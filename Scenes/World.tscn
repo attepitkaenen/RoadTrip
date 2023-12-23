@@ -1,0 +1,129 @@
+[gd_scene load_steps=8 format=3 uid="uid://bpbhecm6eyko4"]
+
+[ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
+[ext_resource type="PackedScene" uid="uid://cdryhy8tvvlgn" path="res://Player/Player.tscn" id="2_ma2nx"]
+[ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
+[ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
+[ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="5_xddwy"]
+
+[sub_resource type="Sky" id="Sky_8c0fj"]
+sky_material = ExtResource("4_j0ilt")
+
+[sub_resource type="Environment" id="Environment_pf6eq"]
+background_mode = 2
+sky = SubResource("Sky_8c0fj")
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_nr3g4")
+playerScene = ExtResource("2_ma2nx")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+material_override = ExtResource("3_4b1jl")
+use_collision = true
+collision_layer = 2
+collision_mask = 3
+size = Vector3(100, 1, 100)
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_pf6eq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 0.548906, 0.835884, 0, -0.835884, 0.548906, 0, 4.79236, 0)
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://Player/Player.tscn")
+spawn_path = NodePath("..")
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="0" type="Node3D" parent="SpawnPoints" groups=["SpawnPoints"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.07538, 2.84028, 0)
+
+[node name="1" type="Node3D" parent="SpawnPoints" groups=["SpawnPoints"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.76613, 3.00926, 0)
+
+[node name="2" type="Node3D" parent="SpawnPoints" groups=["SpawnPoints"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.76613, 3.00926, -3.36068)
+
+[node name="3" type="Node3D" parent="SpawnPoints" groups=["SpawnPoints"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0806, 3.00926, -3.36068)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.51472, 3.30486)
+material_override = ExtResource("3_4b1jl")
+use_collision = true
+size = Vector3(1, 2, 1)
+
+[node name="Item" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.483091, 0.860563, -4.14653)
+
+[node name="Item2" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.483091, 1.2058, -4.14653)
+
+[node name="Item3" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.483091, 1.48021, -4.14653)
+
+[node name="Item4" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.483091, 1.76885, -4.14653)
+
+[node name="Item5" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.483091, 2.02082, -4.14653)
+
+[node name="Item6" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.483091, 2.27255, -4.14653)
+
+[node name="Item7" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.483091, 2.53565, -4.14653)
+
+[node name="Item8" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.483091, 2.53565, -4.14653)
+
+[node name="Item9" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.207953, 0.860563, -4.14653)
+
+[node name="Item10" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.207953, 1.2058, -4.14653)
+
+[node name="Item11" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.207953, 1.48021, -4.14653)
+
+[node name="Item12" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.207953, 1.76885, -4.14653)
+
+[node name="Item13" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.207953, 2.02082, -4.14653)
+
+[node name="Item14" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.207953, 2.27255, -4.14653)
+
+[node name="Item15" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.207953, 2.53565, -4.14653)
+
+[node name="Item16" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.207953, 2.53565, -4.14653)
+
+[node name="Item17" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0937864, 0.860563, -4.14653)
+
+[node name="Item18" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0937864, 1.2058, -4.14653)
+
+[node name="Item19" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0937864, 1.48021, -4.14653)
+
+[node name="Item20" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0937864, 1.76885, -4.14653)
+
+[node name="Item21" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0937864, 2.02082, -4.14653)
+
+[node name="Item22" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0937864, 2.27255, -4.14653)
+
+[node name="Item23" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0937864, 2.53565, -4.14653)
+
+[node name="Item24" parent="." instance=ExtResource("5_xddwy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0937864, 2.53565, -4.14653)

@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=3 uid="uid://d13jgiepvulkk"]
+
+[ext_resource type="Script" path="res://Scenes/MultiplayerController.cs" id="1_trjn8"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_trjn8")
+
+[node name="Host" type="Button" parent="."]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 268.0
+offset_right = 270.0
+offset_bottom = 303.0
+text = "Host"
+
+[node name="Join" type="Button" parent="."]
+layout_mode = 0
+offset_left = 81.0
+offset_top = 321.0
+offset_right = 271.0
+offset_bottom = 356.0
+text = "Join"
+
+[node name="Start" type="Button" parent="."]
+layout_mode = 0
+offset_left = 83.0
+offset_top = 371.0
+offset_right = 273.0
+offset_bottom = 406.0
+text = "Start
+"
+
+[node name="NameEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 84.0
+offset_top = 217.0
+offset_right = 269.0
+offset_bottom = 248.0
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 87.0
+offset_top = 183.0
+offset_right = 127.0
+offset_bottom = 206.0
+text = "Name:
+"
+
+[connection signal="pressed" from="Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="Start" to="." method="_on_start_pressed"]

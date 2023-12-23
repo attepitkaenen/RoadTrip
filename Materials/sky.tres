@@ -1,0 +1,6 @@
+[gd_resource type="PanoramaSkyMaterial" load_steps=2 format=3 uid="uid://gpnl6n783w2y"]
+
+[ext_resource type="Texture2D" uid="uid://qd4a5pimqv5h" path="res://Materials/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="1_qgef3"]
+
+[resource]
+panorama = ExtResource("1_qgef3")
