@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cdryhy8tvvlgn"]
+[gd_scene load_steps=28 format=3 uid="uid://cdryhy8tvvlgn"]
 
 [ext_resource type="Script" path="res://Player/Player.cs" id="1_3rtis"]
 [ext_resource type="Script" path="res://Player/FloatMachine.cs" id="2_fyuyy"]
@@ -8,18 +8,14 @@
 radius = 0.3
 height = 1.0
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_qyuys"]
-radius = 0.3
-height = 1.0
-
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ycfhc"]
 radius = 0.2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_001vp"]
-properties/0/path = NodePath(".:syncPosition")
+properties/0/path = NodePath(".:syncRotation")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:syncRotation")
+properties/1/path = NodePath(".:syncPosition")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
@@ -2816,7 +2812,7 @@ states/jump/position = Vector2(394, 6)
 transitions = ["Start", "Walk", SubResource("AnimationNodeStateMachineTransition_hbvp2"), "Walk", "jump", SubResource("AnimationNodeStateMachineTransition_62rrp"), "jump", "Walk", SubResource("AnimationNodeStateMachineTransition_6l770")]
 graph_offset = Vector2(-170, -132)
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "interaction", "hand", "staticBody", "joint")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "interaction", "hand", "staticBody")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_mask = 3
 script = ExtResource("1_3rtis")
@@ -2826,14 +2822,9 @@ floatMachine = NodePath("FloatMachine")
 interaction = NodePath("Camera3D/InteractionRay")
 hand = NodePath("Camera3D/Hand")
 staticBody = NodePath("Camera3D/StaticBody3D")
-joint = NodePath("Camera3D/Generic6DOFJoint3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_5ovv6")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-visible = false
-mesh = SubResource("CapsuleMesh_qyuys")
 
 [node name="FloatMachine" type="Node3D" parent="." node_paths=PackedStringArray("floatCast", "player")]
 script = ExtResource("2_fyuyy")
@@ -2845,15 +2836,15 @@ shape = SubResource("CylinderShape3D_ycfhc")
 collision_mask = 2
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.1
-delta_interval = 0.1
+replication_interval = 0.05
+delta_interval = 0.05
 replication_config = SubResource("SceneReplicationConfig_001vp")
 
 [node name="characterAnimated" parent="." instance=ExtResource("3_aqu6n")]
 transform = Transform3D(-0.19, 0, -2.86892e-08, 0, 0.19, 0, 2.86892e-08, 0, -0.19, 0, -1.2, 0)
 
 [node name="Skeleton3D" parent="characterAnimated/Armature" index="0"]
-bones/0/position = Vector3(0.00465358, -72.905, -352.089)
+bones/0/position = Vector3(0.00190917, -72.9733, -336.696)
 bones/0/rotation = Quaternion(-0.66155, 0, 0, 0.749901)
 bones/1/position = Vector3(3.44564e-14, 68.8578, -0.458018)
 bones/2/position = Vector3(6.67429e-12, 80.3358, 7.35654e-06)
@@ -2861,9 +2852,9 @@ bones/3/position = Vector3(5.73414e-12, 91.8123, -7.82801e-06)
 bones/4/position = Vector3(7.2415e-12, 103.289, -9.3656e-06)
 bones/7/position = Vector3(26.4867, 90.2838, -0.234327)
 bones/8/position = Vector3(6.21108e-06, 59.7161, 0.000135154)
-bones/8/rotation = Quaternion(0.450751, -0.094747, 0.104344, 0.881453)
+bones/8/rotation = Quaternion(0.451715, 0.00795613, -0.0327762, 0.891524)
 bones/9/position = Vector3(3.56883e-05, 147.614, 2.91894e-05)
-bones/9/rotation = Quaternion(0.169578, -0.0441105, 0.755386, 0.631419)
+bones/9/rotation = Quaternion(0.180354, -0.049198, 0.602374, 0.776014)
 bones/10/position = Vector3(4.52846e-05, 159.486, -8.65246e-07)
 bones/11/position = Vector3(-25.1975, 11.6916, -1.21886e-05)
 bones/11/rotation = Quaternion(0.143529, 0.0276283, 0.174799, 0.973695)
@@ -2883,9 +2874,9 @@ bones/18/position = Vector3(0.010986, 23.541, 1.59405e-05)
 bones/18/rotation = Quaternion(6.85665e-07, -6.54514e-09, 3.659e-09, 1)
 bones/19/position = Vector3(-26.4867, 90.2819, 0.0612746)
 bones/20/position = Vector3(6.41525e-06, 59.7161, -2.34824e-05)
-bones/20/rotation = Quaternion(0.449344, -0.0592943, 0.137679, 0.880692)
+bones/20/rotation = Quaternion(0.458745, 0.0320138, 0.0144777, 0.887873)
 bones/21/position = Vector3(-4.25107e-06, 147.635, -3.32391e-05)
-bones/21/rotation = Quaternion(0.024362, -0.139874, -0.634773, 0.759543)
+bones/21/rotation = Quaternion(0.00300891, -0.123529, -0.713858, 0.689303)
 bones/22/position = Vector3(5.19859e-05, 159.647, 3.67785e-05)
 bones/23/position = Vector3(24.8878, 11.9897, 0.000124805)
 bones/23/rotation = Quaternion(0.11742, -0.00280289, -0.248432, 0.961502)
@@ -2903,15 +2894,15 @@ bones/29/position = Vector3(0.0247362, 24.2232, -1.66985e-05)
 bones/29/rotation = Quaternion(0.584853, 0.0394256, -0.0869781, 0.805498)
 bones/30/position = Vector3(0.0327703, 21.9214, 4.05179e-06)
 bones/30/rotation = Quaternion(6.11828e-07, -4.97095e-08, -3.20621e-08, 1)
-bones/31/rotation = Quaternion(-0.0145356, -0.276754, 0.959546, -0.0496662)
+bones/31/rotation = Quaternion(0.0185412, 0.350773, 0.934986, -0.0491506)
 bones/32/position = Vector3(3.21234e-06, 159.405, -1.8235e-06)
-bones/32/rotation = Quaternion(-0.231814, 0.0224677, -0.0158571, 0.972372)
+bones/32/rotation = Quaternion(-0.784103, 0.071331, -0.0108051, 0.616424)
 bones/33/position = Vector3(9.19148e-06, 116.134, -2.42482e-05)
 bones/34/position = Vector3(3.73976e-06, 12.48, 6.03387e-06)
 bones/35/position = Vector3(5.69467e-06, 11.9254, 1.55425e-07)
-bones/36/rotation = Quaternion(-0.027739, 0.537447, 0.841691, 0.0440265)
+bones/36/rotation = Quaternion(0.00499061, -0.0909096, 0.994472, 0.0523107)
 bones/37/position = Vector3(9.79239e-06, 159.389, 1.13236e-05)
-bones/37/rotation = Quaternion(-0.865052, -0.0781477, 0.00804445, 0.495494)
+bones/37/rotation = Quaternion(-0.0329855, -0.00300528, 0.0159483, 0.999324)
 bones/38/position = Vector3(-6.69095e-06, 116.118, -6.06951e-06)
 bones/39/position = Vector3(-6.46766e-06, 12.4422, 2.80667e-06)
 bones/40/position = Vector3(1.0351e-05, 12.9735, -3.09767e-07)

@@ -13,6 +13,7 @@ public partial class SceneManager : Node3D
 			int index = 0;
 			foreach (var item in GameManager.Players)
 			{
+				
 				Player currentPlayer = playerScene.Instantiate<Player>();
 				currentPlayer.Name = item.Id.ToString();
 				// currentPlayer.SetUpPlayer(item.Name);

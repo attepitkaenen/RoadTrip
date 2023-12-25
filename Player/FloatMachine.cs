@@ -14,7 +14,8 @@ public partial class FloatMachine : Node
 
 	private float floatHeight;
 
-	public Vector3 Float()
+
+    public Vector3 Float()
 	{
 		if (floatCast.IsColliding())
 		{
@@ -39,7 +40,6 @@ public partial class FloatMachine : Node
 				var moveForce = Vector3.Down * floatForce * player.gravity;
 				body.ApplyForce(moveForce);
 			}
-
 
 			// the number is supposed to be half of the hitbox height
 			floatHeight = -distance + floatOffset + 0.6f;
