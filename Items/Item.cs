@@ -13,8 +13,6 @@ public partial class Item : RigidBody3D
 		}
 		else if (playerHolding == player)
 		{
-			playerHolding = player;
-
 			Vector3 moveForce = (handPosition - GlobalPosition) * strength;
 			LinearVelocity = moveForce;
 

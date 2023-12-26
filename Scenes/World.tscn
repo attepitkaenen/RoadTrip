@@ -40,7 +40,7 @@ spawn_path = NodePath("..")
 [node name="SpawnPoints" type="Node3D" parent="."]
 
 [node name="0" type="Node3D" parent="SpawnPoints" groups=["SpawnPoints"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.075, 4.41686, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.075, 2, 0)
 
 [node name="1" type="Node3D" parent="SpawnPoints" groups=["SpawnPoints"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.766, 2, 0)

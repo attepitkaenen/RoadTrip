@@ -1,3 +1,5 @@
+using System.Formats.Asn1;
+using System.Linq;
 using Godot;
 
 public partial class Player : CharacterBody3D
@@ -6,6 +8,7 @@ public partial class Player : CharacterBody3D
 	[Export] public Camera3D camera;
 	[Export] public AnimationTree animationTree;
 	[Export] public FloatMachine floatMachine;
+	[Export] public Label3D nameTag;
 
 	[ExportGroup("Movement properties")]
 	[Export] public float sensitivity = 0.001f;
@@ -25,8 +28,11 @@ public partial class Player : CharacterBody3D
 
 
 	// Sync properties
-	Vector3 syncPosition;
+	public Vector3 syncPosition;
 	Vector3 syncRotation;
+
+	public Vector3 spawnLocation = new Vector3(0, 3, 0);
+	public PlayerInfo playerInfo;
 
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -39,9 +45,24 @@ public partial class Player : CharacterBody3D
 
 	public override void _Ready()
 	{
+		playerInfo = GameManager.Players.Find(x => x.Id == int.Parse(Name));
+		int playerIndex = GameManager.Players.FindIndex(x => x.Id == int.Parse(Name));
+
+		foreach (Node3D spawnPoint in GetTree().GetNodesInGroup("SpawnPoints"))
+		{
+			if (int.Parse(spawnPoint.Name) == playerIndex)
+			{
+				spawnLocation = spawnPoint.GlobalPosition;
+			}
+		}
+
+		nameTag.Text = playerInfo.Name;
+
 		if (!IsMultiplayerAuthority()) {
 			return;
 		}
+
+		GlobalPosition = spawnLocation;
 
 		camera.Current = true;
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Head").Hide();
@@ -82,7 +103,7 @@ public partial class Player : CharacterBody3D
 	{
 		if (!IsMultiplayerAuthority())
 		{
-			GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.5f);
+			GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.1f);
 			GlobalRotation = new Vector3(0, Mathf.LerpAngle(GlobalRotation.Y, syncRotation.Y, 0.1f), 0);
 			return;
 		};
@@ -172,7 +193,7 @@ public partial class Player : CharacterBody3D
 				PickedItem = item;
 				hand.GlobalPosition = item.GlobalPosition;
 			}
-			else if (PickedItem != null)
+			else if (PickedItem is not null)
 			{
 				PickedItem.Rpc(nameof(PickedItem.MoveItem), hand.GlobalPosition, staticBody.GlobalBasis, Strength, 0);
 				PickedItem = null;
