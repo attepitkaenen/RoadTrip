@@ -192,6 +192,7 @@ public partial class Player : CharacterBody3D
 			{
 				PickedItem = item;
 				hand.GlobalPosition = item.GlobalPosition;
+				staticBody.GlobalBasis = PickedItem.GlobalBasis;
 			}
 			else if (PickedItem is not null)
 			{

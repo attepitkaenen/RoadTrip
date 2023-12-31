@@ -17,7 +17,10 @@ public partial class Item : RigidBody3D
 			LinearVelocity = moveForce;
 
 			Vector3 angularForce = GetAngularVelocity(Basis, handBasis) * strength;
-			AngularVelocity = angularForce;
+			if (angularForce.Length() < 100)
+			{
+				AngularVelocity = angularForce;
+			}
 
 			ContactMonitor = true;
 			MaxContactsReported = 1;
