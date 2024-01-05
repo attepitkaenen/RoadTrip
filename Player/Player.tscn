@@ -9,6 +9,7 @@ radius = 0.3
 height = 1.0
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ycfhc"]
+height = 1.5
 radius = 0.2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_001vp"]
@@ -2812,14 +2813,16 @@ states/jump/position = Vector2(394, 6)
 transitions = ["Start", "Walk", SubResource("AnimationNodeStateMachineTransition_hbvp2"), "Walk", "jump", SubResource("AnimationNodeStateMachineTransition_62rrp"), "jump", "Walk", SubResource("AnimationNodeStateMachineTransition_6l770")]
 graph_offset = Vector2(-170, -132)
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "interaction", "hand", "staticBody")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "stateLabel", "speedLabel", "interaction", "hand", "staticBody")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-collision_mask = 3
+collision_mask = 7
 script = ExtResource("1_3rtis")
 camera = NodePath("Camera3D")
 animationTree = NodePath("AnimationTree")
 floatMachine = NodePath("FloatMachine")
 nameTag = NodePath("NameTag")
+stateLabel = NodePath("CanvasLayer/MovementState")
+speedLabel = NodePath("CanvasLayer/Speed")
 interaction = NodePath("Camera3D/InteractionRay")
 hand = NodePath("Camera3D/Hand")
 staticBody = NodePath("Camera3D/StaticBody3D")
@@ -2832,13 +2835,15 @@ text = "Dunce"
 shape = SubResource("CapsuleShape3D_5ovv6")
 
 [node name="FloatMachine" type="Node3D" parent="." node_paths=PackedStringArray("floatCast", "player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
 script = ExtResource("2_fyuyy")
 floatCast = NodePath("FloatCast")
 player = NodePath("..")
 
 [node name="FloatCast" type="ShapeCast3D" parent="FloatMachine"]
 shape = SubResource("CylinderShape3D_ycfhc")
-collision_mask = 2
+target_position = Vector3(0, -0.75, 0)
+collision_mask = 6
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.05
@@ -2933,5 +2938,18 @@ offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 4
+
+[node name="MovementState" type="Label" parent="CanvasLayer"]
+offset_left = 27.0
+offset_top = 17.0
+offset_right = 67.0
+offset_bottom = 40.0
+text = "idle?"
+
+[node name="Speed" type="Label" parent="CanvasLayer"]
+offset_left = 25.0
+offset_top = 44.0
+offset_right = 65.0
+offset_bottom = 67.0
 
 [editable path="characterAnimated"]

@@ -26,7 +26,7 @@ public partial class SceneManager : Node3D
 				Player currentPlayer = playerScene.Instantiate<Player>();
 				currentPlayer.Name = item.Id.ToString();
 				AddChild(currentPlayer);
-				currentPlayer.GlobalPosition = new Vector3(0, 3, index);
+				// currentPlayer.GlobalPosition = new Vector3(0, 3, index);
 				index++;
 			}
 		}

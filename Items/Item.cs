@@ -4,10 +4,40 @@ public partial class Item : RigidBody3D
 {
 	public int playerHolding = 0;
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	// Sync properties
+	// public Vector3 syncPosition;
+	// Vector3 syncRotation;
+
+	// 	public override void _EnterTree()
+	// {
+	// 	SetMultiplayerAuthority(1);
+	// }
+
+
+    // public override void _PhysicsProcess(double delta)
+    // {
+    //     if (!IsMultiplayerAuthority())
+	// 	{
+	// 		GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.01f);
+	// 		GlobalRotation = new Vector3(Mathf.LerpAngle(GlobalRotation.X, syncRotation.X, 0.01f), 
+	// 									Mathf.LerpAngle(GlobalRotation.Y, syncRotation.Y, 0.01f), 
+	// 									Mathf.LerpAngle(GlobalRotation.Z, syncRotation.Z, 0.01f));
+	// 		return;
+	// 	};
+
+	// 	// Host syncing the properties
+	// 	syncPosition = GlobalPosition;
+	// 	syncRotation = GlobalRotation;
+    // }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void MoveItem(Vector3 handPosition, Basis handBasis, float strength, int player)
 	{
-		if (playerHolding == 0)
+		if (player == 0)
+		{
+			playerHolding = 0;
+		}
+		else if (playerHolding == 0)
 		{
 			playerHolding = player;
 		}
@@ -25,14 +55,14 @@ public partial class Item : RigidBody3D
 			ContactMonitor = true;
 			MaxContactsReported = 1;
 		}
-		else if (player == 0)
-		{
-			playerHolding = player;
-		}
-		else
-		{
-			return;
-		}
+		return;
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void Throw(Vector3 handPosition, float strength)
+	{
+		LinearVelocity = handPosition * strength / 3;
+		playerHolding = 0;
 	}
 
 	public Vector3 GetAngularVelocity(Basis fromBasis, Basis toBasis)

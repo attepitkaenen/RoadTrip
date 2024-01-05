@@ -7,8 +7,11 @@ public partial class MultiplayerController : Control
 	[Export]
 	private int port = 8910;
 
+	// [Export]
+	// private string address = "127.0.0.1";
+
 	[Export]
-	private string address = "127.0.0.1";
+	private LineEdit address;
 
 	private ENetMultiplayerPeer peer;
 
@@ -88,7 +91,7 @@ public partial class MultiplayerController : Control
 	
 	public void _on_join_pressed(){
 		peer = new ENetMultiplayerPeer();
-		peer.CreateClient(address, port);
+		peer.CreateClient(address.Text, port);
 
 		peer.Host.Compress(ENetConnection.CompressionMode.RangeCoder);
 		Multiplayer.MultiplayerPeer = peer;

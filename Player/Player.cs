@@ -1,5 +1,3 @@
-using System.Formats.Asn1;
-using System.Linq;
 using Godot;
 
 public partial class Player : CharacterBody3D
@@ -9,6 +7,8 @@ public partial class Player : CharacterBody3D
 	[Export] public AnimationTree animationTree;
 	[Export] public FloatMachine floatMachine;
 	[Export] public Label3D nameTag;
+	[Export] public Label stateLabel;
+	[Export] public Label speedLabel;
 
 	[ExportGroup("Movement properties")]
 	[Export] public float sensitivity = 0.001f;
@@ -24,6 +24,18 @@ public partial class Player : CharacterBody3D
 	[Export] public StaticBody3D staticBody;
 	private Item PickedItem;
 	public float Strength = 40f;
+
+
+	public MovementState movementState = MovementState.idle;
+	public enum MovementState
+	{
+		idle,
+		walking,
+		running,
+		crouching,
+		jumping,
+		falling
+	}
 
 
 
@@ -58,7 +70,8 @@ public partial class Player : CharacterBody3D
 
 		nameTag.Text = playerInfo.Name;
 
-		if (!IsMultiplayerAuthority()) {
+		if (!IsMultiplayerAuthority())
+		{
 			return;
 		}
 
@@ -78,14 +91,14 @@ public partial class Player : CharacterBody3D
 			return;
 		}
 
-		if (PickedItem is not null && 
-			Input.IsActionPressed("interact") && 
+		if (PickedItem is not null &&
+			Input.IsActionPressed("interact") &&
 			@event is InputEventMouseMotion)
 		{
 			InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
 			staticBody.RotateY(mouseMotion.Relative.X * sensitivity);
 			staticBody.RotateX(mouseMotion.Relative.Y * sensitivity);
-			
+
 		}
 		else if (@event is InputEventMouseMotion)
 		{
@@ -108,6 +121,7 @@ public partial class Player : CharacterBody3D
 			return;
 		};
 
+
 		PickObject();
 		Rpc(nameof(HandleRpcAnimations), Input.IsActionJustPressed("jump"), isGrounded, Velocity, Transform);
 
@@ -117,43 +131,79 @@ public partial class Player : CharacterBody3D
 
 		Vector3 velocity = Velocity;
 
-		velocity.Y -= gravity * (float)delta;		
+		velocity.Y -= gravity * (float)delta;
 
-		// Handle Jump.
+		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
+		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
+
+		stateLabel.Text = movementState.ToString();
+		speedLabel.Text = currentSpeed.ToString();
+
 		if (Input.IsActionJustPressed("jump") && isGrounded)
 		{
 			velocity.Y = jumpVelocity;
+			movementState = MovementState.jumping;
+		}
+		else if (!isGrounded && Velocity.Y < 0)
+		{
+			movementState = MovementState.falling;
+		}
+		else if (Input.IsActionPressed("crouch") && isGrounded)
+		{
+			movementState = MovementState.crouching;
+		}
+		else if (Input.IsActionPressed("sprint") && floatMachine.GetCrouchHeight() > 0.8f && currentSpeed > 0.1f && isGrounded)
+		{
+			movementState = MovementState.running;
+		}
+		else if (currentSpeed > 0.1f && isGrounded)
+		{
+			movementState = MovementState.walking;
+		}
+		else if (isGrounded)
+		{
+			movementState = MovementState.idle;
 		}
 
-		// Handle Crouch
-		if (Input.IsActionPressed("crouch"))
+		switch (movementState)
 		{
-			floatMachine.SetFloatOffset(0.1f);
-		}
-		else
-		{
-			floatMachine.SetFloatOffset(0.7f);
+			case MovementState.idle:
+				floatMachine.SetFloatOffset(0.7f);
+				break;
+			case MovementState.walking:
+				floatMachine.SetFloatOffset(0.7f);
+				break;
+			case MovementState.running:
+				correctedSpeed *= 2f;
+				break;
+			case MovementState.jumping:
+				correctedSpeed *= 1.5f;
+				isGrounded = false;
+				break;
+			case MovementState.falling:
+				correctedSpeed *= 1.5f;
+				break;
+			case MovementState.crouching:
+				floatMachine.SetFloatOffset(0.2f);
+				break;
 		}
 
-		// Make speed dependent on the crouchHeight
-		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
-
-		// Handle sprint
-		if (Input.IsActionPressed("sprint") && floatMachine.GetCrouchHeight() > 0.8f)
-		{
-			correctedSpeed *= 2f;
-		}
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
 		Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-		if (direction != Vector3.Zero)
+		if (direction != Vector3.Zero && isGrounded)
 		{
 			velocity.X = Mathf.Lerp(velocity.X, direction.X * correctedSpeed, (float)delta * acceleration);
 			velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * correctedSpeed, (float)delta * acceleration);
 		}
-		else
+		else if (direction != Vector3.Zero && !isGrounded)
+		{
+			velocity.X = Mathf.Lerp(velocity.X, direction.X * correctedSpeed, (float)delta * acceleration);
+			velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * correctedSpeed, (float)delta * acceleration);
+		}
+		else if (isGrounded)
 		{
 			velocity.X = Mathf.Lerp(velocity.X, 0, (float)delta * deceleration);
 			velocity.Z = Mathf.Lerp(velocity.Z, 0, (float)delta * deceleration);
@@ -196,9 +246,15 @@ public partial class Player : CharacterBody3D
 			}
 			else if (PickedItem is not null)
 			{
-				PickedItem.Rpc(nameof(PickedItem.MoveItem), hand.GlobalPosition, staticBody.GlobalBasis, Strength, 0);
+				PickedItem.Rpc(nameof(PickedItem.MoveItem), Vector3.Zero, Vector3.Zero, 0, 0);
 				PickedItem = null;
 			}
+		}
+		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null)
+		{
+			Vector3 throwDirection = (hand.GlobalPosition - GlobalPosition).Normalized();
+			PickedItem.Rpc(nameof(PickedItem.Throw), throwDirection, Strength);
+			PickedItem = null;
 		}
 
 		// Move object

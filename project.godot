@@ -86,6 +86,14 @@ interact={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="Player"
+3d_physics/layer_2="World"
+3d_physics/layer_3="Vehicles"
+3d_physics/layer_4="Items"
+
 [physics]
 
+common/physics_ticks_per_second=90
 3d/physics_engine="JoltPhysics3D"
