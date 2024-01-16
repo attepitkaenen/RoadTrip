@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 public partial class SceneManager : Node3D
 {
@@ -11,24 +12,20 @@ public partial class SceneManager : Node3D
 	{
 		if (Multiplayer.IsServer())
 		{
-			int index = 0;
 			foreach (var item in GameManager.Players)
 			{
-				// foreach (Node3D spawnPoint in GetTree().GetNodesInGroup("SpawnPoints"))
-				// {
-				// 	if (int.Parse(spawnPoint.Name) == index)
-				// 	{
-				// 		item.SpawnLocation = spawnPoint.GlobalPosition;
-				// 		// currentPlayer.spawnLocation = spawnPoint.GlobalPosition;
-				// 	}
-				// }
-				// currentPlayer.SetUpPlayer(item.Name);
 				Player currentPlayer = playerScene.Instantiate<Player>();
 				currentPlayer.Name = item.Id.ToString();
 				AddChild(currentPlayer);
-				// currentPlayer.GlobalPosition = new Vector3(0, 3, index);
-				index++;
 			}
+		}
+	}
+
+	public override void _Input(InputEvent @event)
+	{
+		if (Input.IsActionJustPressed("menu"))
+		{
+			GetTree().Quit();
 		}
 	}
 }

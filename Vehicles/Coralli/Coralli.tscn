@@ -1,4 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://r5jkmn54rdln"]
+[gd_scene load_steps=13 format=3 uid="uid://r5jkmn54rdln"]
+
+[ext_resource type="Script" path="res://Vehicles/Coralli/Coralli.cs" id="1_p5jd5"]
+[ext_resource type="PackedScene" uid="uid://ccgebu0extq6q" path="res://Vehicles/Seat/Seat.tscn" id="1_q5sv6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cwr7c"]
 size = Vector3(1.5, 0.2, 3)
@@ -7,17 +10,41 @@ size = Vector3(1.5, 0.2, 3)
 size = Vector3(1.5, 0.2, 3)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]
-properties/0/path = NodePath(".:position")
+properties/0/path = NodePath(".:syncRotation")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:rotation")
+properties/1/path = NodePath(".:syncPosition")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Coralli" type="VehicleBody3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_j0v52"]
+size = Vector3(1.5, 0.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7ie8t"]
+size = Vector3(1.5, 0.5, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_avm0q"]
+size = Vector3(0.2, 0.5, 0.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3dqkd"]
+size = Vector3(0.2, 0.5, 0.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5ki6w"]
+size = Vector3(0.2, 0.5, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jno3n"]
+size = Vector3(1.5, 1, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_scula"]
+size = Vector3(1.5, 1, 3)
+
+[node name="Coralli" type="VehicleBody3D" node_paths=PackedStringArray("itemCast", "area")]
 collision_layer = 4
 collision_mask = 2
-mass = 500.0
+mass = 100.0
+script = ExtResource("1_p5jd5")
+itemCast = NodePath("ItemCast")
+area = NodePath("Area3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_cwr7c")
@@ -45,7 +72,7 @@ suspension_stiffness = 70.0
 
 [node name="WheelBL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.2, -1)
-use_as_steering = true
+use_as_traction = true
 wheel_roll_influence = 0.5
 wheel_radius = 0.25
 wheel_rest_length = 0.3
@@ -54,7 +81,7 @@ suspension_stiffness = 70.0
 
 [node name="WheelBR" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.2, -1)
-use_as_steering = true
+use_as_traction = true
 wheel_roll_influence = 0.5
 wheel_radius = 0.25
 wheel_rest_length = 0.3
@@ -63,3 +90,52 @@ suspension_stiffness = 70.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_4inyu")
+
+[node name="DriverSeat" parent="." instance=ExtResource("1_q5sv6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.352479, 0.204348, 0.397925)
+freeze = true
+isDriverSeat = true
+
+[node name="Seat2" parent="." instance=ExtResource("1_q5sv6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.299918, 0.204348, 0.397925)
+freeze = true
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.339596, -1.39894)
+shape = SubResource("BoxShape3D_j0v52")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D2"]
+mesh = SubResource("BoxMesh_7ie8t")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.652832, 0.339596, -1.14377)
+shape = SubResource("BoxShape3D_avm0q")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D3"]
+mesh = SubResource("BoxMesh_3dqkd")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.654108, 0.339596, -1.14377)
+shape = SubResource("BoxShape3D_avm0q")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D4"]
+mesh = SubResource("BoxMesh_5ki6w")
+
+[node name="ItemCast" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548114, 0)
+shape = SubResource("BoxShape3D_jno3n")
+target_position = Vector3(0, 0, 0)
+collision_mask = 8
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 8
+gravity_space_override = 3
+linear_damp_space_override = 3
+linear_damp = 0.0
+angular_damp_space_override = 3
+angular_damp = 0.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.545511, 0)
+shape = SubResource("BoxShape3D_scula")

@@ -1,3 +1,4 @@
+using System.Net.Http;
 using Godot;
 
 public partial class Player : CharacterBody3D
@@ -9,6 +10,7 @@ public partial class Player : CharacterBody3D
 	[Export] public Label3D nameTag;
 	[Export] public Label stateLabel;
 	[Export] public Label speedLabel;
+	[Export] public Node3D head;
 
 	[ExportGroup("Movement properties")]
 	[Export] public float sensitivity = 0.001f;
@@ -25,6 +27,9 @@ public partial class Player : CharacterBody3D
 	private Item PickedItem;
 	public float Strength = 40f;
 
+	Seat seat;
+	Vector3 seatPosition;
+	Vector3 seatRotation;
 
 	public MovementState movementState = MovementState.idle;
 	public enum MovementState
@@ -34,6 +39,7 @@ public partial class Player : CharacterBody3D
 		running,
 		crouching,
 		jumping,
+		seated,
 		falling
 	}
 
@@ -98,40 +104,54 @@ public partial class Player : CharacterBody3D
 			InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
 			staticBody.RotateY(mouseMotion.Relative.X * sensitivity);
 			staticBody.RotateX(mouseMotion.Relative.Y * sensitivity);
-
 		}
 		else if (@event is InputEventMouseMotion)
 		{
 			InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
-			RotateY(-mouseMotion.Relative.X * sensitivity);
 			camera.RotateX(-mouseMotion.Relative.Y * sensitivity);
 
 			Vector3 cameraRotation = camera.Rotation;
-			cameraRotation.X = Mathf.Clamp(cameraRotation.X, Mathf.DegToRad(-88f), Mathf.DegToRad(80f));
+			cameraRotation.X = Mathf.Clamp(cameraRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f));
 			camera.Rotation = cameraRotation;
+
+			if (movementState == MovementState.seated)
+			{
+				head.RotateY(-mouseMotion.Relative.X * sensitivity);
+			}
+			else
+			{
+				RotateY(-mouseMotion.Relative.X * sensitivity);
+			}
 		}
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
+		//Lerp movement for other players
+		if (movementState == MovementState.seated && !IsMultiplayerAuthority())
+		{
+			return;
+		}
+
 		if (!IsMultiplayerAuthority())
 		{
-			GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.1f);
-			GlobalRotation = new Vector3(0, Mathf.LerpAngle(GlobalRotation.Y, syncRotation.Y, 0.1f), 0);
+			GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.05f);
+			GlobalRotation = new Vector3(Mathf.LerpAngle(GlobalRotation.X, syncRotation.X, 0.05f),
+										Mathf.LerpAngle(GlobalRotation.Y, syncRotation.Y, 0.05f),
+										Mathf.LerpAngle(GlobalRotation.Z, syncRotation.Z, 0.05f));
 			return;
 		};
 
-
 		PickObject();
+
+		HandleSeat();
+
 		Rpc(nameof(HandleRpcAnimations), Input.IsActionJustPressed("jump"), isGrounded, Velocity, Transform);
 
-		// Movement logic
+
+		// sync properties to lerp movement for other players
 		syncPosition = GlobalPosition;
 		syncRotation = GlobalRotation;
-
-		Vector3 velocity = Velocity;
-
-		velocity.Y -= gravity * (float)delta;
 
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
@@ -139,6 +159,29 @@ public partial class Player : CharacterBody3D
 		stateLabel.Text = movementState.ToString();
 		speedLabel.Text = currentSpeed.ToString();
 
+		// Stop movement if seated
+		if (movementState == MovementState.seated)
+		{
+			Velocity = Vector3.Zero;
+			if (seat is Seat && seat.isDriverSeat)
+			{
+				Vehicle vehicle = seat.GetParent<Vehicle>();
+				vehicle.Rpc(nameof(vehicle.Drive), int.Parse(Name), Input.GetVector("left", "right", "up", "down"), Input.IsActionPressed("jump"), delta);
+			}
+			return;
+		}
+
+
+		head.GlobalRotation = GlobalRotation;
+
+		// Movement logic
+		Vector3 velocity = Velocity;
+
+		velocity.Y -= gravity * (float)delta;
+
+
+
+		// Handle movementState changes
 		if (Input.IsActionJustPressed("jump") && isGrounded)
 		{
 			velocity.Y = jumpVelocity;
@@ -165,6 +208,7 @@ public partial class Player : CharacterBody3D
 			movementState = MovementState.idle;
 		}
 
+		// Handle property changes depenging on the movementState
 		switch (movementState)
 		{
 			case MovementState.idle:
@@ -190,7 +234,6 @@ public partial class Player : CharacterBody3D
 
 
 		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
 		Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		if (direction != Vector3.Zero && isGrounded)
@@ -211,6 +254,31 @@ public partial class Player : CharacterBody3D
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+
+	public void HandleSeat()
+	{
+		var seat = floatMachine.GetSeat();
+		if (seat is Seat && Input.IsActionJustPressed("equip") && movementState != MovementState.seated && !seat.occupied)
+		{
+			seat.Rpc(nameof(seat.Sit), int.Parse(Name));
+			this.seat = seat;
+			movementState = MovementState.seated;
+		}
+		else if (Input.IsActionJustPressed("equip") && movementState == MovementState.seated)
+		{
+			seat.Rpc(nameof(seat.Stand));
+			this.seat = null;
+			GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
+			movementState = MovementState.idle;
+		}
+	}
+
+	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void Sit(Vector3 position, Vector3 rotation)
+	{
+		GlobalPosition = position;
+		GlobalRotation = rotation;
 	}
 
 
@@ -252,7 +320,7 @@ public partial class Player : CharacterBody3D
 		}
 		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null)
 		{
-			Vector3 throwDirection = (hand.GlobalPosition - GlobalPosition).Normalized();
+			Vector3 throwDirection = (hand.GlobalPosition - camera.GlobalPosition).Normalized();
 			PickedItem.Rpc(nameof(PickedItem.Throw), throwDirection, Strength);
 			PickedItem = null;
 		}

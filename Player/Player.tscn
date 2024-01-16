@@ -19,6 +19,15 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:syncPosition")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath(".:movementState")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:seatPosition")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:seatRotation")
+properties/4/spawn = true
+properties/4/replication_mode = 1
 
 [sub_resource type="Animation" id="Animation_qyhfe"]
 resource_name = "default"
@@ -2813,19 +2822,20 @@ states/jump/position = Vector2(394, 6)
 transitions = ["Start", "Walk", SubResource("AnimationNodeStateMachineTransition_hbvp2"), "Walk", "jump", SubResource("AnimationNodeStateMachineTransition_62rrp"), "jump", "Walk", SubResource("AnimationNodeStateMachineTransition_6l770")]
 graph_offset = Vector2(-170, -132)
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "stateLabel", "speedLabel", "interaction", "hand", "staticBody")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "stateLabel", "speedLabel", "head", "interaction", "hand", "staticBody") groups=["Player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_mask = 7
 script = ExtResource("1_3rtis")
-camera = NodePath("Camera3D")
+camera = NodePath("Head/Camera3D")
 animationTree = NodePath("AnimationTree")
 floatMachine = NodePath("FloatMachine")
 nameTag = NodePath("NameTag")
 stateLabel = NodePath("CanvasLayer/MovementState")
 speedLabel = NodePath("CanvasLayer/Speed")
-interaction = NodePath("Camera3D/InteractionRay")
-hand = NodePath("Camera3D/Hand")
-staticBody = NodePath("Camera3D/StaticBody3D")
+head = NodePath("Head")
+interaction = NodePath("Head/Camera3D/InteractionRay")
+hand = NodePath("Head/Camera3D/Hand")
+staticBody = NodePath("Head/Camera3D/StaticBody3D")
 
 [node name="NameTag" type="Label3D" parent="."]
 transform = Transform3D(-0.3, 0, -4.52987e-08, 0, 0.3, 0, 4.52987e-08, 0, -0.3, 0, -0.0464681, -0.195011)
@@ -2846,8 +2856,6 @@ target_position = Vector3(0, -0.75, 0)
 collision_mask = 6
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.05
-delta_interval = 0.05
 replication_config = SubResource("SceneReplicationConfig_001vp")
 
 [node name="characterAnimated" parent="." instance=ExtResource("3_aqu6n")]
@@ -2907,20 +2915,22 @@ parameters/conditions/jump = false
 parameters/conditions/walk = false
 parameters/Walk/blend_position = Vector2(0.00423276, 0.0209424)
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Head" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 
-[node name="InteractionRay" type="RayCast3D" parent="Camera3D"]
+[node name="InteractionRay" type="RayCast3D" parent="Head/Camera3D"]
 target_position = Vector3(0, 0, -3)
-collision_mask = 4
+collision_mask = 8
 
-[node name="Hand" type="Marker3D" parent="Camera3D"]
+[node name="Hand" type="Marker3D" parent="Head/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
-[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Camera3D"]
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Head/Camera3D"]
 node_a = NodePath("../StaticBody3D")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Camera3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Head/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -2944,7 +2954,6 @@ offset_left = 27.0
 offset_top = 17.0
 offset_right = 67.0
 offset_bottom = 40.0
-text = "idle?"
 
 [node name="Speed" type="Label" parent="CanvasLayer"]
 offset_left = 25.0

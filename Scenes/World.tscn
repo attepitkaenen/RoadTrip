@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=10 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="PackedScene" uid="uid://cdryhy8tvvlgn" path="res://Player/Player.tscn" id="2_ma2nx"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://r5jkmn54rdln" path="res://Vehicles/Coralli/Coralli.tscn" id="4_5gbf8"]
 [ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
 [ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="5_xddwy"]
+[ext_resource type="PackedScene" uid="uid://ccgebu0extq6q" path="res://Vehicles/Seat/Seat.tscn" id="7_lyu3h"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -18,16 +19,20 @@ sky = SubResource("Sky_8c0fj")
 script = ExtResource("1_nr3g4")
 playerScene = ExtResource("2_ma2nx")
 
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://Player/Player.tscn")
+spawn_path = NodePath("..")
+
 [node name="Ground" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.93896, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.93896, 52.7642)
 material_override = ExtResource("3_4b1jl")
 use_collision = true
 collision_layer = 2
 collision_mask = 3
-size = Vector3(100, 6.87793, 100)
+size = Vector3(100, 6.87793, 205.528)
 
 [node name="Coralli" parent="." instance=ExtResource("4_5gbf8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.91726, 1.92774, -0.241957)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9827, 1.92774, -0.241957)
 
 [node name="Environment" type="Node3D" parent="."]
 
@@ -36,10 +41,6 @@ environment = SubResource("Environment_pf6eq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 0.548906, 0.835884, 0, -0.835884, 0.548906, 0, 4.79236, 0)
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Player/Player.tscn")
-spawn_path = NodePath("..")
 
 [node name="SpawnPoints" type="Node3D" parent="."]
 
@@ -121,28 +122,28 @@ size = Vector3(5.81396, 0.580909, 3.57141)
 [node name="Items" type="Node3D" parent="."]
 
 [node name="Item" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.289122, 0.860563, -4.14653)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 2.62066, -1.26095)
 
 [node name="Item2" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.289122, 1.2058, -4.14653)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 2.96589, -1.26095)
 
 [node name="Item3" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.289122, 1.48021, -4.14653)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.2403, -1.26095)
 
 [node name="Item4" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.289122, 1.76885, -4.14653)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.52894, -1.26095)
 
 [node name="Item5" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.289122, 2.02082, -4.14653)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.78091, -1.26095)
 
 [node name="Item6" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.289122, 2.27255, -4.14653)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 4.03264, -1.26095)
 
 [node name="Item7" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.289122, 2.53565, -4.14653)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 4.29574, -1.26095)
 
 [node name="Item8" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.289122, 2.79398, -4.14653)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 4.55407, -1.26095)
 
 [node name="Item9" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 0.860563, -4.14653)
@@ -306,3 +307,6 @@ material_override = ExtResource("3_4b1jl")
 use_collision = true
 collision_layer = 2
 size = Vector3(1, 0.94339, 1)
+
+[node name="Node3D" parent="." instance=ExtResource("7_lyu3h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.89302, 1.02947, -0.953824)

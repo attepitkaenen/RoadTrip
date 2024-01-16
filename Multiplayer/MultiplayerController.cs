@@ -5,7 +5,7 @@ using System.Linq;
 public partial class MultiplayerController : Control
 {
 	[Export]
-	private int port = 8910;
+	private int port = 25565;
 
 	// [Export]
 	// private string address = "127.0.0.1";
@@ -53,11 +53,12 @@ public partial class MultiplayerController : Control
         GD.Print("Player Disconnected: " + id.ToString());
 		GameManager.Players.Remove(GameManager.Players.Where(i => i.Id == id).First<PlayerInfo>());
 		var players = GetTree().GetNodesInGroup("Player");
-		
-		foreach (var item in players)
+
+		foreach (var player in players)
 		{
-			if(item.Name == id.ToString()){
-				item.QueueFree();
+			GD.Print(player.Name);
+			if(player.Name == id.ToString()){
+				player.QueueFree();
 			}
 		}
     }
@@ -82,6 +83,7 @@ public partial class MultiplayerController : Control
 
 		Multiplayer.MultiplayerPeer = peer;
 		GD.Print("Waiting For Players!");
+		// UpnpSetup();
 	}
 
 	public void _on_host_pressed(){
@@ -112,9 +114,36 @@ public partial class MultiplayerController : Control
 		}
 	}
 
+	public void UpnpSetup()
+	{
+		// Fix later
+        var upnp = new Upnp();
+
+        var discoverResult = upnp.Discover();
+		GD.Print($"Discovery code: {discoverResult}");
+		if (discoverResult != 0)
+		{
+			GD.Print("upnp discovery failed!");
+			if (discoverResult == 16)
+			{
+				GD.Print("Invalid gateway");
+			}
+			return;
+		}
+
+		var mapResult = upnp.AddPortMapping(port, 0, "", "UDP", 100);
+		if (mapResult != 0)
+		{
+			GD.Print($"UPNP Port Mapping Failed: {mapResult}");
+		}
+		else
+		{
+			GD.Print($"Success! Join address: {upnp.QueryExternalAddress()}");
+		}
+	}
+
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void startGame(){
-
 		var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
 		GetTree().Root.AddChild(scene);
 		this.Hide();
@@ -128,9 +157,7 @@ public partial class MultiplayerController : Control
 		};
 		
 		if(!GameManager.Players.Contains(playerInfo)){
-			
 			GameManager.Players.Add(playerInfo);
-			
 		}
 
 		if(Multiplayer.IsServer()){

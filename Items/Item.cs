@@ -5,30 +5,23 @@ public partial class Item : RigidBody3D
 	public int playerHolding = 0;
 
 	// Sync properties
-	// public Vector3 syncPosition;
-	// Vector3 syncRotation;
+	public Vector3 syncPosition;
+	Vector3 syncRotation;
 
-	// 	public override void _EnterTree()
-	// {
-	// 	SetMultiplayerAuthority(1);
-	// }
+    public override void _PhysicsProcess(double delta)
+    {
+        if (!IsMultiplayerAuthority())
+		{
+			GlobalPosition = syncPosition;
+			GlobalRotation = syncRotation;
+			// GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.01f);
+			// GlobalRotation = new Vector3(Mathf.LerpAngle(GlobalRotation.X, syncRotation.X, 0.01f), Mathf.LerpAngle(GlobalRotation.Y, syncRotation.Y, 0.01f), Mathf.LerpAngle(GlobalRotation.Z, syncRotation.Z, 0.01f));
+			return;
+		};
 
-
-    // public override void _PhysicsProcess(double delta)
-    // {
-    //     if (!IsMultiplayerAuthority())
-	// 	{
-	// 		GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.01f);
-	// 		GlobalRotation = new Vector3(Mathf.LerpAngle(GlobalRotation.X, syncRotation.X, 0.01f), 
-	// 									Mathf.LerpAngle(GlobalRotation.Y, syncRotation.Y, 0.01f), 
-	// 									Mathf.LerpAngle(GlobalRotation.Z, syncRotation.Z, 0.01f));
-	// 		return;
-	// 	};
-
-	// 	// Host syncing the properties
-	// 	syncPosition = GlobalPosition;
-	// 	syncRotation = GlobalRotation;
-    // }
+		syncPosition = GlobalPosition;
+		syncRotation = GlobalRotation;
+	}
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void MoveItem(Vector3 handPosition, Basis handBasis, float strength, int player)

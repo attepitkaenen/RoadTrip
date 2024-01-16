@@ -39,9 +39,8 @@ public partial class FloatMachine : Node
 				player.isGrounded = true;
 				return (Vector3.Up * floatForce * player.gravity * floatHeight) - (Vector3.Down * -player.Velocity.Y * dampingSpringStrength);
 			}
-			else if (floatHeight > -0.3 && player.movementState != Player.MovementState.jumping)
+			else if (floatHeight > -0.3 && player.movementState != Player.MovementState.jumping && player.isGrounded)
 			{
-				player.isGrounded = true;
 				return Vector3.Up * 0.5f * player.gravity * floatHeight;
 			}
 			else
@@ -57,15 +56,17 @@ public partial class FloatMachine : Node
 		return Vector3.Zero;
 	}
 
-	public VehicleBody3D GetVehicle()
+	public Seat GetSeat()
 	{
-		var closestIndex = GetClosestIndex();
-
-		if (floatCast.GetCollider(closestIndex) is VehicleBody3D vehicle)
+		if (floatCast.IsColliding())
 		{
-			return vehicle;
-		}
+			var closestIndex = GetClosestIndex();
 
+			if (floatCast.GetCollider(closestIndex) is Seat seat)
+			{
+				return seat;
+			}
+		}
 		return null;
 	}
 
