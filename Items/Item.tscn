@@ -1,7 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://btmag5dkf8psn"]
+[gd_scene load_steps=7 format=3 uid="uid://btmag5dkf8psn"]
 
 [ext_resource type="Script" path="res://Items/Item.cs" id="1_7ofr0"]
 [ext_resource type="Material" uid="uid://dummx5f06o3ry" path="res://Materials/orange.tres" id="1_pjmki"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7eo7n"]
+rough = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_k2tk5"]
 size = Vector3(0.2, 0.2, 0.2)
@@ -20,6 +23,7 @@ properties/1/replication_mode = 1
 [node name="Item" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 15
+physics_material_override = SubResource("PhysicsMaterial_7eo7n")
 script = ExtResource("1_7ofr0")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

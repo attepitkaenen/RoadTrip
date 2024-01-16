@@ -43,7 +43,6 @@ public partial class Seat : RigidBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Sit(long playerId)
 	{
-		GD.Print(playerId);
 		if (seatedPlayerId != -1)
 		{
 			seatedPlayerId = playerId;
