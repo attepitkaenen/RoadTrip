@@ -14,8 +14,6 @@ public partial class Item : RigidBody3D
 		{
 			GlobalPosition = syncPosition;
 			GlobalRotation = syncRotation;
-			// GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.01f);
-			// GlobalRotation = new Vector3(Mathf.LerpAngle(GlobalRotation.X, syncRotation.X, 0.01f), Mathf.LerpAngle(GlobalRotation.Y, syncRotation.Y, 0.01f), Mathf.LerpAngle(GlobalRotation.Z, syncRotation.Z, 0.01f));
 			return;
 		};
 

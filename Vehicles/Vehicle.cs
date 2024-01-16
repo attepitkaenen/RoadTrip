@@ -25,7 +25,6 @@ public partial class Vehicle : VehicleBody3D
 	public override void _Ready()
 	{
 		driverSeat = GetNode<Seat>("DriverSeat");
-		// driverSeat.PlayerSeated += SetAuthority;
 		seats = GetChildren().Where(x => x is Seat)
 							.Select(x => x as Seat)
 							.ToList();
@@ -53,9 +52,7 @@ public partial class Vehicle : VehicleBody3D
 	{
 		if (node is Item item)
 		{
-			// item.CustomIntegrator = true;
 			items.Add(item);
-			// item.SetMultiplayerAuthority(GetMultiplayerAuthority());
 		}
 	}
 
@@ -63,8 +60,6 @@ public partial class Vehicle : VehicleBody3D
 	{
 		if (node is Item item)
 		{
-			GD.Print($"item exited area: {node}");
-			// item.SetMultiplayerAuthority(1);
 			items.Remove(item);
 		}
 	}
@@ -82,11 +77,9 @@ public partial class Vehicle : VehicleBody3D
 		{
 			if (seat.occupied)
 			{
-				// GD.Print(seat.GetPlayerId());
 				var player = GetPlayer(seat.GetPlayerId());
 				if (player is not null)
 				{
-					// player.Rpc(nameof(player.Sit), seat.GetPosition(), seat.GetRotation());
 					player.Sit(seat.GetPosition(), seat.GetRotation());
 				}
 			}
@@ -96,7 +89,6 @@ public partial class Vehicle : VehicleBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Drive(int playerId, Vector2 inputDir, bool space, double delta)
 	{
-		// SetMultiplayerAuthority(playerId);
 		if (driverSeat.occupied)
 		{
 			Steering = Mathf.Lerp(Steering, -inputDir.X * maxSteer, (float)delta * 1f);
