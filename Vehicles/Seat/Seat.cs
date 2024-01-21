@@ -5,7 +5,7 @@ using System.Linq;
 public partial class Seat : RigidBody3D
 {
 	public Marker3D seatPosition;
-	public long seatedPlayerId;
+	public long seatedPlayerId = -1;
 	public bool occupied = false;
 	[Export] public bool isDriverSeat = false;
 	[Signal] public delegate void PlayerSeatedEventHandler(int playerId);
@@ -43,7 +43,7 @@ public partial class Seat : RigidBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Sit(long playerId)
 	{
-		if (seatedPlayerId != -1)
+		if (seatedPlayerId == -1)
 		{
 			seatedPlayerId = playerId;
 			occupied = true;

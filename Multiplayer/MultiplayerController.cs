@@ -51,7 +51,7 @@ public partial class MultiplayerController : Control
     private void PeerDisconnected(long id)
     {
         GD.Print("Player Disconnected: " + id.ToString());
-		GameManager.Players.Remove(GameManager.Players.Where(i => i.Id == id).First<PlayerInfo>());
+		GameManager.Players.Remove(GameManager.Players.Where(i => i.Id == id).First<PlayerState>());
 		var players = GetTree().GetNodesInGroup("Player");
 
 		foreach (var player in players)
@@ -149,9 +149,9 @@ public partial class MultiplayerController : Control
 		this.Hide();
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void sendPlayerInformation(string name, int id){
-		PlayerInfo playerInfo = new PlayerInfo(){
+		PlayerState playerInfo = new PlayerState(){
 			Name = name,
 			Id = id
 		};

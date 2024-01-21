@@ -16,14 +16,23 @@ public partial class Vehicle : VehicleBody3D
 	public List<Item> items = new List<Item>();
 
 	// Sync properties
-	public Vector3 syncPosition;
+	Vector3 syncPosition;
 	Vector3 syncRotation;
+	Basis syncBasis;
+	Vector3 syncLinearVelocity;
+	Vector3 syncAngularVelocity;
+
 
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		if (!IsMultiplayerAuthority())
+		{
+			CustomIntegrator = true;
+		};
+
 		driverSeat = GetNode<Seat>("DriverSeat");
 		seats = GetChildren().Where(x => x is Seat)
 							.Select(x => x as Seat)
@@ -37,21 +46,37 @@ public partial class Vehicle : VehicleBody3D
 	{
 		MovePassengers();
 
-		if (!IsMultiplayerAuthority())
-		{
-			GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.01f);
-			GlobalRotation = new Vector3(Mathf.LerpAngle(GlobalRotation.X, syncRotation.X, 0.01f), Mathf.LerpAngle(GlobalRotation.Y, syncRotation.Y, 0.01f), Mathf.LerpAngle(GlobalRotation.Z, syncRotation.Z, 0.01f));
-			return;
-		};
-
+		if (!IsMultiplayerAuthority()) return;
+	
+		syncLinearVelocity = LinearVelocity;
+		syncAngularVelocity = AngularVelocity;
 		syncPosition = GlobalPosition;
 		syncRotation = GlobalRotation;
+		syncBasis = GlobalBasis;
+	}
+
+	public override void _IntegrateForces(PhysicsDirectBodyState3D state)
+	{
+		if (!IsMultiplayerAuthority())
+		{
+			var newState = state.Transform;
+			newState.Origin = GlobalPosition.Lerp(syncPosition, 0.9f);
+			var a = newState.Basis.GetRotationQuaternion().Normalized();
+			var b = syncBasis.GetRotationQuaternion().Normalized();
+			var c = a.Slerp(b, 0.5f);
+			newState.Basis = new Basis(c);
+			state.Transform = newState;
+			state.LinearVelocity = syncLinearVelocity;
+			state.AngularVelocity = syncAngularVelocity;
+			return;
+		}
 	}
 
 	public void ItemEntered(Node3D node)
 	{
 		if (node is Item item)
 		{
+			item.vehicle = this;
 			items.Add(item);
 		}
 	}
@@ -60,6 +85,7 @@ public partial class Vehicle : VehicleBody3D
 	{
 		if (node is Item item)
 		{
+			item.vehicle = null;
 			items.Remove(item);
 		}
 	}

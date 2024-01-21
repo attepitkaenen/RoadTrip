@@ -1,27 +1,59 @@
+using System.Runtime.InteropServices;
 using Godot;
 
 public partial class Item : RigidBody3D
 {
 	public int playerHolding = 0;
+	private float dampingSpringStrength = 0.2f;
+
+	public Vehicle vehicle;
 
 	// Sync properties
-	public Vector3 syncPosition;
+	Vector3 syncPosition;
 	Vector3 syncRotation;
+	Basis syncBasis;
+	Vector3 syncLinearVelocity;
+	Vector3 syncAngularVelocity;
 
-    public override void _PhysicsProcess(double delta)
-    {
-        if (!IsMultiplayerAuthority())
+	public override void _Ready()
+	{
+		if (!IsMultiplayerAuthority())
 		{
-			GlobalPosition = syncPosition;
-			GlobalRotation = syncRotation;
+			CustomIntegrator = true;
+		};
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		if (!IsMultiplayerAuthority())
+		{
 			return;
 		};
 
+		syncLinearVelocity = LinearVelocity;
+		syncAngularVelocity = AngularVelocity;
 		syncPosition = GlobalPosition;
 		syncRotation = GlobalRotation;
+		syncBasis = GlobalBasis;
+	}
+	public override void _IntegrateForces(PhysicsDirectBodyState3D state)
+	{
+		if (!IsMultiplayerAuthority())
+		{
+			var newState = state.Transform;
+			newState.Origin = GlobalPosition.Lerp(syncPosition, 0.9f);
+			var a = newState.Basis.GetRotationQuaternion().Normalized();
+			var b = syncBasis.GetRotationQuaternion().Normalized();
+			var c = a.Slerp(b, 0.5f);
+			newState.Basis = new Basis(c);
+			state.Transform = newState;
+			state.LinearVelocity = syncLinearVelocity;
+			state.AngularVelocity = syncAngularVelocity;
+			return;
+		}
 	}
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void MoveItem(Vector3 handPosition, Basis handBasis, float strength, int player)
 	{
 		if (player == 0)

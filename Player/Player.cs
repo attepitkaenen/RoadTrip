@@ -28,8 +28,8 @@ public partial class Player : CharacterBody3D
 	public float Strength = 40f;
 
 	Seat seat;
-	Vector3 seatPosition;
-	Vector3 seatRotation;
+	// Vector3 seatPosition;
+	// Vector3 seatRotation;
 
 	public MovementState movementState = MovementState.idle;
 	public enum MovementState
@@ -50,7 +50,7 @@ public partial class Player : CharacterBody3D
 	Vector3 syncRotation;
 
 	public Vector3 spawnLocation = new Vector3(0, 3, 0);
-	public PlayerInfo playerInfo;
+	public PlayerState playerState;
 
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -59,11 +59,12 @@ public partial class Player : CharacterBody3D
 	public override void _EnterTree()
 	{
 		SetMultiplayerAuthority(int.Parse(Name));
+		Time.GetTicksMsec();
 	}
 
 	public override void _Ready()
 	{
-		playerInfo = GameManager.Players.Find(x => x.Id == int.Parse(Name));
+		playerState = GameManager.Players.Find(x => x.Id == int.Parse(Name));
 		int playerIndex = GameManager.Players.FindIndex(x => x.Id == int.Parse(Name));
 
 		foreach (Node3D spawnPoint in GetTree().GetNodesInGroup("SpawnPoints"))
@@ -71,10 +72,11 @@ public partial class Player : CharacterBody3D
 			if (int.Parse(spawnPoint.Name) == playerIndex)
 			{
 				spawnLocation = spawnPoint.GlobalPosition;
+				
 			}
 		}
 
-		nameTag.Text = playerInfo.Name;
+		nameTag.Text = playerState.Name;
 
 		if (!IsMultiplayerAuthority())
 		{
