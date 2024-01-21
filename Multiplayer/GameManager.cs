@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public partial class GameManager : Node
 {
-	public static List<PlayerInfo> Players = new List<PlayerInfo>();
+	public static List<PlayerState> Players = new List<PlayerState>();
 
+	public void SendPlayerState(PlayerState state)
+	{
+
+	}
 }
