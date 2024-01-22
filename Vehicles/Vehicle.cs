@@ -106,7 +106,7 @@ public partial class Vehicle : VehicleBody3D
 				var player = GetPlayer(seat.GetPlayerId());
 				if (player is not null)
 				{
-					player.Sit(seat.GetPosition(), seat.GetRotation());
+					player.MovePlayer(seat.GetPosition(), seat.GetRotation());
 				}
 			}
 		});
