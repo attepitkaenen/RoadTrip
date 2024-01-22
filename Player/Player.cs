@@ -25,12 +25,10 @@ public partial class Player : CharacterBody3D
 	[Export] public RayCast3D interaction;
 	[Export] public Marker3D hand;
 	[Export] public StaticBody3D staticBody;
-	private Item PickedItem;
+	private dynamic PickedItem;
 	public float Strength = 40f;
 
 	Seat seat;
-	// Vector3 seatPosition;
-	// Vector3 seatRotation;
 
 	public MovementState movementState = MovementState.idle;
 	public enum MovementState
@@ -137,7 +135,7 @@ public partial class Player : CharacterBody3D
 			return;
 		};
 
-		PickObject();
+		PickItem();
 
 		HandleSeat();
 
@@ -293,7 +291,7 @@ public partial class Player : CharacterBody3D
 	}
 
 
-	public void PickObject()
+	public void PickItem()
 	{
 		// Pick and drop item
 		if (Input.IsActionJustPressed("leftClick"))
@@ -302,6 +300,12 @@ public partial class Player : CharacterBody3D
 			{
 				PickedItem = item;
 				hand.GlobalPosition = item.GlobalPosition;
+				staticBody.GlobalBasis = PickedItem.GlobalBasis;
+			}
+			else if (interaction.GetCollider() is Bone bone && PickedItem is null && bone.playerHolding == 0)
+			{
+				PickedItem = bone;
+				hand.GlobalPosition = bone.GlobalPosition;
 				staticBody.GlobalBasis = PickedItem.GlobalBasis;
 			}
 			else if (PickedItem is not null)
@@ -313,11 +317,15 @@ public partial class Player : CharacterBody3D
 		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null)
 		{
 			Vector3 throwDirection = (hand.GlobalPosition - camera.GlobalPosition).Normalized();
-			PickedItem.Rpc(nameof(PickedItem.Throw), throwDirection, Strength);
+			PickedItem.Rpc("Throw", throwDirection, Strength);
 			PickedItem = null;
 		}
 		// Drop item if forced into a wall
-		else if (PickedItem is not null && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 1 && PickedItem.GetCollidingBodies().ToList().Count() > 0)
+		else if (PickedItem is Item && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 1 && PickedItem.IsColliding())
+		{
+			DropPickedItem();
+		}
+		else if (PickedItem is Bone && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 1)
 		{
 			DropPickedItem();
 		}
@@ -326,7 +334,7 @@ public partial class Player : CharacterBody3D
 		if (PickedItem is not null)
 		{
 			staticBody.Position = hand.Position;
-			PickedItem.Rpc(nameof(PickedItem.MoveItem), hand.GlobalPosition, staticBody.GlobalBasis, Strength, int.Parse(Name));
+			PickedItem.Rpc("Move", hand.GlobalPosition, staticBody.GlobalBasis, Strength, int.Parse(Name));
 		}
 
 		// Move item closer and further
@@ -342,7 +350,7 @@ public partial class Player : CharacterBody3D
 
 	public void DropPickedItem()
 	{
-		PickedItem.Rpc(nameof(PickedItem.MoveItem), Vector3.Zero, Vector3.Zero, 0, 0);
+		PickedItem.Rpc("Move", Vector3.Zero, Vector3.Zero, 0, 0);
 		PickedItem = null;
 	}
 }
