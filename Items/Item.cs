@@ -4,7 +4,6 @@ using Godot;
 public partial class Item : RigidBody3D
 {
 	public int playerHolding = 0;
-	private float dampingSpringStrength = 0.2f;
 
 	public Vehicle vehicle;
 
@@ -53,7 +52,7 @@ public partial class Item : RigidBody3D
 		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void MoveItem(Vector3 handPosition, Basis handBasis, float strength, int player)
 	{
 		if (player == 0)
@@ -66,7 +65,8 @@ public partial class Item : RigidBody3D
 		}
 		else if (playerHolding == player)
 		{
-			Vector3 moveForce = (handPosition - GlobalPosition) * strength;
+			Vector3 moveForce = (handPosition - GlobalPosition) * 20;
+			
 			LinearVelocity = moveForce;
 
 			Vector3 angularForce = GetAngularVelocity(Basis, handBasis) * strength;
