@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net.Http;
 using Godot;
 
@@ -43,8 +44,6 @@ public partial class Player : CharacterBody3D
 		falling
 	}
 
-
-
 	// Sync properties
 	public Vector3 syncPosition;
 	Vector3 syncRotation;
@@ -72,7 +71,7 @@ public partial class Player : CharacterBody3D
 			if (int.Parse(spawnPoint.Name) == playerIndex)
 			{
 				spawnLocation = spawnPoint.GlobalPosition;
-				
+
 			}
 		}
 
@@ -94,11 +93,8 @@ public partial class Player : CharacterBody3D
 
 	public override void _Input(InputEvent @event)
 	{
-		if (!IsMultiplayerAuthority())
-		{
-			return;
-		}
-
+		if (!IsMultiplayerAuthority()) return;
+		
 		if (PickedItem is not null &&
 			Input.IsActionPressed("interact") &&
 			@event is InputEventMouseMotion)
@@ -129,12 +125,9 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
+		
 		//Lerp movement for other players
-		if (movementState == MovementState.seated && !IsMultiplayerAuthority())
-		{
-			return;
-		}
-
 		if (!IsMultiplayerAuthority())
 		{
 			GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.05f);
@@ -179,9 +172,8 @@ public partial class Player : CharacterBody3D
 		// Movement logic
 		Vector3 velocity = Velocity;
 
+		// Gravity
 		velocity.Y -= gravity * (float)delta;
-
-
 
 		// Handle movementState changes
 		if (Input.IsActionJustPressed("jump") && isGrounded)
@@ -260,29 +252,27 @@ public partial class Player : CharacterBody3D
 
 	public void HandleSeat()
 	{
-		var seat = floatMachine.GetSeat();
-		if (seat is Seat && Input.IsActionJustPressed("equip") && movementState != MovementState.seated && !seat.occupied)
+		var newSeat = floatMachine.GetSeat();
+		if (newSeat is Seat && Input.IsActionJustPressed("equip") && movementState != MovementState.seated && !newSeat.occupied)
 		{
+			seat = newSeat;
 			seat.Rpc(nameof(seat.Sit), int.Parse(Name));
-			this.seat = seat;
 			movementState = MovementState.seated;
 		}
 		else if (Input.IsActionJustPressed("equip") && movementState == MovementState.seated)
 		{
 			seat.Rpc(nameof(seat.Stand));
-			this.seat = null;
+			seat = null;
 			GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
 			movementState = MovementState.idle;
 		}
 	}
 
-	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void Sit(Vector3 position, Vector3 rotation)
+	public void MovePlayer(Vector3 position, Vector3 rotation)
 	{
 		GlobalPosition = position;
 		GlobalRotation = rotation;
 	}
-
 
 	[Rpc(CallLocal = true)]
 	public void HandleRpcAnimations(bool isJumping, bool isGroundedRpc, Vector3 velocity, Transform3D transform)
@@ -305,7 +295,7 @@ public partial class Player : CharacterBody3D
 
 	public void PickObject()
 	{
-		// Pick object
+		// Pick and drop item
 		if (Input.IsActionJustPressed("leftClick"))
 		{
 			if (interaction.GetCollider() is Item item && PickedItem is null && item.playerHolding == 0)
@@ -316,25 +306,30 @@ public partial class Player : CharacterBody3D
 			}
 			else if (PickedItem is not null)
 			{
-				PickedItem.Rpc(nameof(PickedItem.MoveItem), Vector3.Zero, Vector3.Zero, 0, 0);
-				PickedItem = null;
+				DropPickedItem();
 			}
 		}
+		// Throw item
 		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null)
 		{
 			Vector3 throwDirection = (hand.GlobalPosition - camera.GlobalPosition).Normalized();
 			PickedItem.Rpc(nameof(PickedItem.Throw), throwDirection, Strength);
 			PickedItem = null;
 		}
+		// Drop item if forced into a wall
+		else if (PickedItem is not null && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 1 && PickedItem.GetCollidingBodies().ToList().Count() > 0)
+		{
+			DropPickedItem();
+		}
 
-		// Move object
+		// Move item
 		if (PickedItem is not null)
 		{
 			staticBody.Position = hand.Position;
 			PickedItem.Rpc(nameof(PickedItem.MoveItem), hand.GlobalPosition, staticBody.GlobalBasis, Strength, int.Parse(Name));
 		}
 
-		// Move hand closer and further
+		// Move item closer and further
 		if (Input.IsActionJustPressed("scrollDown") && hand.Position.Z < -1)
 		{
 			hand.Position = new Vector3(hand.Position.X, hand.Position.Y, hand.Position.Z + 0.1f);
@@ -343,5 +338,11 @@ public partial class Player : CharacterBody3D
 		{
 			hand.Position = new Vector3(hand.Position.X, hand.Position.Y, hand.Position.Z - 0.1f);
 		}
+	}
+
+	public void DropPickedItem()
+	{
+		PickedItem.Rpc(nameof(PickedItem.MoveItem), Vector3.Zero, Vector3.Zero, 0, 0);
+		PickedItem = null;
 	}
 }
