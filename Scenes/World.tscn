@@ -7,7 +7,7 @@
 [ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
 [ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="5_xddwy"]
 [ext_resource type="PackedScene" uid="uid://ccgebu0extq6q" path="res://Vehicles/Seat/Seat.tscn" id="7_lyu3h"]
-[ext_resource type="PackedScene" uid="uid://1mruehyshlq" path="res://Player/ragdoll.tscn" id="8_s3diw"]
+[ext_resource type="PackedScene" uid="uid://1mruehyshlq" path="res://Player/Ragdoll/ragdoll.tscn" id="8_s3diw"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
