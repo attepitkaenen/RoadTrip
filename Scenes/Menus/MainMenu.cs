@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 
-public partial class MainMenu : Control
+public partial class MainMenu : Menu
 {
     MultiplayerController multiplayerController;
 
@@ -12,6 +12,7 @@ public partial class MainMenu : Control
 
     public override void _Ready()
     {
+        menuType = MenuHandler.MenuType.mainmenu;
         multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
         userName.TextChanged += SaveUserName;
         playerList.AddItem(userName.Text);
@@ -48,6 +49,13 @@ public partial class MainMenu : Control
     private void SaveUserName(string newText)
     {
         multiplayerController.SetUserName(newText);
+    }
+
+    public void _on_settings_pressed()
+    {
+        GD.Print("Settings pressed");
+        MenuHandler.MenuType menuType = MenuHandler.MenuType.settings;
+        menuHandler.OpenMenu(menuType);
     }
 
     public void _on_host_pressed()
