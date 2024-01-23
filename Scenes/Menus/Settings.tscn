@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://mrpdd3o6m8bx"]
+[gd_scene load_steps=2 format=3 uid="uid://mrpdd3o6m8bx"]
+
+[ext_resource type="Script" path="res://Scenes/Menus/Settings.cs" id="1_3xx2e"]
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_3xx2e")
 
 [node name="BgColor" type="ColorRect" parent="."]
 layout_mode = 1
@@ -39,3 +42,5 @@ offset_right = 72.0
 offset_bottom = 624.0
 text = "Back
 "
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
