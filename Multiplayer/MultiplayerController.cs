@@ -4,16 +4,11 @@ using System.Linq;
 
 public partial class MultiplayerController : Control
 {
-	[Export]
-	private int port = 25565;
-
-	// [Export]
-	// private string address = "127.0.0.1";
-
-	[Export]
-	private LineEdit address;
-
+	[Export] private int port = 25565;
 	private ENetMultiplayerPeer peer;
+	private string userName;
+	private bool isGameStarted = false;
+
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -22,60 +17,73 @@ public partial class MultiplayerController : Control
 		Multiplayer.PeerDisconnected += PeerDisconnected;
 		Multiplayer.ConnectedToServer += ConnectedToServer;
 		Multiplayer.ConnectionFailed += ConnectionFailed;
+		Multiplayer.ServerDisconnected += ServerDisconnected;
 		// if(OS.GetCmdlineArgs().Contains("--server")){
 		// 	hostGame();
 		// }
 	}
 
 	/// <summary>
+	/// runs when this MultiplayerAPI's MultiplayerApi.MultiplayerPeer disconnects from server. Only emitted on clients.
+	/// </summary>
+	private void ServerDisconnected()
+	{
+		isGameStarted = false;
+		GD.Print("Server disconnected");
+	}
+
+	/// <summary>
 	/// runs when the connection fails and it runs onlyh on the client
 	/// </summary>
-    private void ConnectionFailed()
-    {
+	private void ConnectionFailed()
+	{
 		GD.Print("CONNECTION FAILED");
-    }
+	}
 
 	/// <summary>
 	/// runs when the connection is successful and only runs on the clients
 	/// </summary>
-    private void ConnectedToServer()
-    {
-        GD.Print("Connected To Server");
-		RpcId(1, nameof(sendPlayerInformation), GetNode<LineEdit>("NameEdit").Text, Multiplayer.GetUniqueId());
-    }
+	private void ConnectedToServer()
+	{
+		GD.Print("Connected To Server");
+		RpcId(1, nameof(sendPlayerInformation), userName, Multiplayer.GetUniqueId());
+	}
 
 	/// <summary>
 	/// Runs when a player disconnects and runs on all peers
 	/// </summary>
 	/// <param name="id">id of the player that disconnected</param>
-    private void PeerDisconnected(long id)
-    {
-        GD.Print("Player Disconnected: " + id.ToString());
+	private void PeerDisconnected(long id)
+	{
+		GD.Print("Player Disconnected: " + id.ToString());
 		GameManager.Players.Remove(GameManager.Players.Where(i => i.Id == id).First<PlayerState>());
 		var players = GetTree().GetNodesInGroup("Player");
 
 		foreach (var player in players)
 		{
 			GD.Print(player.Name);
-			if(player.Name == id.ToString()){
+			if (player.Name == id.ToString())
+			{
 				player.QueueFree();
 			}
 		}
-    }
+	}
 
 	/// <summary>
 	/// Runs when a player connects and runs on all peers
 	/// </summary>
 	/// <param name="id">id of the player that connected</param>
-    private void PeerConnected(long id)
-    {
-        GD.Print("Player Connected! " + id.ToString());
-    }
+	private void PeerConnected(long id)
+	{
+		GD.Print("Player Connected! " + id.ToString());
+	}
 
-	private void hostGame(){
+	private void hostGame()
+	{
 		peer = new ENetMultiplayerPeer();
 		var error = peer.CreateServer(port, 3);
-		if(error != Error.Ok){
+		if (error != Error.Ok)
+		{
 			GD.Print("error cannot host! :" + error.ToString());
 			return;
 		}
@@ -86,21 +94,34 @@ public partial class MultiplayerController : Control
 		// UpnpSetup();
 	}
 
-	public void _on_host_pressed(){
-		hostGame();
-		sendPlayerInformation(GetNode<LineEdit>("NameEdit").Text, 1);
+	public void SetUserName(string name)
+	{
+		userName = name;
 	}
-	
-	public void _on_join_pressed(){
+
+	public bool GetGameStartedStatus()
+	{
+		return isGameStarted;
+	}
+
+	public void OnHostPressed()
+	{
+		hostGame();
+		sendPlayerInformation(userName, 1);
+	}
+
+	public void OnJoinPressed(string address)
+	{
 		peer = new ENetMultiplayerPeer();
-		peer.CreateClient(address.Text, port);
+		peer.CreateClient(address, port);
 
 		peer.Host.Compress(ENetConnection.CompressionMode.RangeCoder);
 		Multiplayer.MultiplayerPeer = peer;
 		GD.Print("Joining Game!");
 	}
-	public void _on_start_pressed(){
-		if(peer is not null)
+	public void OnStartPressed()
+	{
+		if (peer is not null)
 		{
 			GD.Print("Already a host");
 			Rpc(nameof(startGame));
@@ -109,7 +130,7 @@ public partial class MultiplayerController : Control
 		{
 			GD.Print("Need to host");
 			hostGame();
-			sendPlayerInformation(GetNode<LineEdit>("NameEdit").Text, 1);
+			sendPlayerInformation(userName, 1);
 			Rpc(nameof(startGame));
 		}
 	}
@@ -117,9 +138,9 @@ public partial class MultiplayerController : Control
 	public void UpnpSetup()
 	{
 		// Fix later
-        var upnp = new Upnp();
+		var upnp = new Upnp();
 
-        var discoverResult = upnp.Discover();
+		var discoverResult = upnp.Discover();
 		GD.Print($"Discovery code: {discoverResult}");
 		if (discoverResult != 0)
 		{
@@ -143,24 +164,29 @@ public partial class MultiplayerController : Control
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	private void startGame(){
+	private void startGame()
+	{
 		var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
 		GetTree().Root.AddChild(scene);
-		this.Hide();
+		isGameStarted = true;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	private void sendPlayerInformation(string name, int id){
-		PlayerState playerInfo = new PlayerState(){
+	private void sendPlayerInformation(string name, int id)
+	{
+		PlayerState playerInfo = new PlayerState()
+		{
 			Name = name,
 			Id = id
 		};
-		
-		if(!GameManager.Players.Contains(playerInfo)){
+
+		if (!GameManager.Players.Contains(playerInfo))
+		{
 			GameManager.Players.Add(playerInfo);
 		}
 
-		if(Multiplayer.IsServer()){
+		if (Multiplayer.IsServer())
+		{
 			foreach (var item in GameManager.Players)
 			{
 				Rpc(nameof(sendPlayerInformation), item.Name, item.Id);
