@@ -6,8 +6,4 @@ public partial class GameManager : Node
 {
 	public static List<PlayerState> Players = new List<PlayerState>();
 
-	public void SendPlayerState(PlayerState state)
-	{
-
-	}
 }
