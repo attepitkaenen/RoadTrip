@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="RoadTrip"
-run/main_scene="res://Scenes/MainMenu.tscn"
+run/main_scene="res://Scenes/Menus/MainMenu.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameManager="*res://Multiplayer/GameManager.cs"
+MultiplayerController="*res://Multiplayer/MultiplayerController.cs"
 
 [dotnet]
 
