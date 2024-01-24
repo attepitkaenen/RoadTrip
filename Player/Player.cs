@@ -63,6 +63,7 @@ public partial class Player : CharacterBody3D
 	{
 		playerState = GameManager.Players.Find(x => x.Id == int.Parse(Name));
 		int playerIndex = GameManager.Players.FindIndex(x => x.Id == int.Parse(Name));
+		sensitivity = GameManager.Sensitivity;
 
 		foreach (Node3D spawnPoint in GetTree().GetNodesInGroup("SpawnPoints"))
 		{
