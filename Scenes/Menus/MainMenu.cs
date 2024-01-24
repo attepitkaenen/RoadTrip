@@ -5,6 +5,7 @@ using System.Linq;
 public partial class MainMenu : Menu
 {
     MultiplayerController multiplayerController;
+    GameManager gameManager;
 
     [Export] private LineEdit address;
     [Export] private LineEdit userName;
@@ -14,23 +15,19 @@ public partial class MainMenu : Menu
     {
         menuType = MenuHandler.MenuType.mainmenu;
         multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
+        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         userName.TextChanged += SaveUserName;
-        playerList.AddItem(userName.Text);
-    }
-
-    public override void _Process(double delta)
-    {
-        UpdateLobbyNames();
+        gameManager.PlayerAdded += UpdateLobbyNames;
     }
 
     public void UpdateLobbyNames()
     {
-        while (playerList.ItemCount < GameManager.Players.Count)
+        while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
         {
             playerList.AddItem("");
         }
         var index = 0;
-        GameManager.Players.ForEach(player =>
+        gameManager.GetPlayerStates().ForEach(player =>
         {
             playerList.SetItemText(index, player.Name);
             index++;

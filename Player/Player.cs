@@ -1,9 +1,12 @@
+using System;
 using System.Linq;
 using System.Net.Http;
 using Godot;
 
 public partial class Player : CharacterBody3D
 {
+	public GameManager gameManager;
+
 	[ExportGroup("Required Nodes")]
 	[Export] public Camera3D camera;
 	[Export] public AnimationTree animationTree;
@@ -56,14 +59,15 @@ public partial class Player : CharacterBody3D
 	public override void _EnterTree()
 	{
 		SetMultiplayerAuthority(int.Parse(Name));
+		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		Time.GetTicksMsec();
 	}
 
 	public override void _Ready()
 	{
-		playerState = GameManager.Players.Find(x => x.Id == int.Parse(Name));
-		int playerIndex = GameManager.Players.FindIndex(x => x.Id == int.Parse(Name));
-		sensitivity = GameManager.Sensitivity;
+		playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
+		int playerIndex = gameManager.GetPlayerStates().FindIndex(x => x.Id == int.Parse(Name));
+		sensitivity = gameManager.Sensitivity;
 
 		foreach (Node3D spawnPoint in GetTree().GetNodesInGroup("SpawnPoints"))
 		{
@@ -93,7 +97,7 @@ public partial class Player : CharacterBody3D
 	public override void _Input(InputEvent @event)
 	{
 		if (!IsMultiplayerAuthority()) return;
-		
+
 		if (PickedItem is not null &&
 			Input.IsActionPressed("interact") &&
 			@event is InputEventMouseMotion)
@@ -122,10 +126,18 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
+	public void HandleDebugLines()
+	{
+		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
+
+		stateLabel.Text = movementState.ToString();
+		speedLabel.Text = Math.Round(currentSpeed, 2).ToString();
+	}
+
 	public override void _PhysicsProcess(double delta)
 	{
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
-		
+
 		//Lerp movement for other players
 		if (!IsMultiplayerAuthority())
 		{
@@ -150,8 +162,7 @@ public partial class Player : CharacterBody3D
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
 
-		stateLabel.Text = movementState.ToString();
-		speedLabel.Text = currentSpeed.ToString();
+		HandleDebugLines();
 
 		// Stop movement if seated
 		if (movementState == MovementState.seated)
