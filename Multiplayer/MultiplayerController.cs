@@ -10,12 +10,14 @@ public partial class MultiplayerController : Control
 	private string userName;
 	private bool isGameStarted = false;
 	MenuHandler menuHandler;
+	GameManager gameManager;
 
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
+		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		Multiplayer.PeerConnected += PeerConnected;
 		Multiplayer.PeerDisconnected += PeerDisconnected;
 		Multiplayer.ConnectedToServer += ConnectedToServer;
@@ -60,7 +62,7 @@ public partial class MultiplayerController : Control
 	private void PeerDisconnected(long id)
 	{
 		GD.Print("Player Disconnected: " + id.ToString());
-		GameManager.Players.Remove(GameManager.Players.Where(i => i.Id == id).First<PlayerState>());
+		gameManager.RemovePlayerState(id);
 		var players = GetTree().GetNodesInGroup("Player");
 
 		foreach (var player in players)
@@ -94,6 +96,7 @@ public partial class MultiplayerController : Control
 		peer.Host.Compress(ENetConnection.CompressionMode.RangeCoder);
 
 		Multiplayer.MultiplayerPeer = peer;
+		sendPlayerInformation(userName, 1);
 		GD.Print("Waiting For Players!");
 		// UpnpSetup();
 	}
@@ -103,7 +106,7 @@ public partial class MultiplayerController : Control
 		isGameStarted = false;
 		peer = null;
 		GetTree().Root.GetNode<Node3D>("World").QueueFree();
-		GameManager.Players = new List<PlayerState>();
+		gameManager.ResetPlayerStates();
 	}
 
 	public void SetUserName(string name)
@@ -119,7 +122,6 @@ public partial class MultiplayerController : Control
 	public void OnHostPressed()
 	{
 		hostGame();
-		sendPlayerInformation(userName, 1);
 	}
 
 	public void OnJoinPressed(string address)
@@ -142,7 +144,6 @@ public partial class MultiplayerController : Control
 		{
 			GD.Print("Need to host");
 			hostGame();
-			sendPlayerInformation(userName, 1);
 			Rpc(nameof(startGame));
 		}
 	}
@@ -193,14 +194,14 @@ public partial class MultiplayerController : Control
 			Id = id
 		};
 
-		if (!GameManager.Players.Contains(playerInfo))
+		if (!gameManager.GetPlayerStates().Contains(playerInfo))
 		{
-			GameManager.Players.Add(playerInfo);
+			gameManager.AddPlayerState(playerInfo);
 		}
 
 		if (Multiplayer.IsServer())
 		{
-			foreach (var item in GameManager.Players)
+			foreach (var item in gameManager.GetPlayerStates())
 			{
 				Rpc(nameof(sendPlayerInformation), item.Name, item.Id);
 			}
