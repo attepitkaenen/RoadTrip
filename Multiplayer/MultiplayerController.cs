@@ -8,11 +8,13 @@ public partial class MultiplayerController : Control
 	private ENetMultiplayerPeer peer;
 	private string userName;
 	private bool isGameStarted = false;
+	MenuHandler menuHandler;
 
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
 		Multiplayer.PeerConnected += PeerConnected;
 		Multiplayer.PeerDisconnected += PeerDisconnected;
 		Multiplayer.ConnectedToServer += ConnectedToServer;
@@ -29,6 +31,8 @@ public partial class MultiplayerController : Control
 	private void ServerDisconnected()
 	{
 		isGameStarted = false;
+		menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
+		peer = null;
 		GD.Print("Server disconnected");
 	}
 
@@ -169,6 +173,7 @@ public partial class MultiplayerController : Control
 		var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
 		GetTree().Root.AddChild(scene);
 		isGameStarted = true;
+		menuHandler.OpenMenu(MenuHandler.MenuType.none);
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
