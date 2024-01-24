@@ -20,17 +20,7 @@ public partial class MainMenu : Menu
 
     public override void _Process(double delta)
     {
-        if (multiplayerController.GetGameStartedStatus())
-        {
-            Hide();
-        }
-        else 
-        {
-            Visible = true;
-        }
-
         UpdateLobbyNames();
-
     }
 
     public void UpdateLobbyNames()
@@ -40,7 +30,8 @@ public partial class MainMenu : Menu
             playerList.AddItem("");
         }
         var index = 0;
-        GameManager.Players.ForEach(player => {
+        GameManager.Players.ForEach(player =>
+        {
             playerList.SetItemText(index, player.Name);
             index++;
         });

@@ -87,7 +87,7 @@ public partial class Player : CharacterBody3D
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Head").Hide();
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Eyes").Hide();
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Nose").Hide();
-		Input.MouseMode = Input.MouseModeEnum.Captured;
+
 	}
 
 	public override void _Input(InputEvent @event)

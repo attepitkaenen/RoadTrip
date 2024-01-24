@@ -20,12 +20,4 @@ public partial class SceneManager : Node3D
 			}
 		}
 	}
-
-	public override void _Input(InputEvent @event)
-	{
-		if (Input.IsActionJustPressed("menu"))
-		{
-			GetTree().Quit();
-		}
-	}
 }
