@@ -14,7 +14,6 @@ public partial class Ragdoll : Node3D
         var boneCount = skeleton.GetBoneCount();
         bones = skeleton.GetChildren().Where(node => node is PhysicalBone3D).Select(node => node as PhysicalBone3D).ToList();
         bones.ForEach(bone => {
-            GD.Print(bone);
             synchronizer.ReplicationConfig.AddProperty($"{bone.GetPath()}:position");
             synchronizer.ReplicationConfig.AddProperty($"{bone.GetPath()}:rotation");
         });
