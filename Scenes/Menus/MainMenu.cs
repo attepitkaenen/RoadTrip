@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public partial class MainMenu : Menu
@@ -10,6 +11,7 @@ public partial class MainMenu : Menu
     [Export] private LineEdit address;
     [Export] private LineEdit userName;
     [Export] private ItemList playerList;
+    private List<Button> buttons;
 
     public override void _Ready()
     {
@@ -17,7 +19,8 @@ public partial class MainMenu : Menu
         multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         userName.TextChanged += SaveUserName;
-        gameManager.PlayerAdded += UpdateLobbyNames;
+        gameManager.PlayersChanged += UpdateLobbyNames;
+        buttons = GetChildren().Where(node => node is Button).Select(node => node as Button).ToList();
     }
 
     public void UpdateLobbyNames()
@@ -48,6 +51,7 @@ public partial class MainMenu : Menu
 
     public void _on_host_pressed()
     {
+
         multiplayerController.OnHostPressed();
     }
 
@@ -58,5 +62,10 @@ public partial class MainMenu : Menu
     public void _on_start_pressed()
     {
         multiplayerController.OnStartPressed();
+    }
+
+    public void _on_quit_pressed()
+    {
+        GetTree().Quit();
     }
 }

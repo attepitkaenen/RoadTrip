@@ -12,9 +12,13 @@ public partial class Player : CharacterBody3D
 	[Export] public AnimationTree animationTree;
 	[Export] public FloatMachine floatMachine;
 	[Export] public Label3D nameTag;
+	[Export] public Node3D head;
+
+	[ExportGroup("Debug Nodes")]
 	[Export] public Label stateLabel;
 	[Export] public Label speedLabel;
-	[Export] public Node3D head;
+	[Export] public Control debugWindow;
+
 
 	[ExportGroup("Movement properties")]
 	[Export] public float sensitivity = 0.001f;
@@ -128,6 +132,11 @@ public partial class Player : CharacterBody3D
 
 	public void HandleDebugLines()
 	{
+		if (Input.IsActionJustPressed("debug"))
+		{
+			debugWindow.Visible = !debugWindow.Visible;
+		}
+
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
 
 		stateLabel.Text = movementState.ToString();
