@@ -33,9 +33,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -493.0
-offset_top = -66.0
+offset_top = -67.0
 offset_right = -271.0
-offset_bottom = 72.0
+offset_bottom = 104.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -55,6 +55,11 @@ text = "Join"
 [node name="Settings" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Settings
+"
+
+[node name="Quit" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Quit
 "
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -132,3 +137,4 @@ size_flags_vertical = 8
 [connection signal="pressed" from="VBoxContainer/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="VBoxContainer/Join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/Quit" to="." method="_on_quit_pressed"]

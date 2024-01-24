@@ -6,14 +6,14 @@ using System.Security.Cryptography.X509Certificates;
 
 public partial class GameManager : Node
 {
-	[Signal] public delegate void PlayerAddedEventHandler();
+	[Signal] public delegate void PlayersChangedEventHandler();
 	private List<PlayerState> Players = new List<PlayerState>();
 	public float Sensitivity = 0.001f;
 
 	public void AddPlayerState(PlayerState state)
 	{
 		Players.Add(state);
-		EmitSignal(SignalName.PlayerAdded);
+		EmitSignal(SignalName.PlayersChanged);
 	}
 
 	public void RemovePlayerState(long id)
