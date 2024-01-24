@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 using System.Linq;
 
 
@@ -30,9 +31,8 @@ public partial class MultiplayerController : Control
 	/// </summary>
 	private void ServerDisconnected()
 	{
-		isGameStarted = false;
 		menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
-		peer = null;
+		ResetGameState();
 		GD.Print("Server disconnected");
 	}
 
@@ -96,6 +96,14 @@ public partial class MultiplayerController : Control
 		Multiplayer.MultiplayerPeer = peer;
 		GD.Print("Waiting For Players!");
 		// UpnpSetup();
+	}
+
+	public void ResetGameState()
+	{
+		isGameStarted = false;
+		peer = null;
+		GetTree().Root.GetNode<Node3D>("World").QueueFree();
+		GameManager.Players = new List<PlayerState>();
 	}
 
 	public void SetUserName(string name)

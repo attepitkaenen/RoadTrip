@@ -23,13 +23,16 @@ public partial class MenuHandler : Control
 
     public override void _Input(InputEvent @event)
     {
-        if (currentMenu == MenuType.none && Input.IsActionJustPressed("menu"))
+        if (multiplayerController.GetGameStartedStatus())
         {
-            OpenMenu(MenuType.ingamemenu);
-        }
-        else if (currentMenu == MenuType.ingamemenu && Input.IsActionJustPressed("menu"))
-        {
-            OpenMenu(MenuType.none);
+            if (currentMenu == MenuType.none && Input.IsActionJustPressed("menu"))
+            {
+                OpenMenu(MenuType.ingamemenu);
+            }
+            else if (Input.IsActionJustPressed("menu"))
+            {
+                OpenMenu(MenuType.none);
+            }
         }
     }
 
