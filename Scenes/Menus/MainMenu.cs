@@ -1,36 +1,36 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public partial class MainMenu : Menu
 {
     MultiplayerController multiplayerController;
+    GameManager gameManager;
 
     [Export] private LineEdit address;
     [Export] private LineEdit userName;
     [Export] private ItemList playerList;
+    private List<Button> buttons;
 
     public override void _Ready()
     {
         menuType = MenuHandler.MenuType.mainmenu;
         multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
+        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         userName.TextChanged += SaveUserName;
-        playerList.AddItem(userName.Text);
+        gameManager.PlayerJoined += UpdateLobbyNames;
+        buttons = GetNode("Buttons").GetChildren().Select(node => node as Button).ToList();
     }
 
-    public override void _Process(double delta)
+    public void UpdateLobbyNames(long id)
     {
-        UpdateLobbyNames();
-    }
-
-    public void UpdateLobbyNames()
-    {
-        while (playerList.ItemCount < GameManager.Players.Count)
+        while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
         {
             playerList.AddItem("");
         }
         var index = 0;
-        GameManager.Players.ForEach(player =>
+        gameManager.GetPlayerStates().ForEach(player =>
         {
             playerList.SetItemText(index, player.Name);
             index++;
@@ -51,6 +51,9 @@ public partial class MainMenu : Menu
 
     public void _on_host_pressed()
     {
+        GD.Print(buttons.Count);
+        var joinButton = buttons.Find(button => button.Name == "Join");
+        joinButton.Disabled = true;
         multiplayerController.OnHostPressed();
     }
 
@@ -61,5 +64,10 @@ public partial class MainMenu : Menu
     public void _on_start_pressed()
     {
         multiplayerController.OnStartPressed();
+    }
+
+    public void _on_quit_pressed()
+    {
+        GetTree().Quit();
     }
 }

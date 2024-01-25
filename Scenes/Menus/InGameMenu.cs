@@ -3,9 +3,12 @@ using System;
 
 public partial class InGameMenu : Menu
 {
+    MultiplayerController multiplayerController;
+
     public override void _Ready()
     {
         menuType = MenuHandler.MenuType.ingamemenu;
+        multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
     }
 
     public void _on_resume_pressed()
@@ -16,12 +19,12 @@ public partial class InGameMenu : Menu
     public void _on_mainmenu_pressed()
     {
         menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
-        GetTree().Root.GetNode("World").QueueFree();
+        multiplayerController.ResetGameState();
     }
 
     public void _on_settings_pressed()
     {
-
+        menuHandler.OpenMenu(MenuHandler.MenuType.settings);
     }
 
     public void _on_quit_pressed()
