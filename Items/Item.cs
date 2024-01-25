@@ -4,21 +4,24 @@ using Godot;
 public partial class Item : RigidBody3D
 {
 	public int playerHolding = 0;
+	[Export] MultiplayerSynchronizer multiplayerSynchronizer;
 
 	public Vehicle vehicle;
 
 	// Sync properties
-	Vector3 syncPosition;
-	Vector3 syncRotation;
-	Basis syncBasis;
-	Vector3 syncLinearVelocity;
-	Vector3 syncAngularVelocity;
+	public Vector3 syncPosition;
+	public Vector3 syncRotation;
+	public Basis syncBasis;
+	public Vector3 syncLinearVelocity;
+	public Vector3 syncAngularVelocity;
+
 
 	public override void _Ready()
 	{
 		if (!IsMultiplayerAuthority())
 		{
 			CustomIntegrator = true;
+			return;
 		};
 	}
 
@@ -71,7 +74,7 @@ public partial class Item : RigidBody3D
 		else if (playerHolding == player)
 		{
 			Vector3 moveForce = (handPosition - GlobalPosition) * 20;
-			
+
 			LinearVelocity = moveForce;
 
 			Vector3 angularForce = GetAngularVelocity(Basis, handBasis) * strength;

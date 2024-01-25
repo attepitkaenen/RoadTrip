@@ -5,7 +5,7 @@ using Godot;
 
 public partial class Player : CharacterBody3D
 {
-	public GameManager gameManager;
+	GameManager gameManager;
 	MenuHandler menuHandler;
 
 	[ExportGroup("Required Nodes")]
@@ -27,6 +27,7 @@ public partial class Player : CharacterBody3D
 	[Export] public float deceleration = 5f;
 	[Export] public float speed = 3f;
 	[Export] public float jumpVelocity = 4.5f;
+	[Export] public float runningMultiplier = 1.5f;
 	public bool isGrounded;
 
 	[ExportGroup("Interaction properties")]
@@ -52,7 +53,8 @@ public partial class Player : CharacterBody3D
 
 	// Sync properties
 	public Vector3 syncPosition;
-	Vector3 syncRotation;
+	public Vector3 syncRotation;
+	public Basis syncBasis;
 
 	public Vector3 spawnLocation = new Vector3(0, 3, 0);
 	public PlayerState playerState;
@@ -144,19 +146,16 @@ public partial class Player : CharacterBody3D
 		//Lerp movement for other players
 		if (!IsMultiplayerAuthority())
 		{
-			GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.05f);
-			GlobalRotation = new Vector3(Mathf.LerpAngle(GlobalRotation.X, syncRotation.X, 0.05f),
-										Mathf.LerpAngle(GlobalRotation.Y, syncRotation.Y, 0.05f),
-										Mathf.LerpAngle(GlobalRotation.Z, syncRotation.Z, 0.05f));
+			var newState = Transform;
+			newState.Origin = GlobalPosition.Lerp(syncPosition, 0.9f);
+			var a = newState.Basis.GetRotationQuaternion().Normalized();
+			var b = syncBasis.GetRotationQuaternion().Normalized();
+			var c = a.Slerp(b, 0.5f);
+			newState.Basis = new Basis(c);
+			Transform = newState;
 			return;
 		};
 
-		// menuHandler.OpenMenu(MenuHandler.MenuType.none);
-		// GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Head").Hide();
-		// GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Eyes").Hide();
-		// GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Nose").Hide();
-		// nameTag.Visible = false;
-		// camera.Current = true;
 
 		PickItem();
 
@@ -168,6 +167,7 @@ public partial class Player : CharacterBody3D
 		// sync properties to lerp movement for other players
 		syncPosition = GlobalPosition;
 		syncRotation = GlobalRotation;
+		syncBasis = GlobalBasis;
 
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
@@ -232,7 +232,7 @@ public partial class Player : CharacterBody3D
 				floatMachine.SetFloatOffset(0.7f);
 				break;
 			case MovementState.running:
-				correctedSpeed *= 2f;
+				correctedSpeed *= runningMultiplier;
 				break;
 			case MovementState.jumping:
 				correctedSpeed *= 1.5f;
