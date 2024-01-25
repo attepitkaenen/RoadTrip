@@ -1,5 +1,7 @@
 using Godot;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 
 public partial class MultiplayerController : Control
@@ -9,17 +11,20 @@ public partial class MultiplayerController : Control
 	private string userName;
 	private bool isGameStarted = false;
 	MenuHandler menuHandler;
+	GameManager gameManager;
 
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
+		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		Multiplayer.PeerConnected += PeerConnected;
 		Multiplayer.PeerDisconnected += PeerDisconnected;
 		Multiplayer.ConnectedToServer += ConnectedToServer;
 		Multiplayer.ConnectionFailed += ConnectionFailed;
 		Multiplayer.ServerDisconnected += ServerDisconnected;
+
 		// if(OS.GetCmdlineArgs().Contains("--server")){
 		// 	hostGame();
 		// }
@@ -30,9 +35,8 @@ public partial class MultiplayerController : Control
 	/// </summary>
 	private void ServerDisconnected()
 	{
-		isGameStarted = false;
 		menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
-		peer = null;
+		ResetGameState();
 		GD.Print("Server disconnected");
 	}
 
@@ -60,7 +64,7 @@ public partial class MultiplayerController : Control
 	private void PeerDisconnected(long id)
 	{
 		GD.Print("Player Disconnected: " + id.ToString());
-		GameManager.Players.Remove(GameManager.Players.Where(i => i.Id == id).First<PlayerState>());
+		gameManager.RemovePlayerState(id);
 		var players = GetTree().GetNodesInGroup("Player");
 
 		foreach (var player in players)
@@ -94,13 +98,28 @@ public partial class MultiplayerController : Control
 		peer.Host.Compress(ENetConnection.CompressionMode.RangeCoder);
 
 		Multiplayer.MultiplayerPeer = peer;
+		sendPlayerInformation(userName, 1);
 		GD.Print("Waiting For Players!");
 		// UpnpSetup();
+	}
+
+	public void ResetGameState()
+	{
+		isGameStarted = false;
+		peer = null;
+		GetTree().Root.GetNode<Node3D>("World").QueueFree();
+		gameManager.ResetPlayerStates();
 	}
 
 	public void SetUserName(string name)
 	{
 		userName = name;
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	public void SetGameStartedStatus(bool status)
+	{
+		isGameStarted = status;
 	}
 
 	public bool GetGameStartedStatus()
@@ -111,7 +130,6 @@ public partial class MultiplayerController : Control
 	public void OnHostPressed()
 	{
 		hostGame();
-		sendPlayerInformation(userName, 1);
 	}
 
 	public void OnJoinPressed(string address)
@@ -127,14 +145,12 @@ public partial class MultiplayerController : Control
 	{
 		if (peer is not null)
 		{
-			GD.Print("Already a host");
 			Rpc(nameof(startGame));
 		}
 		else
 		{
 			GD.Print("Need to host");
 			hostGame();
-			sendPlayerInformation(userName, 1);
 			Rpc(nameof(startGame));
 		}
 	}
@@ -170,10 +186,14 @@ public partial class MultiplayerController : Control
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void startGame()
 	{
-		var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
-		GetTree().Root.AddChild(scene);
+		if (Multiplayer.IsServer())
+		{
+			gameManager.InitiateWorld();
+		}
+		GD.Print($"game started for {Multiplayer.GetUniqueId()}");
+		// var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
+		// GetTree().Root.AddChild(scene);
 		isGameStarted = true;
-		menuHandler.OpenMenu(MenuHandler.MenuType.none);
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -185,14 +205,14 @@ public partial class MultiplayerController : Control
 			Id = id
 		};
 
-		if (!GameManager.Players.Contains(playerInfo))
+		if (!gameManager.GetPlayerStates().Contains(playerInfo))
 		{
-			GameManager.Players.Add(playerInfo);
+			gameManager.AddPlayerState(playerInfo);
 		}
 
 		if (Multiplayer.IsServer())
 		{
-			foreach (var item in GameManager.Players)
+			foreach (var item in gameManager.GetPlayerStates())
 			{
 				Rpc(nameof(sendPlayerInformation), item.Name, item.Id);
 			}

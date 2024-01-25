@@ -1,17 +1,25 @@
+using System;
 using System.Linq;
 using System.Net.Http;
 using Godot;
 
 public partial class Player : CharacterBody3D
 {
+	public GameManager gameManager;
+	MenuHandler menuHandler;
+
 	[ExportGroup("Required Nodes")]
 	[Export] public Camera3D camera;
 	[Export] public AnimationTree animationTree;
 	[Export] public FloatMachine floatMachine;
 	[Export] public Label3D nameTag;
+	[Export] public Node3D head;
+
+	[ExportGroup("Debug Nodes")]
 	[Export] public Label stateLabel;
 	[Export] public Label speedLabel;
-	[Export] public Node3D head;
+	[Export] public Control debugWindow;
+
 
 	[ExportGroup("Movement properties")]
 	[Export] public float sensitivity = 0.001f;
@@ -55,45 +63,33 @@ public partial class Player : CharacterBody3D
 
 	public override void _EnterTree()
 	{
+		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
+
 		SetMultiplayerAuthority(int.Parse(Name));
-		Time.GetTicksMsec();
-	}
-
-	public override void _Ready()
-	{
-		playerState = GameManager.Players.Find(x => x.Id == int.Parse(Name));
-		int playerIndex = GameManager.Players.FindIndex(x => x.Id == int.Parse(Name));
-		sensitivity = GameManager.Sensitivity;
-
-		foreach (Node3D spawnPoint in GetTree().GetNodesInGroup("SpawnPoints"))
-		{
-			if (int.Parse(spawnPoint.Name) == playerIndex)
-			{
-				spawnLocation = spawnPoint.GlobalPosition;
-
-			}
-		}
-
-		nameTag.Text = playerState.Name;
 
 		if (!IsMultiplayerAuthority())
 		{
 			return;
 		}
 
-		GlobalPosition = spawnLocation;
-
-		camera.Current = true;
+		menuHandler.OpenMenu(MenuHandler.MenuType.none);
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Head").Hide();
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Eyes").Hide();
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Nose").Hide();
+		nameTag.Visible = false;
+		camera.Current = true;
+	}
+
+	public override void _Ready()
+	{
 
 	}
 
 	public override void _Input(InputEvent @event)
 	{
 		if (!IsMultiplayerAuthority()) return;
-		
+
 		if (PickedItem is not null &&
 			Input.IsActionPressed("interact") &&
 			@event is InputEventMouseMotion)
@@ -108,8 +104,7 @@ public partial class Player : CharacterBody3D
 			camera.RotateX(-mouseMotion.Relative.Y * sensitivity);
 
 			Vector3 cameraRotation = camera.Rotation;
-			cameraRotation.X = Mathf.Clamp(cameraRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f));
-			camera.Rotation = cameraRotation;
+			cameraRotation.X = Mathf.Clamp(cameraRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f)); camera.Rotation = cameraRotation;
 
 			if (movementState == MovementState.seated)
 			{
@@ -122,10 +117,30 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
+	public void HandleDebugLines()
+	{
+		if (Input.IsActionJustPressed("debug"))
+		{
+			debugWindow.Visible = !debugWindow.Visible;
+		}
+
+		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
+
+		stateLabel.Text = movementState.ToString();
+		speedLabel.Text = Math.Round(currentSpeed, 2).ToString();
+	}
+
 	public override void _PhysicsProcess(double delta)
 	{
+		if (gameManager is not null)
+		{
+			playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
+			sensitivity = gameManager.Sensitivity;
+			nameTag.Text = playerState.Name;
+		}
+
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
-		
+
 		//Lerp movement for other players
 		if (!IsMultiplayerAuthority())
 		{
@@ -135,6 +150,13 @@ public partial class Player : CharacterBody3D
 										Mathf.LerpAngle(GlobalRotation.Z, syncRotation.Z, 0.05f));
 			return;
 		};
+
+		// menuHandler.OpenMenu(MenuHandler.MenuType.none);
+		// GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Head").Hide();
+		// GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Eyes").Hide();
+		// GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Nose").Hide();
+		// nameTag.Visible = false;
+		// camera.Current = true;
 
 		PickItem();
 
@@ -150,8 +172,7 @@ public partial class Player : CharacterBody3D
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
 
-		stateLabel.Text = movementState.ToString();
-		speedLabel.Text = currentSpeed.ToString();
+		HandleDebugLines();
 
 		// Stop movement if seated
 		if (movementState == MovementState.seated)
@@ -267,6 +288,7 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void MovePlayer(Vector3 position, Vector3 rotation)
 	{
 		GlobalPosition = position;

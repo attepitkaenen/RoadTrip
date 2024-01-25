@@ -2816,7 +2816,7 @@ states/jump/position = Vector2(394, 6)
 transitions = ["Start", "Walk", SubResource("AnimationNodeStateMachineTransition_hbvp2"), "Walk", "jump", SubResource("AnimationNodeStateMachineTransition_62rrp"), "jump", "Walk", SubResource("AnimationNodeStateMachineTransition_6l770")]
 graph_offset = Vector2(-272, -25)
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "stateLabel", "speedLabel", "head", "interaction", "hand", "staticBody") groups=["Player"]]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "head", "stateLabel", "speedLabel", "debugWindow", "interaction", "hand", "staticBody") groups=["Player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_mask = 7
 script = ExtResource("1_3rtis")
@@ -2824,9 +2824,10 @@ camera = NodePath("Head/Camera3D")
 animationTree = NodePath("AnimationTree")
 floatMachine = NodePath("FloatMachine")
 nameTag = NodePath("NameTag")
-stateLabel = NodePath("CanvasLayer/MovementState")
-speedLabel = NodePath("CanvasLayer/Speed")
 head = NodePath("Head")
+stateLabel = NodePath("Debug/MovementState")
+speedLabel = NodePath("Debug/Speed")
+debugWindow = NodePath("Debug")
 interaction = NodePath("Head/Camera3D/InteractionRay")
 hand = NodePath("Head/Camera3D/Hand")
 staticBody = NodePath("Head/Camera3D/StaticBody3D")
@@ -2856,7 +2857,7 @@ replication_config = SubResource("SceneReplicationConfig_001vp")
 transform = Transform3D(-0.19, 0, -2.86892e-08, 0, 0.19, 0, 2.86892e-08, 0, -0.19, 0, -1.2, 0)
 
 [node name="Skeleton3D" parent="characterAnimated/Armature" index="0"]
-bones/0/position = Vector3(0.00138227, -73.1535, -347.386)
+bones/0/position = Vector3(0.000406597, -73.2388, -332.909)
 bones/0/rotation = Quaternion(-0.661394, 0, 0, 0.750039)
 bones/1/position = Vector3(1.062e-14, 68.8578, -0.458018)
 bones/2/position = Vector3(6.69625e-12, 80.3358, 7.38036e-06)
@@ -2864,9 +2865,9 @@ bones/3/position = Vector3(5.78181e-12, 91.8123, -7.85555e-06)
 bones/4/position = Vector3(7.26534e-12, 103.289, -9.39889e-06)
 bones/7/position = Vector3(26.4867, 90.2838, -0.234327)
 bones/8/position = Vector3(6.23657e-06, 59.7161, 0.000135693)
-bones/8/rotation = Quaternion(0.45143, -0.0839261, 0.0887832, 0.883903)
+bones/8/rotation = Quaternion(0.452106, 0.000800506, -0.0229192, 0.891669)
 bones/9/position = Vector3(3.57189e-05, 147.614, 2.92617e-05)
-bones/9/rotation = Quaternion(0.171115, -0.0450076, 0.740636, 0.648191)
+bones/9/rotation = Quaternion(0.179814, -0.0488149, 0.615233, 0.766011)
 bones/10/position = Vector3(4.53944e-05, 159.486, -9.06655e-07)
 bones/11/position = Vector3(-25.1975, 11.6916, -1.21683e-05)
 bones/11/rotation = Quaternion(0.143529, 0.0276283, 0.174799, 0.973695)
@@ -2886,9 +2887,9 @@ bones/18/position = Vector3(0.010986, 23.541, 1.59281e-05)
 bones/18/rotation = Quaternion(6.85769e-07, -6.56188e-09, 3.67666e-09, 1)
 bones/19/position = Vector3(-26.4867, 90.2819, 0.0612745)
 bones/20/position = Vector3(6.44013e-06, 59.7161, -2.32793e-05)
-bones/20/rotation = Quaternion(0.450586, -0.0529398, 0.127915, 0.881934)
+bones/20/rotation = Quaternion(0.458163, 0.0204777, 0.0303642, 0.888113)
 bones/21/position = Vector3(-4.29782e-06, 147.635, -3.33398e-05)
-bones/21/rotation = Quaternion(0.0237672, -0.139746, -0.63616, 0.758424)
+bones/21/rotation = Quaternion(0.00776461, -0.127285, -0.697048, 0.705594)
 bones/22/position = Vector3(5.22766e-05, 159.647, 3.68577e-05)
 bones/23/position = Vector3(24.8878, 11.9897, 0.00012479)
 bones/23/rotation = Quaternion(0.11742, -0.00280289, -0.248432, 0.961502)
@@ -2906,15 +2907,15 @@ bones/29/position = Vector3(0.0247363, 24.2232, -1.67683e-05)
 bones/29/rotation = Quaternion(0.584853, 0.0394256, -0.0869781, 0.805498)
 bones/30/position = Vector3(0.0327704, 21.9214, 4.07364e-06)
 bones/30/rotation = Quaternion(6.11815e-07, -4.97397e-08, -3.20833e-08, 1)
-bones/31/rotation = Quaternion(-0.013469, -0.254742, 0.965568, -0.0510289)
+bones/31/rotation = Quaternion(0.0167399, 0.315149, 0.947565, -0.0502067)
 bones/32/position = Vector3(3.2393e-06, 159.405, -1.83038e-06)
-bones/32/rotation = Quaternion(-0.125532, 0.0125603, -0.0159978, 0.991881)
+bones/32/rotation = Quaternion(-0.771048, 0.0701476, -0.0110051, 0.632806)
 bones/33/position = Vector3(9.25019e-06, 116.134, -2.43328e-05)
 bones/34/position = Vector3(3.75433e-06, 12.48, 6.05255e-06)
 bones/35/position = Vector3(5.71361e-06, 11.9254, 1.56127e-07)
-bones/36/rotation = Quaternion(-0.0264972, 0.501308, 0.863651, 0.0457671)
+bones/36/rotation = Quaternion(0.00266072, -0.0500284, 0.997342, 0.0529104)
 bones/37/position = Vector3(9.81851e-06, 159.389, 1.13609e-05)
-bones/37/rotation = Quaternion(-0.839662, -0.0757667, 0.00880097, 0.537727)
+bones/37/rotation = Quaternion(-0.0143486, -0.00160482, 0.0159895, 0.999768)
 bones/38/position = Vector3(-6.67658e-06, 116.118, -6.08917e-06)
 bones/39/position = Vector3(-6.50249e-06, 12.4422, 2.76216e-06)
 bones/40/position = Vector3(1.0365e-05, 12.9735, -3.06789e-07)
@@ -2948,9 +2949,41 @@ node_a = NodePath("../StaticBody3D")
 [node name="StaticBody3D" type="StaticBody3D" parent="Head/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="Debug" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+[node name="MovementState" type="Label" parent="Debug"]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 17.0
+offset_right = 92.0
+offset_bottom = 40.0
+text = "Running"
+
+[node name="Speed" type="Label" parent="Debug"]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 44.0
+offset_right = 65.0
+offset_bottom = 67.0
+text = "100"
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Crosshair" type="ColorRect" parent="HUD"]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -2963,17 +2996,5 @@ offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 4
-
-[node name="MovementState" type="Label" parent="CanvasLayer"]
-offset_left = 27.0
-offset_top = 17.0
-offset_right = 67.0
-offset_bottom = 40.0
-
-[node name="Speed" type="Label" parent="CanvasLayer"]
-offset_left = 25.0
-offset_top = 44.0
-offset_right = 65.0
-offset_bottom = 67.0
 
 [editable path="characterAnimated"]
