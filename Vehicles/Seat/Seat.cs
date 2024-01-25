@@ -23,6 +23,7 @@ public partial class Seat : RigidBody3D
 		{
 			SetMultiplayerAuthority(vehicle.GetMultiplayerAuthority());
 		}
+		MovePassenger();
 	}
 
 	public Vector3 GetPosition()
@@ -30,7 +31,7 @@ public partial class Seat : RigidBody3D
 		return seatPosition.GlobalPosition;
 	}
 
-		public Vector3 GetRotation()
+	public Vector3 GetRotation()
 	{
 		return seatPosition.GlobalRotation;
 	}
@@ -38,6 +39,25 @@ public partial class Seat : RigidBody3D
 	public long GetPlayerId()
 	{
 		return seatedPlayerId;
+	}
+
+	public Player GetPlayer(long Id)
+	{
+		var players = GetTree().GetNodesInGroup("Player");
+		if (players.Count() < 1) return null;
+		return players.First(player => player.Name == Id.ToString()) as Player;
+	}
+
+	public void MovePassenger()
+	{
+		if (occupied)
+		{
+			var player = GetPlayer(seatedPlayerId);
+			if (player is not null)
+			{
+				player.MovePlayer(GetPosition(), GetRotation());
+			}
+		}
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
