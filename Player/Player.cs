@@ -6,6 +6,7 @@ using Godot;
 public partial class Player : CharacterBody3D
 {
 	public GameManager gameManager;
+	MenuHandler menuHandler;
 
 	[ExportGroup("Required Nodes")]
 	[Export] public Camera3D camera;
@@ -62,39 +63,26 @@ public partial class Player : CharacterBody3D
 
 	public override void _EnterTree()
 	{
-		SetMultiplayerAuthority(int.Parse(Name));
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-		Time.GetTicksMsec();
-	}
+		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
 
-	public override void _Ready()
-	{
-		playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
-		int playerIndex = gameManager.GetPlayerStates().FindIndex(x => x.Id == int.Parse(Name));
-		sensitivity = gameManager.Sensitivity;
-
-		foreach (Node3D spawnPoint in GetTree().GetNodesInGroup("SpawnPoints"))
-		{
-			if (int.Parse(spawnPoint.Name) == playerIndex)
-			{
-				spawnLocation = spawnPoint.GlobalPosition;
-
-			}
-		}
-
-		nameTag.Text = playerState.Name;
+		SetMultiplayerAuthority(int.Parse(Name));
 
 		if (!IsMultiplayerAuthority())
 		{
 			return;
 		}
 
-		GlobalPosition = spawnLocation;
-
-		camera.Current = true;
+		menuHandler.OpenMenu(MenuHandler.MenuType.none);
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Head").Hide();
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Eyes").Hide();
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Nose").Hide();
+		nameTag.Visible = false;
+		camera.Current = true;
+	}
+
+	public override void _Ready()
+	{
 
 	}
 
@@ -116,8 +104,7 @@ public partial class Player : CharacterBody3D
 			camera.RotateX(-mouseMotion.Relative.Y * sensitivity);
 
 			Vector3 cameraRotation = camera.Rotation;
-			cameraRotation.X = Mathf.Clamp(cameraRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f));
-			camera.Rotation = cameraRotation;
+			cameraRotation.X = Mathf.Clamp(cameraRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f)); camera.Rotation = cameraRotation;
 
 			if (movementState == MovementState.seated)
 			{
@@ -145,6 +132,13 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if (gameManager is not null)
+		{
+			playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
+			sensitivity = gameManager.Sensitivity;
+			nameTag.Text = playerState.Name;
+		}
+
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
 
 		//Lerp movement for other players
@@ -156,6 +150,13 @@ public partial class Player : CharacterBody3D
 										Mathf.LerpAngle(GlobalRotation.Z, syncRotation.Z, 0.05f));
 			return;
 		};
+
+		// menuHandler.OpenMenu(MenuHandler.MenuType.none);
+		// GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Head").Hide();
+		// GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Eyes").Hide();
+		// GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Nose").Hide();
+		// nameTag.Visible = false;
+		// camera.Current = true;
 
 		PickItem();
 
@@ -287,6 +288,7 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void MovePlayer(Vector3 position, Vector3 rotation)
 	{
 		GlobalPosition = position;
