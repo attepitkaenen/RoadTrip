@@ -92,7 +92,7 @@ public partial class Player : CharacterBody3D
 
 	public override void _Input(InputEvent @event)
 	{
-		if (!IsMultiplayerAuthority()) return;
+		if (!IsMultiplayerAuthority() || menuHandler.currentMenu != MenuHandler.MenuType.none) return;
 
 		if (PickedItem is not null &&
 			Input.IsActionPressed("interact") &&
@@ -136,8 +136,6 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
-
-
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
 
 		//Lerp movement for other players
@@ -153,21 +151,25 @@ public partial class Player : CharacterBody3D
 			return;
 		};
 
+		// Movement logic
+		Vector3 velocity = Velocity;
 
-		PickItem();
-
-		HandleSeat();
-
-		Rpc(nameof(HandleRpcAnimations), Input.IsActionJustPressed("jump"), isGrounded, Velocity, Transform);
-
+		// Gravity
+		velocity.Y -= gravity * (float)delta;
 
 		// sync properties to lerp movement for other players
 		syncPosition = GlobalPosition;
 		syncRotation = GlobalRotation;
 		syncBasis = GlobalBasis;
 
+		Rpc(nameof(HandleRpcAnimations), Input.IsActionJustPressed("jump"), isGrounded, Velocity, Transform);
+
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
+
+		PickItem();
+
+		HandleSeat();
 
 		HandleDebugLines();
 
@@ -184,13 +186,9 @@ public partial class Player : CharacterBody3D
 		}
 
 
+		// Makes head and body same rotation when not seated
 		head.GlobalRotation = GlobalRotation;
 
-		// Movement logic
-		Vector3 velocity = Velocity;
-
-		// Gravity
-		velocity.Y -= gravity * (float)delta;
 
 		// Handle movementState changes
 		if (Input.IsActionJustPressed("jump") && isGrounded)
