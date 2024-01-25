@@ -44,8 +44,6 @@ public partial class Vehicle : VehicleBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		MovePassengers();
-
 		if (!IsMultiplayerAuthority()) return;
 	
 		syncLinearVelocity = LinearVelocity;
@@ -90,30 +88,8 @@ public partial class Vehicle : VehicleBody3D
 		}
 	}
 
-	public Player GetPlayer(long Id)
-	{
-		var players = GetTree().GetNodesInGroup("Player");
-		if (players.Count() < 1) return null;
-		return players.Where(player => player.Name == Id.ToString()).First() as Player;
-	}
-
-	public void MovePassengers()
-	{
-		seats.ForEach(seat =>
-		{
-			if (seat.occupied)
-			{
-				var player = GetPlayer(seat.GetPlayerId());
-				if (player is not null)
-				{
-					player.MovePlayer(seat.GetPosition(), seat.GetRotation());
-				}
-			}
-		});
-	}
-
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void Drive(int playerId, Vector2 inputDir, bool space, double delta)
+	public void Drive(Vector2 inputDir, bool space, double delta)
 	{
 		if (driverSeat.occupied)
 		{
