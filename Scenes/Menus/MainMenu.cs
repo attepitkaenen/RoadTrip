@@ -20,7 +20,7 @@ public partial class MainMenu : Menu
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         userName.TextChanged += SaveUserName;
         gameManager.PlayersChanged += UpdateLobbyNames;
-        buttons = GetChildren().Where(node => node is Button).Select(node => node as Button).ToList();
+        buttons = GetNode("Buttons").GetChildren().Select(node => node as Button).ToList();
     }
 
     public void UpdateLobbyNames()
@@ -51,7 +51,9 @@ public partial class MainMenu : Menu
 
     public void _on_host_pressed()
     {
-
+        GD.Print(buttons.Count);
+        var joinButton = buttons.Find(button => button.Name == "Join");
+        joinButton.Disabled = true;
         multiplayerController.OnHostPressed();
     }
 

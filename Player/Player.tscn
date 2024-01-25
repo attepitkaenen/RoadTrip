@@ -2957,6 +2957,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="MovementState" type="Label" parent="Debug"]
+layout_mode = 0
 offset_left = 27.0
 offset_top = 17.0
 offset_right = 92.0
@@ -2964,6 +2965,7 @@ offset_bottom = 40.0
 text = "Running"
 
 [node name="Speed" type="Label" parent="Debug"]
+layout_mode = 0
 offset_left = 25.0
 offset_top = 44.0
 offset_right = 65.0
