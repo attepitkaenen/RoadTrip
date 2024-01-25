@@ -1,6 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 
 public partial class MultiplayerController : Control
@@ -23,6 +24,7 @@ public partial class MultiplayerController : Control
 		Multiplayer.ConnectedToServer += ConnectedToServer;
 		Multiplayer.ConnectionFailed += ConnectionFailed;
 		Multiplayer.ServerDisconnected += ServerDisconnected;
+
 		// if(OS.GetCmdlineArgs().Contains("--server")){
 		// 	hostGame();
 		// }
@@ -114,6 +116,12 @@ public partial class MultiplayerController : Control
 		userName = name;
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	public void SetGameStartedStatus(bool status)
+	{
+		isGameStarted = status;
+	}
+
 	public bool GetGameStartedStatus()
 	{
 		return isGameStarted;
@@ -137,7 +145,6 @@ public partial class MultiplayerController : Control
 	{
 		if (peer is not null)
 		{
-			GD.Print("Already a host");
 			Rpc(nameof(startGame));
 		}
 		else
@@ -179,10 +186,14 @@ public partial class MultiplayerController : Control
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void startGame()
 	{
-		var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
-		GetTree().Root.AddChild(scene);
+		if (Multiplayer.IsServer())
+		{
+			gameManager.InitiateWorld();
+		}
+		GD.Print($"game started for {Multiplayer.GetUniqueId()}");
+		// var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
+		// GetTree().Root.AddChild(scene);
 		isGameStarted = true;
-		menuHandler.OpenMenu(MenuHandler.MenuType.none);
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

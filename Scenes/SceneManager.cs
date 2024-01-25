@@ -6,23 +6,12 @@ public partial class SceneManager : Node3D
 {
 	[Export] private PackedScene playerScene;
 	GameManager gameManager;
-    // Called when the node enters the scene tree for the first time.
+	MultiplayerController multiplayerController;
+	// Called when the node enters the scene tree for the first time.
 
-    public override void _EnterTree()
-    {
-        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-    }
-
-    public override void _Ready()
+	public override void _EnterTree()
 	{
-		if (Multiplayer.IsServer())
-		{
-			foreach (var playerState in gameManager.GetPlayerStates())
-			{
-				Player currentPlayer = playerScene.Instantiate<Player>();
-				currentPlayer.Name = playerState.Id.ToString();
-				AddChild(currentPlayer);
-			}
-		}
+		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+		multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
 	}
 }

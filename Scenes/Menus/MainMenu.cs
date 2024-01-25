@@ -19,11 +19,11 @@ public partial class MainMenu : Menu
         multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         userName.TextChanged += SaveUserName;
-        gameManager.PlayersChanged += UpdateLobbyNames;
+        gameManager.PlayerJoined += UpdateLobbyNames;
         buttons = GetNode("Buttons").GetChildren().Select(node => node as Button).ToList();
     }
 
-    public void UpdateLobbyNames()
+    public void UpdateLobbyNames(long id)
     {
         while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
         {
