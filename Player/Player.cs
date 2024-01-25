@@ -70,6 +70,13 @@ public partial class Player : CharacterBody3D
 
 		SetMultiplayerAuthority(int.Parse(Name));
 
+		if (gameManager is not null)
+		{
+			playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
+			sensitivity = gameManager.Sensitivity;
+			nameTag.Text = playerState.Name;
+		}
+
 		if (!IsMultiplayerAuthority())
 		{
 			return;
@@ -81,11 +88,6 @@ public partial class Player : CharacterBody3D
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Nose").Hide();
 		nameTag.Visible = false;
 		camera.Current = true;
-	}
-
-	public override void _Ready()
-	{
-
 	}
 
 	public override void _Input(InputEvent @event)
@@ -134,12 +136,7 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (gameManager is not null)
-		{
-			playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
-			sensitivity = gameManager.Sensitivity;
-			nameTag.Text = playerState.Name;
-		}
+
 
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
 
@@ -220,6 +217,12 @@ public partial class Player : CharacterBody3D
 		else if (isGrounded)
 		{
 			movementState = MovementState.idle;
+		}
+
+		// Handle crouch height seperately so that you can crouch while airborne
+		if (Input.IsActionPressed("crouch"))
+		{
+			floatMachine.SetFloatOffset(0.2f);
 		}
 
 		// Handle property changes depenging on the movementState
