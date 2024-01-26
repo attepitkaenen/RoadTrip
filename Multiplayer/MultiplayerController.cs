@@ -1,6 +1,8 @@
 using Godot;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization.Formatters;
 using System.Threading;
 
 
@@ -36,8 +38,9 @@ public partial class MultiplayerController : Control
 	private void ServerDisconnected()
 	{
 		menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
-		ResetGameState();
-		GD.Print("Server disconnected");
+		gameManager.ResetWorld();
+		peer.Close();
+		GD.Print($"Server disconnected");
 	}
 
 	/// <summary>
@@ -64,17 +67,7 @@ public partial class MultiplayerController : Control
 	private void PeerDisconnected(long id)
 	{
 		GD.Print("Player Disconnected: " + id.ToString());
-		gameManager.RemovePlayerState(id);
-		var players = GetTree().GetNodesInGroup("Player");
-
-		foreach (var player in players)
-		{
-			GD.Print(player.Name);
-			if (player.Name == id.ToString())
-			{
-				player.QueueFree();
-			}
-		}
+		gameManager.RemovePlayer(id);
 	}
 
 	/// <summary>
@@ -84,6 +77,7 @@ public partial class MultiplayerController : Control
 	private void PeerConnected(long id)
 	{
 		GD.Print("Player Connected! " + id.ToString());
+		RpcId(id, nameof(SetGameStartedStatus), isGameStarted);
 	}
 
 	private void hostGame()
@@ -105,13 +99,56 @@ public partial class MultiplayerController : Control
 
 	public void ResetGameState()
 	{
-		isGameStarted = false;
-		var shti = peer as MultiplayerPeer;
-		
-		peer = null;
-		GetTree().Root.GetNode<Node3D>("World").QueueFree();
-		gameManager.ResetPlayerStates();
+		if (Multiplayer.IsServer())
+		{
+			var players = gameManager.GetPlayerStates();
+			if (players.Count > 0)
+			{
+				players.ForEach(player =>
+				{
+					if (player.Id != 1)
+					{
+						peer.DisconnectPeer(player.Id);
+					}
+				});
+			}
+			gameManager.ResetWorld();
+			DisconnectFromServer();
+		}
+		else
+		{
+			gameManager.ResetWorld();
+			DisconnectFromServer();
+		}
 	}
+
+	public void DisconnectFromServer()
+	{
+		GD.Print("Why is this running");
+		if (Multiplayer.IsServer())
+		{
+			Multiplayer.MultiplayerPeer = null;
+			// peer.DisconnectPeer(1);
+			peer.Host.Destroy();
+			// Multiplayer.MultiplayerPeer.Close();
+			// GD.Print(Multiplayer.GetUniqueId());
+		}
+		else
+		{
+			RpcId(1, nameof(KickPlayer), Multiplayer.GetUniqueId());
+			peer.Close();
+			// peer.DisconnectPeer(Multiplayer.GetUniqueId());
+		}
+		isGameStarted = false;
+		peer = null;
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	public void KickPlayer(int id)
+	{
+		peer.DisconnectPeer(id);
+	}
+
 
 	public void SetUserName(string name)
 	{
@@ -188,6 +225,7 @@ public partial class MultiplayerController : Control
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void startGame()
 	{
+		isGameStarted = true;
 		if (Multiplayer.IsServer())
 		{
 			gameManager.InitiateWorld();
@@ -216,8 +254,11 @@ public partial class MultiplayerController : Control
 				Rpc(nameof(sendPlayerInformation), item.Name, item.Id);
 			}
 
-			Thread.Sleep(100);
-			gameManager.SpawnPlayer(playerInfo);
+			if (isGameStarted)
+			{
+				Thread.Sleep(100);
+				gameManager.SpawnPlayer(playerInfo);
+			}
 		}
 	}
 }

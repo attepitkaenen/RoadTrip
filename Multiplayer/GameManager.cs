@@ -18,14 +18,30 @@ public partial class GameManager : Node
 		EmitSignal(SignalName.PlayerJoined, playerState.Id);
 	}
 
-	public void RemovePlayerState(long id)
+	public void RemovePlayer(long id)
 	{
-		Players.Remove(Players.Where(i => i.Id == id).First<PlayerState>());
+		var players = GetTree().GetNodesInGroup("Player");
+		if (players.Count > 0)
+		{
+			var player = Players.FirstOrDefault(i => i.Id == id);
+			if (player is not null)
+			{
+				Players.Remove(player);
+			}
+			players.First(player => player.Name == $"{id}").QueueFree();
+		}
 	}
 
-	public void ResetPlayerStates()
+	public void ResetWorld()
 	{
 		Players = new List<PlayerState>();
+		EmitSignal(SignalName.PlayerJoined, 0);
+		var destroyList = GetChildren().Where(node => node is not MultiplayerSpawner).ToList();
+		if (destroyList.Count > 0)
+		{
+			destroyList.ForEach(node => node.QueueFree());
+		}
+		
 	}
 
 	public List<PlayerState> GetPlayerStates()
