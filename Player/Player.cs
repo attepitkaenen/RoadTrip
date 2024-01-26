@@ -172,6 +172,8 @@ public partial class Player : CharacterBody3D
 
 		PickItem();
 
+		FlipCar();
+
 		HandleSeat();
 
 		HandleDebugLines();
@@ -317,6 +319,17 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
+	public void FlipCar()
+	{
+		if (Input.IsActionPressed("leftClick") && PickedItem is null)
+		{
+			if (interaction.GetCollider() is Vehicle vehicle)
+			{
+				var axis = -head.GlobalBasis.X;
+				vehicle.Rpc(nameof(vehicle.Flip), axis);
+			}
+		}
+	}
 
 	public void PickItem()
 	{
