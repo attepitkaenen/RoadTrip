@@ -1,11 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://ccgebu0extq6q"]
+[gd_scene load_steps=5 format=3 uid="uid://ccgebu0extq6q"]
 
 [ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="1_8iabv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j4iee"]
 size = Vector3(0.5, 0.2, 0.5)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wtrmi"]
+albedo_color = Color(0.431373, 0.223529, 0.113725, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_lk326"]
+material = SubResource("StandardMaterial3D_wtrmi")
 size = Vector3(0.5, 0.2, 0.5)
 
 [node name="Seat" type="RigidBody3D" groups=["Seat"]]
