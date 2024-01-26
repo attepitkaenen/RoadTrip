@@ -78,7 +78,6 @@ public partial class Player : CharacterBody3D
 			return;
 		}
 
-		multiplayerController.SetGameStartedStatus(true);
 		menuHandler.OpenMenu(MenuHandler.MenuType.none);
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Head").Hide();
 		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Eyes").Hide();

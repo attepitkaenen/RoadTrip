@@ -5,7 +5,16 @@ using System.Linq;
 
 public partial class Bone : PhysicalBone3D
 {
-    public int playerHolding = 0;
+	MultiplayerSynchronizer multiplayerSynchronizer;
+
+	public int playerHolding = 0;
+
+	public override void _Ready()
+	{
+		multiplayerSynchronizer = GetParent().GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+		// multiplayerSynchronizer.ReplicationConfig.AddProperty($":position");
+		// multiplayerSynchronizer.ReplicationConfig.AddProperty($":rotation");
+	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Move(Vector3 handPosition, Basis handBasis, float strength, int player)
@@ -21,7 +30,7 @@ public partial class Bone : PhysicalBone3D
 		else if (playerHolding == player)
 		{
 			Vector3 moveForce = (handPosition - GlobalPosition) * 20;
-			
+
 			LinearVelocity = moveForce;
 
 			Vector3 angularForce = GetAngularVelocity(Basis, handBasis) * strength;
