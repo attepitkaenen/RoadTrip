@@ -7,6 +7,7 @@ public partial class Player : CharacterBody3D
 {
 	GameManager gameManager;
 	MenuHandler menuHandler;
+	MultiplayerController multiplayerController;
 
 	[ExportGroup("Required Nodes")]
 	[Export] public Camera3D camera;
@@ -66,19 +67,14 @@ public partial class Player : CharacterBody3D
 	public override void _EnterTree()
 	{
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
+		menuHandler = GetTree().Root.GetNode<MenuHandler>("MenuHandler");
+		multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
 
 		SetMultiplayerAuthority(int.Parse(Name));
 
-		if (gameManager is not null)
-		{
-			playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
-			sensitivity = gameManager.Sensitivity;
-			nameTag.Text = playerState.Name;
-		}
-
 		if (!IsMultiplayerAuthority())
 		{
+			camera.Current = false;
 			return;
 		}
 
@@ -136,6 +132,13 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if (gameManager is not null)
+		{
+			playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
+			sensitivity = gameManager.Sensitivity;
+			nameTag.Text = playerState.Name;
+		}
+
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
 
 		//Lerp movement for other players

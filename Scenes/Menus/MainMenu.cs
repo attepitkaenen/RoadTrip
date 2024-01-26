@@ -20,11 +20,19 @@ public partial class MainMenu : Menu
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         userName.TextChanged += SaveUserName;
         gameManager.PlayerJoined += UpdateLobbyNames;
+        Multiplayer.ConnectionFailed += ConnectionFailed;
+        Multiplayer.ServerDisconnected += ConnectionFailed;
         buttons = GetNode("Buttons").GetChildren().Select(node => node as Button).ToList();
+    }
+
+    private void ConnectionFailed()
+    {
+        ToggleHostAndJoinDisabled(false);
     }
 
     public void UpdateLobbyNames(long id)
     {
+        playerList.Clear();
         while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
         {
             playerList.AddItem("");
@@ -52,18 +60,27 @@ public partial class MainMenu : Menu
     public void _on_host_pressed()
     {
         GD.Print(buttons.Count);
-        var joinButton = buttons.Find(button => button.Name == "Join");
-        joinButton.Disabled = true;
+        ToggleHostAndJoinDisabled(true);
         multiplayerController.OnHostPressed();
     }
 
     public void _on_join_pressed()
     {
         multiplayerController.OnJoinPressed(address.Text);
+        ToggleHostAndJoinDisabled(true);
     }
     public void _on_start_pressed()
     {
+        ToggleHostAndJoinDisabled(false);
         multiplayerController.OnStartPressed();
+    }
+
+    public void ToggleHostAndJoinDisabled(bool state)
+    {
+        var joinButton = buttons.Find(button => button.Name == "Join");
+        var hostButton = buttons.Find(button => button.Name == "Host");
+        joinButton.Disabled = state;
+        hostButton.Disabled = state;
     }
 
     public void _on_quit_pressed()
