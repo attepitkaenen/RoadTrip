@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://bkfckvp6lv6fp" path="res://Scenes/Menus/MainTheme.tres" id="1_o667a"]
 [ext_resource type="Script" path="res://Scenes/Menus/MainMenu.cs" id="2_jqt73"]
 
-[node name="Control" type="Control" node_paths=PackedStringArray("address", "userName", "playerList")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("address", "userName", "playerList")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

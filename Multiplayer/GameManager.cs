@@ -16,21 +16,32 @@ public partial class GameManager : Node
 	{
 		Players.Add(playerState);
 		EmitSignal(SignalName.PlayerJoined, playerState.Id);
-		var world = GetNodeOrNull("World");
-		if (world is not null && Multiplayer.IsServer())
+	}
+
+	public void RemovePlayer(long id)
+	{
+		var players = GetTree().GetNodesInGroup("Player");
+		if (players.Count > 0)
 		{
-			SpawnPlayer(playerState);
+			var player = Players.FirstOrDefault(i => i.Id == id);
+			if (player is not null)
+			{
+				Players.Remove(player);
+			}
+			players.First(player => player.Name == $"{id}").QueueFree();
 		}
 	}
 
-	public void RemovePlayerState(long id)
-	{
-		Players.Remove(Players.Where(i => i.Id == id).First<PlayerState>());
-	}
-
-	public void ResetPlayerStates()
+	public void ResetWorld()
 	{
 		Players = new List<PlayerState>();
+		EmitSignal(SignalName.PlayerJoined, 0);
+		var destroyList = GetChildren().Where(node => node is not MultiplayerSpawner).ToList();
+		if (destroyList.Count > 0)
+		{
+			destroyList.ForEach(node => node.QueueFree());
+		}
+		
 	}
 
 	public List<PlayerState> GetPlayerStates()
@@ -40,10 +51,10 @@ public partial class GameManager : Node
 
 	public void InitiateWorld()
 	{
-		var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
-		AddChild(scene);
 		if (Multiplayer.IsServer())
 		{
+			var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
+			AddChild(scene);
 			foreach (var playerState in Players)
 			{
 				SpawnPlayer(playerState);
@@ -51,23 +62,26 @@ public partial class GameManager : Node
 		}
 	}
 
-	private void SpawnPlayer(PlayerState playerState)
+	public void SpawnPlayer(PlayerState playerState)
 	{
-		Player currentPlayer = playerScene.Instantiate<Player>();
-		currentPlayer.Name = playerState.Id.ToString();
-
-		int playerIndex = Players.FindIndex(x => x.Id == int.Parse(playerState.Id.ToString()));
-		currentPlayer.SetMultiplayerAuthority(playerState.Id);
-
-		AddChild(currentPlayer);
-
-		var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints"); 
-		foreach (Node3D spawnPoint in spawnPoints)
+		var world = GetNodeOrNull("World");
+		if (world is not null && Multiplayer.IsServer())
 		{
-			if (int.Parse(spawnPoint.Name) == playerIndex)
+			Player currentPlayer = playerScene.Instantiate<Player>();
+			currentPlayer.Name = playerState.Id.ToString();
+
+			int playerIndex = Players.FindIndex(x => x.Id == int.Parse(playerState.Id.ToString()));
+			// currentPlayer.SetMultiplayerAuthority(playerState.Id);
+
+			AddChild(currentPlayer);
+
+			var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
+			foreach (Node3D spawnPoint in spawnPoints)
 			{
-				// currentPlayer.MovePlayer(spawnPoint.GlobalPosition, Vector3.Zero);
-				currentPlayer.Rpc(nameof(currentPlayer.MovePlayer), spawnPoint.GlobalPosition, Vector3.Zero);
+				if (int.Parse(spawnPoint.Name) == playerIndex)
+				{
+					currentPlayer.Rpc(nameof(currentPlayer.MovePlayer), spawnPoint.GlobalPosition, Vector3.Zero);
+				}
 			}
 		}
 	}
