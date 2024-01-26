@@ -106,6 +106,8 @@ public partial class MultiplayerController : Control
 	public void ResetGameState()
 	{
 		isGameStarted = false;
+		var shti = peer as MultiplayerPeer;
+		
 		peer = null;
 		GetTree().Root.GetNode<Node3D>("World").QueueFree();
 		gameManager.ResetPlayerStates();
@@ -191,9 +193,6 @@ public partial class MultiplayerController : Control
 			gameManager.InitiateWorld();
 		}
 		GD.Print($"game started for {Multiplayer.GetUniqueId()}");
-		// var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
-		// GetTree().Root.AddChild(scene);
-		isGameStarted = true;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -216,6 +215,9 @@ public partial class MultiplayerController : Control
 			{
 				Rpc(nameof(sendPlayerInformation), item.Name, item.Id);
 			}
+
+			Thread.Sleep(100);
+			gameManager.SpawnPlayer(playerInfo);
 		}
 	}
 }
