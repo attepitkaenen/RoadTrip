@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://c51cxho2bjjy6"]
+
+[ext_resource type="Script" path="res://Resources/WeaponResource.cs" id="1_rhnbt"]
+
+[resource]
+script = ExtResource("1_rhnbt")
+WeaponName = "Revolver"
+ActiveAnim = ""
+ShootAnim = ""
+ReloadAnim = ""
+DeactivateAnim = ""
+OutOfAmmoAnim = ""
+CurrentAmmo = 0
+ReserveAmmo = 0
+Magazine = 0
+MaxAmmo = 0
+AutoFire = false
