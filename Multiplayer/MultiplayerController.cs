@@ -39,7 +39,7 @@ public partial class MultiplayerController : Control
 	{
 		menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
 		gameManager.ResetWorld();
-		peer.Close();
+		// peer.Close();
 		GD.Print($"Server disconnected");
 	}
 
@@ -99,27 +99,29 @@ public partial class MultiplayerController : Control
 
 	public void ResetGameState()
 	{
-		if (Multiplayer.IsServer())
-		{
-			var players = gameManager.GetPlayerStates();
-			if (players.Count > 0)
-			{
-				players.ForEach(player =>
-				{
-					if (player.Id != 1)
-					{
-						peer.DisconnectPeer(player.Id);
-					}
-				});
-			}
-			gameManager.ResetWorld();
-			DisconnectFromServer();
-		}
-		else
-		{
-			gameManager.ResetWorld();
-			DisconnectFromServer();
-		}
+		gameManager.ResetWorld();
+		Multiplayer.MultiplayerPeer = null;
+		// if (Multiplayer.IsServer())
+		// {
+		// 	var players = gameManager.GetPlayerStates();
+		// 	if (players.Count > 0)
+		// 	{
+		// 		players.ForEach(player =>
+		// 		{
+		// 			if (player.Id != 1)
+		// 			{
+		// 				peer.DisconnectPeer(player.Id);
+		// 			}
+		// 		});
+		// 	}
+		// 	gameManager.ResetWorld();
+		// 	DisconnectFromServer();
+		// }
+		// else
+		// {
+		// 	gameManager.ResetWorld();
+		// 	DisconnectFromServer();
+		// }
 	}
 
 	public void DisconnectFromServer()
@@ -127,7 +129,7 @@ public partial class MultiplayerController : Control
 		GD.Print("Why is this running");
 		if (Multiplayer.IsServer())
 		{
-			Multiplayer.MultiplayerPeer = null;
+			// Multiplayer.MultiplayerPeer = null;
 			// peer.DisconnectPeer(1);
 			peer.Host.Destroy();
 			// Multiplayer.MultiplayerPeer.Close();
@@ -135,12 +137,12 @@ public partial class MultiplayerController : Control
 		}
 		else
 		{
-			RpcId(1, nameof(KickPlayer), Multiplayer.GetUniqueId());
+			// RpcId(1, nameof(KickPlayer), Multiplayer.GetUniqueId());
 			peer.Close();
 			// peer.DisconnectPeer(Multiplayer.GetUniqueId());
 		}
+		Multiplayer.MultiplayerPeer = null;
 		isGameStarted = false;
-		peer = null;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
