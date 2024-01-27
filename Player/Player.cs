@@ -19,6 +19,7 @@ public partial class Player : CharacterBody3D
 	[ExportGroup("Debug Nodes")]
 	[Export] public Label stateLabel;
 	[Export] public Label speedLabel;
+	[Export] public ItemList playerList;
 	[Export] public Control debugWindow;
 
 
@@ -128,6 +129,18 @@ public partial class Player : CharacterBody3D
 
 		stateLabel.Text = movementState.ToString();
 		speedLabel.Text = Math.Round(currentSpeed, 2).ToString();
+
+		playerList.Clear();
+		while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
+		{
+			playerList.AddItem("");
+		}
+		var index = 0;
+		gameManager.GetPlayerStates().ForEach(player =>
+		{
+			playerList.SetItemText(index, player.Name);
+			index++;
+		});
 	}
 
 	public override void _PhysicsProcess(double delta)

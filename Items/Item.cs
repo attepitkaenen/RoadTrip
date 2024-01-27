@@ -10,7 +10,6 @@ public partial class Item : RigidBody3D
 
 	// Sync properties
 	public Vector3 syncPosition;
-	public Vector3 syncRotation;
 	public Basis syncBasis;
 	public Vector3 syncLinearVelocity;
 	public Vector3 syncAngularVelocity;
@@ -35,7 +34,6 @@ public partial class Item : RigidBody3D
 		syncLinearVelocity = LinearVelocity;
 		syncAngularVelocity = AngularVelocity;
 		syncPosition = GlobalPosition;
-		syncRotation = GlobalRotation;
 		syncBasis = GlobalBasis;
 	}
 	public override void _IntegrateForces(PhysicsDirectBodyState3D state)
