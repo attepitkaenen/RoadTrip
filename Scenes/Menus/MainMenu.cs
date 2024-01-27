@@ -67,7 +67,7 @@ public partial class MainMenu : Menu
     public void _on_join_pressed()
     {
         multiplayerController.OnJoinPressed(address.Text);
-        ToggleHostAndJoinDisabled(true);
+        // ToggleHostAndJoinDisabled(true);
     }
     public void _on_start_pressed()
     {
