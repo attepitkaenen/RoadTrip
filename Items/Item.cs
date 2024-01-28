@@ -5,6 +5,7 @@ public partial class Item : RigidBody3D
 {
 	public int playerHolding = 0;
 	[Export] MultiplayerSynchronizer multiplayerSynchronizer;
+	[Export] public int ItemId;
 
 	public Vehicle vehicle;
 
