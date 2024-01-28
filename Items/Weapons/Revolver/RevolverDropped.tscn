@@ -1,7 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://d0qg76y7uivqw"]
+[gd_scene load_steps=10 format=3 uid="uid://dqqqnhev4fhpv"]
 
-[ext_resource type="Script" path="res://Items/Weapons/Weapon.cs" id="1_5a8ok"]
-[ext_resource type="Resource" uid="uid://c51cxho2bjjy6" path="res://Items/Weapons/Revolver/Revolver.tres" id="2_r15v2"]
+[ext_resource type="Script" path="res://Items/Item.cs" id="1_ue5ts"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4rv2q"]
 resource_name = "metal"
@@ -121,10 +120,10 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_syjoy")
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_y2oja"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_dxr82"]
 points = PackedVector3Array(-0.05, -0.137102, -0.183007, 0.0494841, -0.142348, -0.19, 0.0183282, 0.146603, -0.130138, 0.050873, -0.0290939, 0.130138, -0.05, 0.0947204, -0.195238, -0.053254, -0.0290939, 0.130138, 0.0487959, 0.097, -0.199946, 0.0470009, 0.0935229, 0.132498, -0.053254, -0.146254, -0.0780749, -0.0493912, 0.093541, 0.126522, 0.050873, -0.146254, -0.0780749, -0.0207092, 0.146603, -0.00648246, 0.0313441, 0.0294431, 0.208254, -0.0272222, 0.0749942, 0.208254, -0.0207092, 0.0164285, 0.208254, -0.0207092, 0.146603, -0.130138, -0.0377101, -0.0698011, 0.0669193, 0.0349537, 0.0935246, 0.162616, -0.05, -0.00286225, -0.195238, -0.0324271, 0.097, 0.16867, 0.0313441, 0.0684869, 0.208254, 0.0488252, -0.00293729, -0.200063, -0.0337251, 0.0294431, 0.208254, 0.011, 0.113, 0.121981, 0.0183282, 0.0164285, 0.208254, -0.0337251, 0.0619796, 0.208254, 0.04, -0.0674834, 0.0647029)
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wsxxj"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_k5618"]
 properties/0/path = NodePath(".:syncPosition")
 properties/0/spawn = true
 properties/0/replication_mode = 1
@@ -138,17 +137,20 @@ properties/3/path = NodePath(".:syncAngularVelocity")
 properties/3/spawn = true
 properties/3/replication_mode = 1
 
-[node name="Revolver" type="RigidBody3D" node_paths=PackedStringArray("multiplayerSynchronizer")]
-script = ExtResource("1_5a8ok")
-Stats = ExtResource("2_r15v2")
+[node name="RevolverDropped" type="RigidBody3D" node_paths=PackedStringArray("multiplayerSynchronizer")]
+collision_layer = 8
+collision_mask = 15
+contact_monitor = true
+script = ExtResource("1_ue5ts")
 multiplayerSynchronizer = NodePath("MultiplayerSynchronizer")
+ItemId = 1
 
 [node name="blasterB" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_uk0le")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("ConvexPolygonShape3D_y2oja")
+shape = SubResource("ConvexPolygonShape3D_dxr82")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_wsxxj")
+replication_config = SubResource("SceneReplicationConfig_k5618")

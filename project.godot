@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 MultiplayerController="*res://Multiplayer/MultiplayerController.cs"
 GameManager="*res://Multiplayer/GameManager.tscn"
+ItemsDatabase="*res://Items/ItemsDatabase.tscn"
 
 [dotnet]
 

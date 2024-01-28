@@ -8,40 +8,44 @@ public partial class Player : CharacterBody3D
 	GameManager gameManager;
 	MenuHandler menuHandler;
 	MultiplayerController multiplayerController;
+	MultiplayerSynchronizer multiplayerSynchronizer;
 
 	[ExportGroup("Required Nodes")]
-	[Export] public Camera3D camera;
-	[Export] public AnimationTree animationTree;
-	[Export] public FloatMachine floatMachine;
-	[Export] public Label3D nameTag;
-	[Export] public Node3D head;
+	[Export] private Camera3D camera;
+	[Export] private AnimationTree animationTree;
+	[Export] private FloatMachine floatMachine;
+	[Export] private Label3D nameTag;
+	[Export] private Node3D head;
 
 	[ExportGroup("Debug Nodes")]
-	[Export] public Label stateLabel;
-	[Export] public Label speedLabel;
-	[Export] public ItemList playerList;
-	[Export] public Control debugWindow;
+	[Export] private Label stateLabel;
+	[Export] private Label speedLabel;
+	[Export] private ItemList playerList;
+	[Export] private Control debugWindow;
 
 
 	[ExportGroup("Movement properties")]
-	[Export] public float sensitivity = 0.001f;
-	[Export] public float acceleration = 4f;
-	[Export] public float deceleration = 5f;
-	[Export] public float speed = 3f;
-	[Export] public float jumpVelocity = 4.5f;
-	[Export] public float runningMultiplier = 1.5f;
-	public bool isGrounded;
+	[Export] private float sensitivity = 0.001f;
+	[Export] private float acceleration = 4f;
+	[Export] private float deceleration = 5f;
+	[Export] private float speed = 3f;
+	[Export] private float jumpVelocity = 4.5f;
+	[Export] private float runningMultiplier = 1.5f;
+	public bool isGrounded { get; set; } = false;
 
 	[ExportGroup("Interaction properties")]
-	[Export] public RayCast3D interaction;
-	[Export] public Marker3D hand;
-	[Export] public StaticBody3D staticBody;
+	[Export] private RayCast3D interaction;
+	[Export] private Marker3D hand;
+	[Export] private Marker3D equip;
+	[Export] private StaticBody3D staticBody;
 	private dynamic PickedItem;
-	public float Strength = 40f;
+	private ItemResource itemResource;
+	private Node3D heldItem;
+	private float Strength = 40f;
 
 	Seat seat;
 
-	public MovementState movementState = MovementState.idle;
+	public MovementState movementState { get; set; } = MovementState.idle;
 	public enum MovementState
 	{
 		idle,
@@ -70,6 +74,7 @@ public partial class Player : CharacterBody3D
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		menuHandler = GetTree().Root.GetNode<MenuHandler>("MenuHandler");
 		multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
+		multiplayerSynchronizer = GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
 
 		SetMultiplayerAuthority(int.Parse(Name));
 
@@ -183,7 +188,7 @@ public partial class Player : CharacterBody3D
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
 
-		PickItem();
+		HandleItem();
 
 		FlipCar();
 
@@ -314,6 +319,12 @@ public partial class Player : CharacterBody3D
 		GlobalRotation = rotation;
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SetPickedItem(string itemPath)
+	{
+		PickedItem = GetTree().Root.GetNode<Item>(itemPath);
+	}
+
 	[Rpc(CallLocal = true)]
 	public void HandleRpcAnimations(bool isJumping, bool isGroundedRpc, Vector3 velocity, Transform3D transform)
 	{
@@ -344,8 +355,38 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	public void PickItem()
+	public void HandleItem()
 	{
+		// Equip held item
+		if (Input.IsActionJustPressed("equip") && PickedItem is not null && heldItem is null)
+		{
+			GD.Print("Item picked");
+			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
+			if (itemResource.Equippable)
+			{
+				heldItem = itemResource.ItemInHand.Instantiate<Node3D>();
+				equip.AddChild(heldItem);
+				// multiplayerSynchronizer.ReplicationConfig.AddProperty($"{equip.GetChild(0).GetPath()}:position");
+				// multiplayerSynchronizer.ReplicationConfig.AddProperty($"{equip.GetChild(0).GetPath()}:rotation");
+				// PickedItem.RpcId(1, nameof(PickedItem.Destroy));
+				
+				// gameManager.Rpc(nameof(gameManager.DestroyItem), PickedItem.Name);
+				gameManager.DestroyItem(PickedItem.Name);
+				PickedItem = null;
+			}
+		}
+		// Drop held item
+		else if (Input.IsActionJustPressed("equip") && PickedItem is null && heldItem is not null && itemResource is not null)
+		{
+			// gameManager.Rpc(nameof(gameManager.SpawnItem), int.Parse(Name), itemResource.ItemId, hand.GlobalPosition);
+			gameManager.SpawnItem(int.Parse(Name), itemResource.ItemId, hand.GlobalPosition);
+			heldItem = null;
+			equip.GetChild(0).QueueFree();
+		}
+
+		// Stop picking items when item held
+		if (heldItem is not null) return;
+
 		// Pick and drop item
 		if (Input.IsActionJustPressed("leftClick"))
 		{
@@ -366,6 +407,7 @@ public partial class Player : CharacterBody3D
 				DropPickedItem();
 			}
 		}
+
 		// Throw item
 		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null)
 		{
@@ -373,6 +415,7 @@ public partial class Player : CharacterBody3D
 			PickedItem.Rpc("Throw", throwDirection, Strength);
 			PickedItem = null;
 		}
+
 		// Drop item if forced into a wall
 		else if (PickedItem is Item && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 1 && PickedItem.IsColliding())
 		{
