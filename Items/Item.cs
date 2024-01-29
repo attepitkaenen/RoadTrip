@@ -18,6 +18,9 @@ public partial class Item : RigidBody3D
 
 	public override void _Ready()
 	{
+		ContactMonitor = true;
+		MaxContactsReported = 1;
+		// ContinuousCd = true;
 		if (!IsMultiplayerAuthority())
 		{
 			CustomIntegrator = true;
@@ -81,9 +84,6 @@ public partial class Item : RigidBody3D
 			{
 				AngularVelocity = angularForce;
 			}
-
-			ContactMonitor = true;
-			MaxContactsReported = 1;
 		}
 		return;
 	}
