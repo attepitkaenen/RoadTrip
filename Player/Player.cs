@@ -85,9 +85,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		menuHandler.OpenMenu(MenuHandler.MenuType.none);
-		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Head").Hide();
-		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Eyes").Hide();
-		GetNode<MeshInstance3D>("characterAnimated/Armature/Skeleton3D/Nose").Hide();
+		GetNode<MeshInstance3D>("character/Armature/Skeleton3D/Head/Head").Hide();
 		nameTag.Visible = false;
 		camera.Current = true;
 	}
@@ -183,7 +181,7 @@ public partial class Player : CharacterBody3D
 		syncRotation = GlobalRotation;
 		syncBasis = GlobalBasis;
 
-		Rpc(nameof(HandleRpcAnimations), Input.IsActionJustPressed("jump"), isGrounded, Velocity, Transform);
+		Rpc(nameof(HandleRpcAnimations), movementState.ToString(), isGrounded, Velocity, Transform);
 
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
@@ -326,9 +324,16 @@ public partial class Player : CharacterBody3D
 	}
 
 	[Rpc(CallLocal = true)]
-	public void HandleRpcAnimations(bool isJumping, bool isGroundedRpc, Vector3 velocity, Transform3D transform)
+	public void HandleRpcAnimations(string state, bool isGroundedRpc, Vector3 velocity, Transform3D transform)
 	{
-		if (isJumping || !isGroundedRpc)
+		if (state == "seated")
+		{
+			animationTree.Set("parameters/conditions/sit", true);
+			animationTree.Set("parameters/conditions/walk", false);
+			return;
+		}
+
+		if (state == "jumping" || !isGroundedRpc)
 		{
 			animationTree.Set("parameters/conditions/jump", true);
 			animationTree.Set("parameters/conditions/walk", false);
