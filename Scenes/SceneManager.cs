@@ -4,15 +4,11 @@ using System.Linq;
 
 public partial class SceneManager : Node3D
 {
-	[Export] private PackedScene playerScene;
 	GameManager gameManager;
-	MultiplayerController multiplayerController;
-	// Called when the node enters the scene tree for the first time.
 
 	public override void _EnterTree()
 	{
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-		multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -30,7 +26,7 @@ public partial class SceneManager : Node3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void DestroyItem(string itemName)
 	{
-		if (!Multiplayer.IsServer()) return;
+		// if (!Multiplayer.IsServer()) return;
 		GetChildren().First(item => item.Name == itemName).QueueFree();
 	}
 }

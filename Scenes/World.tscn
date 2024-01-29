@@ -1,7 +1,6 @@
-[gd_scene load_steps=12 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=11 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
-[ext_resource type="PackedScene" uid="uid://cdryhy8tvvlgn" path="res://Player/Player.tscn" id="2_ma2nx"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
 [ext_resource type="PackedScene" uid="uid://r5jkmn54rdln" path="res://Vehicles/Coralli/Coralli.tscn" id="4_5gbf8"]
 [ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
@@ -19,7 +18,6 @@ sky = SubResource("Sky_8c0fj")
 
 [node name="World" type="Node3D" groups=["World"]]
 script = ExtResource("1_nr3g4")
-playerScene = ExtResource("2_ma2nx")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Items/Weapons/Revolver/RevolverDropped.tscn")
