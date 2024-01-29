@@ -9,8 +9,19 @@ public partial class GameManager : Node
 {
 	[Signal] public delegate void PlayerJoinedEventHandler(long id);
 	[Export] private PackedScene playerScene;
+	[Export] public ItemListResource itemList { get; set; }
+	public SceneManager world;
 	private List<PlayerState> Players = new List<PlayerState>();
 	public float Sensitivity = 0.001f;
+
+	public ItemResource GetItemResource(int id)
+	{
+		if (itemList is not null)
+		{
+			return itemList.items.First(item => item.ItemId == id);
+		}
+		return null;
+	}
 
 	public void AddPlayerState(PlayerState playerState)
 	{
@@ -32,16 +43,35 @@ public partial class GameManager : Node
 		}
 	}
 
+	public void SpawnItem(int playerId, int itemId, Vector3 position)
+	{
+		if (world is null)
+		{
+			world = GetNode<SceneManager>("World");
+		}
+		world.Rpc(nameof(world.SpawnItem), playerId, itemId, position);
+	}
+
+	public void DestroyItem(string itemName)
+	{
+		if (world is null)
+		{
+			GD.Print("Yeah world was missing");
+			world = GetNode<SceneManager>("World");
+		}
+		world.Rpc(nameof(world.DestroyItem), itemName);
+	}
+
 	public void ResetWorld()
 	{
 		Players = new List<PlayerState>();
+		world = null;
 		EmitSignal(SignalName.PlayerJoined, 0);
 		var destroyList = GetChildren().Where(node => node is not MultiplayerSpawner).ToList();
 		if (destroyList.Count > 0)
 		{
 			destroyList.ForEach(node => node.QueueFree());
 		}
-		
 	}
 
 	public List<PlayerState> GetPlayerStates()
@@ -53,8 +83,9 @@ public partial class GameManager : Node
 	{
 		if (Multiplayer.IsServer())
 		{
-			var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<Node3D>();
+			var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<SceneManager>();
 			AddChild(scene);
+			world = scene;
 			foreach (var playerState in Players)
 			{
 				SpawnPlayer(playerState);
@@ -71,7 +102,6 @@ public partial class GameManager : Node
 			currentPlayer.Name = playerState.Id.ToString();
 
 			int playerIndex = Players.FindIndex(x => x.Id == int.Parse(playerState.Id.ToString()));
-			// currentPlayer.SetMultiplayerAuthority(playerState.Id);
 
 			AddChild(currentPlayer);
 

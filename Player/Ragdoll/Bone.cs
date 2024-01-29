@@ -5,7 +5,6 @@ using System.Linq;
 
 public partial class Bone : PhysicalBone3D
 {
-	MultiplayerSynchronizer multiplayerSynchronizer;
 	public int playerHolding = 0;
 
 

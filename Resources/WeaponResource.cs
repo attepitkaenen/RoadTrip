@@ -18,9 +18,6 @@ public partial class WeaponResource : Resource
 
     [Export] public bool AutoFire { get; set; } = false;
 
-    [Export] public PackedScene DroppedWeapon { get; set; }
-    [Export] public PackedScene InHandWeapon { get; set; }
-
     // Make sure you provide a parameterless constructor.
     // In C#, a parameterless constructor is different from a
     // constructor with all default values.
