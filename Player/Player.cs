@@ -161,7 +161,7 @@ public partial class Player : CharacterBody3D
 		if (!IsMultiplayerAuthority())
 		{
 			var newState = Transform;
-			newState.Origin = GlobalPosition.Lerp(syncPosition, 0.9f);
+			newState.Origin = GlobalPosition.Lerp(syncPosition, 0.5f);
 			var a = newState.Basis.GetRotationQuaternion().Normalized();
 			var b = syncBasis.GetRotationQuaternion().Normalized();
 			var c = a.Slerp(b, 0.5f);
