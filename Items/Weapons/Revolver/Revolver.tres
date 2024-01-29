@@ -1,17 +1,14 @@
-[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://c51cxho2bjjy6"]
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://bo7u6cyvl04tw"]
 
-[ext_resource type="Script" path="res://Resources/WeaponResource.cs" id="1_rhnbt"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_auvlc"]
+[ext_resource type="PackedScene" uid="uid://c1f4hwg1i38lk" path="res://Items/Weapons/Revolver/RevolverHeld.tscn" id="1_m1ow3"]
+[ext_resource type="PackedScene" uid="uid://dqqqnhev4fhpv" path="res://Items/Weapons/Revolver/RevolverDropped.tscn" id="2_1digp"]
 
 [resource]
-script = ExtResource("1_rhnbt")
-WeaponName = "Revolver"
-ActiveAnim = ""
-ShootAnim = ""
-ReloadAnim = ""
-DeactivateAnim = ""
-OutOfAmmoAnim = ""
-CurrentAmmo = 0
-ReserveAmmo = 0
-Magazine = 0
-MaxAmmo = 0
-AutoFire = false
+script = ExtResource("1_auvlc")
+Equippable = true
+ItemName = "Revolver"
+ItemId = "1"
+Description = "6 shot revolver"
+ItemOnFloor = ExtResource("2_1digp")
+ItemInHand = ExtResource("1_m1ow3")
