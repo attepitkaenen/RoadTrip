@@ -7,18 +7,19 @@ using System.Threading;
 public partial class Ragdoll : Node3D
 {
     [Export] MultiplayerSynchronizer synchronizer;
-    List<Bone> bones;
+    [Export] Skeleton3D skeleton;
+    List<PhysicalBone3D> bones;
 
     public override void _Ready()
     {
-        var skeleton = GetNode<Skeleton3D>("Armature/Skeleton3D");
-        var boneCount = skeleton.GetBoneCount();
-        bones = skeleton.GetChildren().Where(node => node is Bone).Select(node => node as Bone).ToList();
+        skeleton.PhysicalBonesStartSimulation();
+        bones = skeleton.GetChildren().Where(node => node is PhysicalBone3D).Select(node => node as PhysicalBone3D).ToList();
+        GD.Print(bones.Count());
         bones.ForEach(bone =>
         {
+            GD.Print($"{bone.GetPath()}:position");
             synchronizer.ReplicationConfig.AddProperty($"{bone.GetPath()}:position");
             synchronizer.ReplicationConfig.AddProperty($"{bone.GetPath()}:rotation");
         });
     }
-
 }
