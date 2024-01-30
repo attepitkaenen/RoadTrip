@@ -85,7 +85,7 @@ public partial class GameManager : Node
 		{
 			var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<SceneManager>();
 			AddChild(scene);
-			world = scene;
+			// world = scene;
 			foreach (var playerState in Players)
 			{
 				SpawnPlayer(playerState);
@@ -100,6 +100,7 @@ public partial class GameManager : Node
 		{
 			Player currentPlayer = playerScene.Instantiate<Player>();
 			currentPlayer.Name = playerState.Id.ToString();
+			currentPlayer.Id = playerState.Id;
 
 			int playerIndex = Players.FindIndex(x => x.Id == int.Parse(playerState.Id.ToString()));
 

@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://cl5qvqjlatyyb"]
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://3np40eakl0gk"]
 
-[ext_resource type="Script" path="res://Resources/WeaponResource.cs" id="1_rhnbt"]
+[ext_resource type="Script" path="res://Items/Weapons/WeaponResource.cs" id="1_20d3l"]
 
 [resource]
-script = ExtResource("1_rhnbt")
+script = ExtResource("1_20d3l")
 WeaponName = "Revolver"
 ActiveAnim = ""
 ShootAnim = ""
@@ -13,5 +13,6 @@ OutOfAmmoAnim = ""
 CurrentAmmo = 0
 ReserveAmmo = 0
 Magazine = 0
-MaxAmmo = 6
+MaxAmmo = 0
+Damage = 12
 AutoFire = false

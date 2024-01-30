@@ -1,5 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://c1f4hwg1i38lk"]
+[gd_scene load_steps=4 format=3 uid="uid://c1f4hwg1i38lk"]
 
 [ext_resource type="PackedScene" uid="uid://xqlb2dwwpyry" path="res://Assets/Weapons/blasterB.glb" id="1_e6e3h"]
+[ext_resource type="Script" path="res://Items/Weapons/Weapon.cs" id="2_vsehg"]
+[ext_resource type="Resource" uid="uid://3np40eakl0gk" path="res://Items/Weapons/Revolver/RevolverStats.tres" id="3_prapy"]
 
-[node name="RevolverHeld" instance=ExtResource("1_e6e3h")]
+[node name="RevolverHeld" node_paths=PackedStringArray("bulletRay") instance=ExtResource("1_e6e3h")]
+script = ExtResource("2_vsehg")
+stats = ExtResource("3_prapy")
+bulletRay = NodePath("RayCast3D")
+
+[node name="RayCast3D" type="RayCast3D" parent="." index="1"]
+target_position = Vector3(0, 0, 50)
+collision_mask = 15
