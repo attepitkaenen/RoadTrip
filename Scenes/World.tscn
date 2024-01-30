@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=11 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -6,6 +6,7 @@
 [ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
 [ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="5_xddwy"]
 [ext_resource type="PackedScene" uid="uid://ccgebu0extq6q" path="res://Vehicles/Seat/Seat.tscn" id="7_lyu3h"]
+[ext_resource type="PackedScene" uid="uid://f7xtx21m8p4m" path="res://Player/Ragdoll/ragdoll2.tscn" id="8_ho0v7"]
 [ext_resource type="PackedScene" uid="uid://dqqqnhev4fhpv" path="res://Items/Weapons/Revolver/RevolverDropped.tscn" id="9_fswkx"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
@@ -19,7 +20,7 @@ sky = SubResource("Sky_8c0fj")
 script = ExtResource("1_nr3g4")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Items/Weapons/Revolver/RevolverDropped.tscn")
+_spawnable_scenes = PackedStringArray("res://Items/Weapons/Revolver/RevolverDropped.tscn", "res://Player/Ragdoll/ragdoll2.tscn")
 spawn_path = NodePath("..")
 
 [node name="Ground" type="CSGBox3D" parent="."]
@@ -498,3 +499,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.89302, 1.02947, -0.953824)
 
 [node name="RevolverDropped" parent="." instance=ExtResource("9_fswkx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01503, 7.30919, -4.18042)
+
+[node name="character" parent="." instance=ExtResource("8_ho0v7")]
+transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 11.3221, 0.500004, 3.2695)
