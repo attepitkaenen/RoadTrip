@@ -7,13 +7,16 @@ using System.Threading;
 public partial class Ragdoll : Node3D
 {
     [Export] MultiplayerSynchronizer synchronizer;
-    List<Bone> bones;
+    [Export] Skeleton3D skeleton;
+    [Export] Camera3D camera;
+    [Export] MeshInstance3D head;
+    public int playerId;
+    List<PhysicalBone3D> bones;
 
     public override void _Ready()
     {
-        var skeleton = GetNode<Skeleton3D>("Armature/Skeleton3D");
-        var boneCount = skeleton.GetBoneCount();
-        bones = skeleton.GetChildren().Where(node => node is Bone).Select(node => node as Bone).ToList();
+        skeleton.PhysicalBonesStartSimulation();
+        bones = skeleton.GetChildren().Where(node => node is PhysicalBone3D).Select(node => node as PhysicalBone3D).ToList();
         bones.ForEach(bone =>
         {
             synchronizer.ReplicationConfig.AddProperty($"{bone.GetPath()}:position");
@@ -21,4 +24,32 @@ public partial class Ragdoll : Node3D
         });
     }
 
+    public void MoveRagdoll(Vector3 position, Vector3 rotation)
+    {
+        Position = position;
+        Rotation = new Vector3(Rotation.X, rotation.Y, Rotation.Z);
+    }
+
+    public void SwitchCamera()
+    {
+        camera.Current = !camera.Current;
+        head.Visible = false;
+    }
+
+    public Vector3 GetUpPosition()
+    {
+        return  new Vector3(bones[0].GlobalPosition.X, bones[0].GlobalPosition.Y + 1, bones[0].GlobalPosition.Z);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    public void Destroy()
+    {
+        // if (!Multiplayer.IsServer()) return;
+        bones.ForEach(bone =>
+        {
+            synchronizer.ReplicationConfig.RemoveProperty($"{bone.GetPath()}:position");
+            synchronizer.ReplicationConfig.RemoveProperty($"{bone.GetPath()}:rotation");
+        });
+        QueueFree();
+    }
 }

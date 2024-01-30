@@ -20,7 +20,6 @@ public partial class Item : RigidBody3D
 	{
 		ContactMonitor = true;
 		MaxContactsReported = 1;
-		// ContinuousCd = true;
 		if (!IsMultiplayerAuthority())
 		{
 			CustomIntegrator = true;
@@ -63,17 +62,13 @@ public partial class Item : RigidBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void Move(Vector3 handPosition, Basis handBasis, float strength, int player)
+	public void Move(Vector3 handPosition, Basis handBasis, float strength, int playerId)
 	{
-		if (player == 0)
+		if (playerHolding == 0)
 		{
-			playerHolding = 0;
+			playerHolding = playerId;
 		}
-		else if (playerHolding == 0)
-		{
-			playerHolding = player;
-		}
-		else if (playerHolding == player)
+		else if (playerHolding == playerId)
 		{
 			Vector3 moveForce = (handPosition - GlobalPosition) * 20;
 
@@ -85,7 +80,12 @@ public partial class Item : RigidBody3D
 				AngularVelocity = angularForce;
 			}
 		}
-		return;
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void Drop()
+	{
+		playerHolding = 0;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
