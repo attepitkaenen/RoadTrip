@@ -40,8 +40,10 @@ public partial class Player : CharacterBody3D
 	[Export] private StaticBody3D staticBody;
 	private dynamic PickedItem;
 	private ItemResource itemResource;
-	private Node3D heldItem;
+	private HeldItem heldItem;
 	private float Strength = 40f;
+	private int Health = 10;
+	public int Id;
 
 	Seat seat;
 
@@ -54,7 +56,8 @@ public partial class Player : CharacterBody3D
 		crouching,
 		jumping,
 		seated,
-		falling
+		falling,
+		unconscious
 	}
 
 	// Sync properties
@@ -148,6 +151,12 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if(Health <= 0)
+		{
+			Health = 10;
+			var spawnPoint = GetTree().GetNodesInGroup("SpawnPoints")[0] as Node3D;
+			GlobalPosition = spawnPoint.GlobalPosition;
+		}
 		if (gameManager is not null)
 		{
 			playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
@@ -360,6 +369,13 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	public void Hit(int damage)
+	{
+		GD.Print($"Player {Name} was hit for {damage}");
+		Health -= damage;
+	}
+
 	public void HandleItem()
 	{
 		// Equip held item
@@ -369,7 +385,8 @@ public partial class Player : CharacterBody3D
 			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
 			if (itemResource.Equippable)
 			{
-				heldItem = itemResource.ItemInHand.Instantiate<Node3D>();
+				heldItem = itemResource.ItemInHand.Instantiate<HeldItem>();
+				// heldItem.SetMultiplayerAuthority(int.Parse(Name));
 				equip.AddChild(heldItem);
 				// multiplayerSynchronizer.ReplicationConfig.AddProperty($"{equip.GetChild(0).GetPath()}:position");
 				// multiplayerSynchronizer.ReplicationConfig.AddProperty($"{equip.GetChild(0).GetPath()}:rotation");
