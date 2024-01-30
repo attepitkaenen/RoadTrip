@@ -15,6 +15,7 @@ public partial class WeaponResource : Resource
     [Export] public int ReserveAmmo { get; set; } = 0;
     [Export] public int Magazine { get; set; } = 0;
     [Export] public int MaxAmmo { get; set; } = 0;
+    [Export] public int Damage { get; set; } = 0;
 
     [Export] public bool AutoFire { get; set; } = false;
 

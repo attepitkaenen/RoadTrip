@@ -1,10 +1,27 @@
 using Godot;
 using System;
 
-public partial class HeldItem : Node
+public partial class HeldItem : Node3D
 {
-    public void Drop()
+    public override void _PhysicsProcess(double delta)
     {
-        QueueFree();
+        if (Input.IsActionJustPressed("leftClick"))
+        {
+            LeftClick();
+        }
+        if (Input.IsActionJustPressed("rightClick"))
+        {
+            rightClick();
+        }
+    }
+
+    public virtual void LeftClick()
+    {
+        GD.Print("leftClick");
+    }
+
+    public virtual void rightClick()
+    {
+        GD.Print("rightClick");
     }
 }

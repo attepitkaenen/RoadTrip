@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=10 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -6,7 +6,6 @@
 [ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
 [ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="5_xddwy"]
 [ext_resource type="PackedScene" uid="uid://ccgebu0extq6q" path="res://Vehicles/Seat/Seat.tscn" id="7_lyu3h"]
-[ext_resource type="PackedScene" uid="uid://1mruehyshlq" path="res://Player/Ragdoll/ragdoll.tscn" id="8_s3diw"]
 [ext_resource type="PackedScene" uid="uid://dqqqnhev4fhpv" path="res://Items/Weapons/Revolver/RevolverDropped.tscn" id="9_fswkx"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
@@ -496,9 +495,6 @@ size = Vector3(1, 0.25, 0.25)
 
 [node name="Node3D" parent="." instance=ExtResource("7_lyu3h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.89302, 1.02947, -0.953824)
-
-[node name="character" parent="." instance=ExtResource("8_s3diw")]
-transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 12, 1, 3)
 
 [node name="RevolverDropped" parent="." instance=ExtResource("9_fswkx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01503, 7.30919, -4.18042)
