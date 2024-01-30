@@ -4,11 +4,12 @@
 [ext_resource type="PackedScene" uid="uid://cdryhy8tvvlgn" path="res://Player/Player.tscn" id="2_bpip0"]
 [ext_resource type="Resource" uid="uid://cyg7nj4c61q0s" path="res://Items/ItemLists/ItemsList.tres" id="3_h3mcl"]
 
-[node name="GameManager" type="Node3D"]
+[node name="GameManager" type="Node3D" node_paths=PackedStringArray("spawner")]
 script = ExtResource("1_mirrj")
 playerScene = ExtResource("2_bpip0")
 itemList = ExtResource("3_h3mcl")
+spawner = NodePath("MultiplayerSpawner")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Player/Player.tscn", "res://Scenes/World.tscn")
+_spawnable_scenes = PackedStringArray("res://Player/Player.tscn", "res://Scenes/World.tscn", "res://Player/Ragdoll/ragdoll.tscn", "res://Items/Weapons/Revolver/RevolverDropped.tscn")
 spawn_path = NodePath("..")

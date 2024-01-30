@@ -10,6 +10,7 @@ public partial class GameManager : Node
 	[Signal] public delegate void PlayerJoinedEventHandler(long id);
 	[Export] private PackedScene playerScene;
 	[Export] public ItemListResource itemList { get; set; }
+	[Export] public MultiplayerSpawner spawner;
 	public SceneManager world;
 	private List<PlayerState> Players = new List<PlayerState>();
 	public float Sensitivity = 0.001f;
@@ -43,24 +44,23 @@ public partial class GameManager : Node
 		}
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SpawnItem(int playerId, int itemId, Vector3 position)
 	{
-		if (world is null)
-		{
-			world = GetNode<SceneManager>("World");
-		}
-		world.Rpc(nameof(world.SpawnItem), playerId, itemId, position);
+		var item = GetItemResource(itemId).ItemOnFloor.Instantiate<Item>();
+		AddChild(item, true);
+		item.GlobalPosition = position;
+		var player = GetNode<Player>($"{playerId}");
+		player.RpcId(playerId, nameof(player.SetPickedItem), item.GetPath());
 	}
 
-	public void DestroyItem(string itemName)
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void DestroyItem(string itemPath)
 	{
-		if (world is null)
-		{
-			GD.Print("Yeah world was missing");
-			world = GetNode<SceneManager>("World");
-		}
-		world.Rpc(nameof(world.DestroyItem), itemName);
+		// if (Multiplayer.IsServer())
+		GetNode(itemPath).QueueFree();
 	}
+
 
 	public void ResetWorld()
 	{
@@ -85,7 +85,7 @@ public partial class GameManager : Node
 		{
 			var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<SceneManager>();
 			AddChild(scene);
-			// world = scene;
+			world = scene;
 			foreach (var playerState in Players)
 			{
 				SpawnPlayer(playerState);
@@ -100,7 +100,6 @@ public partial class GameManager : Node
 		{
 			Player currentPlayer = playerScene.Instantiate<Player>();
 			currentPlayer.Name = playerState.Id.ToString();
-			currentPlayer.Id = playerState.Id;
 
 			int playerIndex = Players.FindIndex(x => x.Id == int.Parse(playerState.Id.ToString()));
 
