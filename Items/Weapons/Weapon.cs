@@ -12,7 +12,7 @@ public partial class Weapon : HeldItem
         var collider = bulletRay.GetCollider();
         if (collider is Player player)
         {
-            player.Rpc(nameof(player.Hit), stats.Damage);
+            player.RpcId(int.Parse(player.Name), nameof(player.Hit), stats.Damage);
         }
     }
 }

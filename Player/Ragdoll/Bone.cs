@@ -41,6 +41,12 @@ public partial class Bone : PhysicalBone3D
 		playerHolding = 0;
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void Drop()
+	{
+		playerHolding = 0;
+	}
+
 	public Vector3 GetAngularVelocity(Basis fromBasis, Basis toBasis)
 	{
 		Quaternion q1 = fromBasis.GetRotationQuaternion();

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http;
 using Godot;
@@ -16,6 +17,8 @@ public partial class Player : CharacterBody3D
 	[Export] private FloatMachine floatMachine;
 	[Export] private Label3D nameTag;
 	[Export] private Node3D head;
+	[Export] private PackedScene ragdollScene;
+	[Export] private CollisionShape3D collisionShape3D;
 
 	[ExportGroup("Debug Nodes")]
 	[Export] private Label stateLabel;
@@ -43,9 +46,9 @@ public partial class Player : CharacterBody3D
 	private HeldItem heldItem;
 	private float Strength = 40f;
 	private int Health = 10;
-	public int Id;
 
 	Seat seat;
+	Ragdoll ragdoll;
 
 	public MovementState movementState { get; set; } = MovementState.idle;
 	public enum MovementState
@@ -151,12 +154,6 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if(Health <= 0)
-		{
-			Health = 10;
-			var spawnPoint = GetTree().GetNodesInGroup("SpawnPoints")[0] as Node3D;
-			GlobalPosition = spawnPoint.GlobalPosition;
-		}
 		if (gameManager is not null)
 		{
 			playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
@@ -165,6 +162,17 @@ public partial class Player : CharacterBody3D
 		}
 
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
+
+		if (movementState == MovementState.unconscious)
+		{
+			Visible = false;
+			collisionShape3D.Disabled = true;
+		}
+		else
+		{
+			Visible = true;
+			collisionShape3D.Disabled = false;
+		}
 
 		//Lerp movement for other players
 		if (!IsMultiplayerAuthority())
@@ -178,6 +186,28 @@ public partial class Player : CharacterBody3D
 			Transform = newState;
 			return;
 		};
+
+		if (movementState == MovementState.unconscious)
+		{
+			camera.Current = false;
+			if (Input.IsActionJustPressed("jump"))
+			{
+				Health = 10;
+				movementState = MovementState.idle;
+				if (ragdoll is not null)
+				{
+					GD.Print(ragdoll.GetUpPosition());
+					GlobalPosition = ragdoll.GetUpPosition();
+					ragdoll.SwitchCamera();
+					ragdoll.Rpc(nameof(ragdoll.Destroy));
+				}
+			}
+			return;
+		}
+		else
+		{
+			camera.Current = true;
+		}
 
 		// Movement logic
 		Vector3 velocity = Velocity;
@@ -219,8 +249,11 @@ public partial class Player : CharacterBody3D
 		// Makes head and body same rotation when not seated
 		head.GlobalRotation = GlobalRotation;
 
-
 		// Handle movementState changes
+		if (Health <= 0)
+		{
+			movementState = MovementState.unconscious;
+		}
 		if (Input.IsActionJustPressed("jump") && isGrounded)
 		{
 			velocity.Y = jumpVelocity;
@@ -326,12 +359,6 @@ public partial class Player : CharacterBody3D
 		GlobalRotation = rotation;
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void SetPickedItem(string itemPath)
-	{
-		PickedItem = GetTree().Root.GetNode<Item>(itemPath);
-	}
-
 	[Rpc(CallLocal = true)]
 	public void HandleRpcAnimations(string state, bool isGroundedRpc, Vector3 velocity, Transform3D transform)
 	{
@@ -374,34 +401,65 @@ public partial class Player : CharacterBody3D
 	{
 		GD.Print($"Player {Name} was hit for {damage}");
 		Health -= damage;
+
+		if (Health <= 0)
+		{
+			movementState = MovementState.unconscious;
+			GD.Print($"Spawn ragdoll for {Name}");
+			Visible = false;
+			collisionShape3D.Disabled = true;
+			Rpc(nameof(SpawnRagdoll), int.Parse(Name));
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SpawnRagdoll(int playerId)
+	{
+		GD.Print(playerId);
+		if (Multiplayer.IsServer())
+		{
+			var ragdoll = ragdollScene.Instantiate<Ragdoll>();
+			ragdoll.MoveRagdoll(new Vector3(GlobalPosition.X, GlobalPosition.Y - 1.2f, GlobalPosition.Z), GlobalRotation);
+			GetParent().AddChild(ragdoll, true);
+			ragdoll.playerId = playerId;
+		
+			RpcId(playerId, nameof(SetRagdoll), ragdoll.GetPath());
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SetRagdoll(string ragdollPath)
+	{
+		ragdoll = GetNode<Ragdoll>(ragdollPath);
+		ragdoll.SwitchCamera();
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SetPickedItem(string itemPath)
+	{
+		GD.Print($"Should hold {itemPath}");
+		PickedItem = GetTree().Root.GetNode<Item>(itemPath);
 	}
 
 	public void HandleItem()
 	{
 		// Equip held item
-		if (Input.IsActionJustPressed("equip") && PickedItem is not null && heldItem is null)
+		if (Input.IsActionJustPressed("equip") && PickedItem is Item && heldItem is null)
 		{
 			GD.Print("Item picked");
 			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
 			if (itemResource.Equippable)
 			{
 				heldItem = itemResource.ItemInHand.Instantiate<HeldItem>();
-				// heldItem.SetMultiplayerAuthority(int.Parse(Name));
 				equip.AddChild(heldItem);
-				// multiplayerSynchronizer.ReplicationConfig.AddProperty($"{equip.GetChild(0).GetPath()}:position");
-				// multiplayerSynchronizer.ReplicationConfig.AddProperty($"{equip.GetChild(0).GetPath()}:rotation");
-				// PickedItem.RpcId(1, nameof(PickedItem.Destroy));
-				
-				// gameManager.Rpc(nameof(gameManager.DestroyItem), PickedItem.Name);
-				gameManager.DestroyItem(PickedItem.Name);
+				gameManager.Rpc(nameof(gameManager.DestroyItem), PickedItem.GetPath());
 				PickedItem = null;
 			}
 		}
 		// Drop held item
 		else if (Input.IsActionJustPressed("equip") && PickedItem is null && heldItem is not null && itemResource is not null)
 		{
-			// gameManager.Rpc(nameof(gameManager.SpawnItem), int.Parse(Name), itemResource.ItemId, hand.GlobalPosition);
-			gameManager.SpawnItem(int.Parse(Name), itemResource.ItemId, hand.GlobalPosition);
+			gameManager.RpcId(1, nameof(gameManager.SpawnItem), int.Parse(Name), itemResource.ItemId, hand.GlobalPosition);
 			heldItem = null;
 			equip.GetChild(0).QueueFree();
 		}
@@ -414,15 +472,11 @@ public partial class Player : CharacterBody3D
 		{
 			if (interaction.GetCollider() is Item item && PickedItem is null && item.playerHolding == 0)
 			{
-				PickedItem = item;
-				hand.GlobalPosition = item.GlobalPosition;
-				staticBody.GlobalBasis = PickedItem.GlobalBasis;
+				PickItem(item);
 			}
 			else if (interaction.GetCollider() is Bone bone && PickedItem is null && bone.playerHolding == 0)
 			{
-				PickedItem = bone;
-				hand.GlobalPosition = bone.GlobalPosition;
-				staticBody.GlobalBasis = PickedItem.GlobalBasis;
+				PickItem(bone);
 			}
 			else if (PickedItem is not null)
 			{
@@ -468,7 +522,14 @@ public partial class Player : CharacterBody3D
 
 	public void DropPickedItem()
 	{
-		PickedItem.Rpc("Move", Vector3.Zero, Vector3.Zero, 0, 0);
+		PickedItem.Rpc(nameof(PickedItem.Drop));
 		PickedItem = null;
+	}
+
+	public void PickItem(dynamic item)
+	{
+		PickedItem = item;
+		hand.GlobalPosition = item.GlobalPosition;
+		staticBody.GlobalBasis = PickedItem.GlobalBasis;
 	}
 }
