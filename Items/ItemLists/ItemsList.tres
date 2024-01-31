@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="ItemListResource" load_steps=3 format=3 uid="uid://cyg7nj4c61q0s"]
-
-[ext_resource type="Resource" uid="uid://bo7u6cyvl04tw" path="res://Items/Weapons/Revolver/Revolver.tres" id="1_vskqv"]
-[ext_resource type="Script" path="res://Items/ItemListResource.cs" id="2_vwcdt"]
-
-[resource]
-script = ExtResource("2_vwcdt")
-items = Array[Object]([ExtResource("1_vskqv")])

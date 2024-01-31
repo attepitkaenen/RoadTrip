@@ -1,25 +1,37 @@
 using Godot;
-using System;
+using Godot.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 
 public partial class GameManager : Node
 {
 	[Signal] public delegate void PlayerJoinedEventHandler(long id);
 	[Export] private PackedScene playerScene;
-	[Export] public ItemListResource itemList { get; set; }
+	[Export] public Array<ItemResource> itemList = new Array<ItemResource>();
 	[Export] public MultiplayerSpawner spawner;
 	public SceneManager world;
 	private List<PlayerState> Players = new List<PlayerState>();
 	public float Sensitivity = 0.001f;
 
-	public ItemResource GetItemResource(int id)
+    public override void _Ready()
+    {
+		// Load all itemResources
+        foreach (string fileNameRemap in DirAccess.GetFilesAt("res://ItemData"))
+		{
+			GD.Print(fileNameRemap);
+			var fileName = fileNameRemap.Replace(".remap", "");
+			var item = GD.Load<ItemResource>("res://ItemData/" + fileName);
+			itemList.Add(item);
+			GD.Print(itemList[0].ItemName);
+		}
+    }
+
+    public ItemResource GetItemResource(int id)
 	{
 		if (itemList is not null)
 		{
-			return itemList.items.First(item => item.ItemId == id);
+			return itemList.First(item => item.ItemId == id);
 		}
 		return null;
 	}

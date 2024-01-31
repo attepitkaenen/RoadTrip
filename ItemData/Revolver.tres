@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://bo7u6cyvl04tw"]
+
+[ext_resource type="PackedScene" uid="uid://c1f4hwg1i38lk" path="res://Items/Weapons/Revolver/RevolverHeld.tscn" id="1_mxa17"]
+[ext_resource type="PackedScene" uid="uid://dqqqnhev4fhpv" path="res://Items/Weapons/Revolver/RevolverDropped.tscn" id="2_pifmb"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="3_67svs"]
+
+[resource]
+script = ExtResource("3_67svs")
+Equippable = true
+ItemName = "Revolver"
+ItemId = 1
+Description = "6 shot revolver"
+ItemOnFloor = ExtResource("2_pifmb")
+ItemInHand = ExtResource("1_mxa17")
