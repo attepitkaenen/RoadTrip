@@ -29,7 +29,7 @@ material_override = ExtResource("3_4b1jl")
 use_collision = true
 collision_layer = 2
 collision_mask = 3
-size = Vector3(100, 6.87793, 205.528)
+size = Vector3(1000, 6.878, 1000)
 
 [node name="Coralli" parent="." instance=ExtResource("4_5gbf8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9827, 1.92774, -0.241957)
@@ -111,14 +111,14 @@ text = "Controlls:"
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.169392, -0.00813484, 2.48586)
 text = "WASD: Move
 Shift: Sprint
-Space: Jump
+Space: Jump & handbreak
 Left Ctrl: Crouch
 Esc: Open menu
 Mouse1: Grab items
-Mouse2: Throw hold item
+Mouse2: Throw picked item
 E + Mouse: Rotate held item 
 Scroll wheel: Move held item closer and further
-F: Sit on seats by standing on top of them"
+F: Sit while on top of seat & equip currently held item"
 horizontal_alignment = 0
 
 [node name="CSGBox3D9" type="CSGBox3D" parent="."]
