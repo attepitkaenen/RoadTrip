@@ -74,7 +74,14 @@ public partial class GameManager : Node
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SpawnItem(int playerId, int itemId, Vector3 position)
+	public void HoldItem(int itemId, string equipPath)
+	{
+		var item = GetItemResource(itemId).ItemInHand.Instantiate<HeldItem>();
+		GetNode<Marker3D>(equipPath).AddChild(item);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void DropItem(int playerId, int itemId, Vector3 position)
 	{
 		var item = GetItemResource(itemId).ItemOnFloor.Instantiate<Item>();
 		AddChild(item, true);
