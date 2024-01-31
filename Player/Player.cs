@@ -240,7 +240,7 @@ public partial class Player : CharacterBody3D
 			if (seat is Seat && seat.isDriverSeat)
 			{
 				Vehicle vehicle = seat.GetParent<Vehicle>();
-				vehicle.Rpc(nameof(vehicle.Drive), Input.GetVector("left", "right", "up", "down"), Input.IsActionPressed("jump"), delta);
+				vehicle.Rpc(nameof(vehicle.Drive), Input.GetActionStrength("left") - Input.GetActionStrength("right"), Input.GetActionStrength("up") - Input.GetActionStrength("down"), Input.IsActionPressed("jump"), delta);
 			}
 			return;
 		}

@@ -130,12 +130,22 @@ public partial class Vehicle : VehicleBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void Drive(Vector2 inputDir, bool space, double delta)
+	public void Drive(float inputDir, float gas, bool space, double delta)
 	{
+		var steeringReducer = (1 / LinearVelocity.Length() * 10);
+		steeringReducer = Mathf.Clamp(steeringReducer, 0.1f, 1);
+		GD.Print(steeringReducer);
 		if (driverSeat.occupied)
 		{
-			Steering = Mathf.Lerp(Steering, -inputDir.X * maxSteer, (float)delta * 1f);
-			EngineForce = -inputDir.Y * enginePower;
+			Steering = Mathf.Lerp(Steering, (inputDir * steeringReducer) * maxSteer, (float)delta * 1f);
+			// if (inputDir > 0.1 || inputDir < -0.1)
+			// {
+			// }
+			// else
+			// {
+			// 	Steering = Mathf.Lerp(Steering, 0, (float)delta * 1f);
+			// }
+			EngineForce = gas * enginePower;
 
 			if (space)
 			{
