@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://r5jkmn54rdln"]
+[gd_scene load_steps=16 format=3 uid="uid://r5jkmn54rdln"]
 
 [ext_resource type="Script" path="res://Vehicles/Coralli/Coralli.cs" id="1_p5jd5"]
 [ext_resource type="PackedScene" uid="uid://ccgebu0extq6q" path="res://Vehicles/Seat/Seat.tscn" id="1_q5sv6"]
@@ -8,6 +8,11 @@ size = Vector3(1.5, 0.2, 3)
 
 [sub_resource type="BoxMesh" id="BoxMesh_55uds"]
 size = Vector3(1.5, 0.2, 3)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_h00jx"]
+top_radius = 0.25
+bottom_radius = 0.25
+height = 0.2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]
 properties/0/path = NodePath(".:syncRotation")
@@ -73,36 +78,52 @@ shape = SubResource("BoxShape3D_cwr7c")
 mesh = SubResource("BoxMesh_55uds")
 
 [node name="WheelFL" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.2, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, -0.2, 1)
 use_as_steering = true
 wheel_radius = 0.25
-wheel_rest_length = 0.3
+wheel_rest_length = 0.2
 wheel_friction_slip = 3.0
 suspension_stiffness = 60.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFL"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_h00jx")
 
 [node name="WheelFR" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, -0.2, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, -0.2, 1)
 use_as_steering = true
 wheel_radius = 0.25
-wheel_rest_length = 0.3
+wheel_rest_length = 0.2
 wheel_friction_slip = 3.0
 suspension_stiffness = 60.0
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFR"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_h00jx")
+
 [node name="WheelBL" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.2, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, -0.2, -1)
 use_as_traction = true
 wheel_radius = 0.25
-wheel_rest_length = 0.3
+wheel_rest_length = 0.2
 wheel_friction_slip = 2.0
 suspension_stiffness = 60.0
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBL"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_h00jx")
+
 [node name="WheelBR" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, -0.2, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, -0.2, -1)
 use_as_traction = true
 wheel_radius = 0.25
-wheel_rest_length = 0.3
+wheel_rest_length = 0.2
 wheel_friction_slip = 2.0
 suspension_stiffness = 60.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBR"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_h00jx")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_4inyu")
