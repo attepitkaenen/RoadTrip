@@ -137,14 +137,7 @@ public partial class Vehicle : VehicleBody3D
 		GD.Print(steeringReducer);
 		if (driverSeat.occupied)
 		{
-			Steering = Mathf.Lerp(Steering, (inputDir * steeringReducer) * maxSteer, (float)delta * 1f);
-			// if (inputDir > 0.1 || inputDir < -0.1)
-			// {
-			// }
-			// else
-			// {
-			// 	Steering = Mathf.Lerp(Steering, 0, (float)delta * 1f);
-			// }
+			Steering = Mathf.Lerp(Steering, inputDir * steeringReducer * maxSteer, (float)delta * 1f);
 			EngineForce = gas * enginePower;
 
 			if (space)
