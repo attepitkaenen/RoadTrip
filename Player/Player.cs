@@ -404,6 +404,12 @@ public partial class Player : CharacterBody3D
 
 		if (Health <= 0)
 		{
+			if (movementState == MovementState.seated)
+			{
+				seat.Rpc(nameof(seat.Stand));
+				seat = null;
+				GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
+			}
 			movementState = MovementState.unconscious;
 			GD.Print($"Spawn ragdoll for {Name}");
 			Visible = false;
@@ -422,7 +428,7 @@ public partial class Player : CharacterBody3D
 			ragdoll.MoveRagdoll(new Vector3(GlobalPosition.X, GlobalPosition.Y - 1.2f, GlobalPosition.Z), GlobalRotation);
 			GetParent().AddChild(ragdoll, true);
 			ragdoll.playerId = playerId;
-		
+
 			RpcId(playerId, nameof(SetRagdoll), ragdoll.GetPath());
 		}
 	}
@@ -465,7 +471,7 @@ public partial class Player : CharacterBody3D
 			gameManager.Rpc(nameof(gameManager.DestroyItem), heldItem.GetPath());
 			heldItem = null;
 			equip.GetChild(0).QueueFree();
-			
+
 		}
 
 		// Stop picking items when item held
