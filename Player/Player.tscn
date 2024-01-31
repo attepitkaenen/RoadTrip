@@ -1406,7 +1406,7 @@ bones/34/rotation = Quaternion(-0.0145625, -0.0444006, -0.428319, 0.902419)
 bones/35/rotation = Quaternion(0.462806, 3.86938e-08, 0.187114, 0.866486)
 
 [node name="Head" parent="character/Armature/Skeleton3D" index="0"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 0)
+transform = Transform3D(1.37091e-06, 0, -1, 0, 1, 0, 1, 0, 1.37091e-06, 0, 0, 0)
 
 [node name="NameTag" type="Label3D" parent="."]
 transform = Transform3D(-0.3, 0, -4.52987e-08, 0, 0.3, 0, 4.52987e-08, 0, -0.3, 0, -0.0464681, -0.195011)

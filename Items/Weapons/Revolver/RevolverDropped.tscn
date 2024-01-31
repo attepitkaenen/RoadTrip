@@ -120,9 +120,6 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_syjoy")
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_373bt"]
-points = PackedVector3Array(-0.05, -0.142951, -0.19003, -0.05, 0.00204296, -0.205, 0.05, -0.142951, -0.19003, -0.05, -0.142951, -0.0800254, 0.05, 0.00204296, -0.205, -0.05, 0.0970265, -0.205, 0.05, -0.142951, -0.0800254, -0.0400059, -0.0729587, 0.0649755, -0.05, -0.0229763, 0.124975, 0.05, 0.0970265, -0.205, -0.0150059, 0.142951, -0.117068, -0.0150059, 0.139201, -0.131035, -0.05, 0.0970265, 0.124975, 0.0399961, -0.0729587, 0.0649755, 0.05, -0.0229763, 0.124975, -0.030002, -0.00296648, 0.17498, -0.0289839, 0.0392639, 0.205, -0.030002, 0.047044, 0.205, 0.0149961, 0.139201, -0.131035, 0.0149961, 0.142951, -0.117068, 0.05, 0.0970265, 0.124975, -0.0150059, 0.142951, -0.0229561, -0.0289839, 0.054796, 0.205, -0.030002, 0.0970265, 0.17498, -0.0100039, 0.117036, 0.124975, 0.0299922, -0.00296648, 0.17498, 0.0299922, 0.047044, 0.205, 0.0289742, 0.0392639, 0.205, -9.79006e-06, 0.0170433, 0.205, -0.00777213, 0.0180508, 0.205, -0.0150059, 0.0210453, 0.205, -0.0212216, 0.0258308, 0.205, -0.0259886, 0.0320436, 0.205, 0.0149961, 0.142951, -0.0229561, 0.00999413, 0.117036, 0.124975, 0.0299922, 0.0970265, 0.17498, 0.0289742, 0.054796, 0.205, -0.0259886, 0.0620443, 0.205, -0.0212216, 0.0682572, 0.205, -0.0150059, 0.0730147, 0.205, -0.00777213, 0.0760092, 0.205, -9.79006e-06, 0.0770447, 0.205, 0.0259789, 0.0320436, 0.205, 0.0212118, 0.0258308, 0.205, 0.0149961, 0.0210453, 0.205, 0.00776233, 0.0180508, 0.205, 0.00776233, 0.0760092, 0.205, 0.0149961, 0.0730147, 0.205, 0.0212118, 0.0682572, 0.205, 0.0259789, 0.0620443, 0.205)
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_k5618"]
 properties/0/path = NodePath(".:syncPosition")
 properties/0/spawn = true
@@ -137,6 +134,9 @@ properties/3/path = NodePath(".:syncAngularVelocity")
 properties/3/spawn = true
 properties/3/replication_mode = 1
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_g3boa"]
+size = Vector3(0.2, 0.3, 0.4)
+
 [node name="RevolverDropped" type="RigidBody3D" node_paths=PackedStringArray("multiplayerSynchronizer")]
 collision_layer = 8
 collision_mask = 15
@@ -149,9 +149,8 @@ ItemId = 1
 mesh = SubResource("ArrayMesh_uk0le")
 skeleton = NodePath("")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-shape = SubResource("ConvexPolygonShape3D_373bt")
-
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_k5618")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_g3boa")
