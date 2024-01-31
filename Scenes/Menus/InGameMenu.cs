@@ -4,11 +4,13 @@ using System;
 public partial class InGameMenu : Menu
 {
     MultiplayerController multiplayerController;
+    GameManager gameManager;
 
     public override void _Ready()
     {
         menuType = MenuHandler.MenuType.ingamemenu;
         multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
+        gameManager = GetNode<GameManager>("/root/GameManager");
     }
 
     public void _on_resume_pressed()
@@ -30,5 +32,10 @@ public partial class InGameMenu : Menu
     public void _on_quit_pressed()
     {
         GetTree().Quit();
+    }
+
+    public void _on_respawn_pressed()
+    {
+        gameManager.Respawn();
     }
 }

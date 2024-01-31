@@ -122,11 +122,18 @@ F: Sit while on top of seat & equip currently held item"
 horizontal_alignment = 0
 
 [node name="CSGBox3D9" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.92124, 0.388995, 0, -0.388995, 0.92124, 9.68861, 1.11176, 39.9811)
+transform = Transform3D(1, 0, 0, 0, 0.958845, 0.283931, 0, -0.283931, 0.958845, 11.8008, 1.45686, 42.2507)
 material_override = ExtResource("3_4b1jl")
 use_collision = true
 collision_layer = 2
-size = Vector3(2.67078, 0.94339, 5.45578)
+size = Vector3(6.89508, 0.94339, 10.383)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.954293, -0.298875, 0, 0.298875, 0.954293, 11.8008, 1.45686, 64.5324)
+material_override = ExtResource("3_4b1jl")
+use_collision = true
+collision_layer = 2
+size = Vector3(6.89508, 0.94339, 10.383)
 
 [node name="CSGBox3D7" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.22762, 2.21289, 4.88896)

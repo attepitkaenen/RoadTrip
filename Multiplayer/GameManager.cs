@@ -14,10 +14,10 @@ public partial class GameManager : Node
 	private List<PlayerState> Players = new List<PlayerState>();
 	public float Sensitivity = 0.001f;
 
-    public override void _Ready()
-    {
+	public override void _Ready()
+	{
 		// Load all itemResources
-        foreach (string fileNameRemap in DirAccess.GetFilesAt("res://ItemData"))
+		foreach (string fileNameRemap in DirAccess.GetFilesAt("res://ItemData"))
 		{
 			GD.Print(fileNameRemap);
 			var fileName = fileNameRemap.Replace(".remap", "");
@@ -25,9 +25,26 @@ public partial class GameManager : Node
 			itemList.Add(item);
 			GD.Print(itemList[0].ItemName);
 		}
-    }
+	}
 
-    public ItemResource GetItemResource(int id)
+	public void Respawn()
+	{
+		GD.Print($"Respawning {Multiplayer.GetUniqueId()}");
+		var player = GetTree().GetNodesInGroup("Player").ToList().Find(player => player.Name == $"{Multiplayer.GetUniqueId()}") as Player;
+
+		int playerIndex = Players.FindIndex(x => x.Id == int.Parse(player.Name));
+
+		var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
+		foreach (Node3D spawnPoint in spawnPoints)
+		{
+			if (int.Parse(spawnPoint.Name) == playerIndex)
+			{
+				player.Rpc(nameof(player.MovePlayer), spawnPoint.GlobalPosition, Vector3.Zero);
+			}
+		}
+	}
+
+	public ItemResource GetItemResource(int id)
 	{
 		if (itemList is not null)
 		{
