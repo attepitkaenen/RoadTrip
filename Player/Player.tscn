@@ -30,7 +30,7 @@ height = 1.0
 height = 1.5
 radius = 0.2
 
-[sub_resource type="Animation" id="Animation_padm3"]
+[sub_resource type="Animation" id="Animation_qatfd"]
 resource_name = "idle"
 length = 0.0416667
 tracks/0/type = "rotation_3d"
@@ -202,7 +202,7 @@ tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="Animation" id="Animation_cu6vk"]
+[sub_resource type="Animation" id="Animation_t13ht"]
 resource_name = "jump"
 length = 0.416667
 tracks/0/type = "position_3d"
@@ -374,7 +374,7 @@ tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="Animation" id="Animation_3ejmg"]
+[sub_resource type="Animation" id="Animation_4a6na"]
 resource_name = "sitting"
 length = 0.0416667
 tracks/0/type = "position_3d"
@@ -546,7 +546,7 @@ tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="Animation" id="Animation_ee56x"]
+[sub_resource type="Animation" id="Animation_i3q8m"]
 resource_name = "sideStepping_l_loop"
 length = 0.833333
 loop_mode = 1
@@ -719,7 +719,7 @@ tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = PackedFloat32Array(0, 1, -0.64935, 0.2799, 0.64935, 0.2799)
 
-[sub_resource type="Animation" id="Animation_ixyh1"]
+[sub_resource type="Animation" id="Animation_f7axm"]
 resource_name = "sideStepping_r_loop"
 length = 0.833333
 loop_mode = 1
@@ -892,7 +892,7 @@ tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = PackedFloat32Array(0, 1, -0.64935, 0.2799, 0.64935, 0.2799)
 
-[sub_resource type="Animation" id="Animation_wqvyc"]
+[sub_resource type="Animation" id="Animation_58f51"]
 resource_name = "walkingBackward_loop"
 length = 0.833333
 loop_mode = 1
@@ -1065,7 +1065,7 @@ tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="Animation" id="Animation_jrbc2"]
+[sub_resource type="Animation" id="Animation_wmkwt"]
 resource_name = "walkingForward_loop"
 length = 0.833333
 loop_mode = 1
@@ -1238,15 +1238,15 @@ tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_jsfpp"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_87r2y"]
 _data = {
-"idle": SubResource("Animation_padm3"),
-"jump": SubResource("Animation_cu6vk"),
-"sideStepping_l": SubResource("Animation_ee56x"),
-"sideStepping_r": SubResource("Animation_ixyh1"),
-"sitting": SubResource("Animation_3ejmg"),
-"walkingBackward": SubResource("Animation_wqvyc"),
-"walkingForward": SubResource("Animation_jrbc2")
+"idle": SubResource("Animation_qatfd"),
+"jump": SubResource("Animation_t13ht"),
+"sideStepping_l": SubResource("Animation_i3q8m"),
+"sideStepping_r": SubResource("Animation_f7axm"),
+"sitting": SubResource("Animation_4a6na"),
+"walkingBackward": SubResource("Animation_58f51"),
+"walkingForward": SubResource("Animation_wmkwt")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_70wnq"]
@@ -1429,7 +1429,7 @@ collision_mask = 6
 [node name="AnimationTree" type="AnimationTree" parent="."]
 root_node = NodePath("../character")
 libraries = {
-"": SubResource("AnimationLibrary_jsfpp")
+"": SubResource("AnimationLibrary_87r2y")
 }
 tree_root = SubResource("AnimationNodeStateMachine_a7qf5")
 anim_player = NodePath("../character/AnimationPlayer")
