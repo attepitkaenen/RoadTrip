@@ -62,6 +62,17 @@ public partial class Item : RigidBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void Hit(int damage, Vector3 bulletTravelDirection)
+	{
+		GD.Print($"{Name} was hit for {damage}");
+
+		if (playerHolding == 0)
+		{
+			LinearVelocity += bulletTravelDirection * 10; 
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Move(Vector3 handPosition, Basis handBasis, float strength, int playerId)
 	{
 		if (playerHolding == 0)

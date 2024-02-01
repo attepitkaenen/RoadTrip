@@ -9,10 +9,15 @@ public partial class Weapon : HeldItem
     public override void LeftClick()
     {
         GD.Print("Bang!");
-        var collider = bulletRay.GetCollider();
+        dynamic collider = bulletRay.GetCollider();
+        var bulletTravelDirection = (bulletRay.GetCollisionPoint() - GlobalPosition).Normalized();
         if (collider is Player player)
         {
-            player.RpcId(int.Parse(player.Name), nameof(player.Hit), stats.Damage);
+            player.RpcId(int.Parse(player.Name), nameof(player.Hit), stats.Damage, bulletTravelDirection);
+        }
+        else if (collider is Item || collider is Bone)
+        {
+            collider.Rpc(nameof(collider.Hit), stats.Damage, bulletTravelDirection);
         }
     }
 }
