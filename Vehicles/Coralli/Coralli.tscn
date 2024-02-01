@@ -126,6 +126,8 @@ transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 
 mesh = SubResource("CylinderMesh_h00jx")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.016
+delta_interval = 0.016
 replication_config = SubResource("SceneReplicationConfig_4inyu")
 
 [node name="DriverSeat" parent="." instance=ExtResource("1_q5sv6")]

@@ -64,7 +64,6 @@ public partial class MenuHandler : Control
                 Input.MouseMode = Input.MouseModeEnum.Captured;
                 break;
             case MenuType.mainmenu:
-                multiplayerController.SetGameStartedStatus(false);
                 SwitchMenus(menus, MenuType.mainmenu);
                 Input.MouseMode = Input.MouseModeEnum.Visible;
                 break;
