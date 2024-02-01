@@ -404,6 +404,7 @@ public partial class Player : CharacterBody3D
 
 		if (Health <= 0)
 		{
+
 			Rpc(nameof(SpawnRagdoll), int.Parse(Name), Velocity);
 			if (movementState == MovementState.seated)
 			{
