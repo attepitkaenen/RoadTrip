@@ -41,6 +41,24 @@ public partial class Bone : PhysicalBone3D
 		playerHolding = 0;
 	}
 
+	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SetLinearVelocity(Vector3 linearVelocity)
+	{
+		GD.Print("Here I am");
+		LinearVelocity = linearVelocity;
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void Hit(int damage, Vector3 bulletTravelDirection)
+	{
+		GD.Print($"{Name} was hit for {damage}");
+
+		if (playerHolding == 0)
+		{
+			LinearVelocity += bulletTravelDirection * 10;
+		}
+	}
+
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Drop()
 	{
