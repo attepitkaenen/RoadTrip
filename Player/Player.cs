@@ -397,13 +397,15 @@ public partial class Player : CharacterBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	public void Hit(int damage)
+	public void Hit(int damage, Vector3 bulletTravelDirection)
 	{
 		GD.Print($"Player {Name} was hit for {damage}");
 		Health -= damage;
 
 		if (Health <= 0)
 		{
+
+			Rpc(nameof(SpawnRagdoll), int.Parse(Name), Velocity);
 			if (movementState == MovementState.seated)
 			{
 				seat.Rpc(nameof(seat.Stand));
@@ -414,18 +416,18 @@ public partial class Player : CharacterBody3D
 			GD.Print($"Spawn ragdoll for {Name}");
 			Visible = false;
 			collisionShape3D.Disabled = true;
-			Rpc(nameof(SpawnRagdoll), int.Parse(Name));
 		}
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void SpawnRagdoll(int playerId)
+	public void SpawnRagdoll(int playerId, Vector3 velocity)
 	{
-		GD.Print(playerId);
+		GD.Print(velocity);
 		if (Multiplayer.IsServer())
 		{
 			var ragdoll = ragdollScene.Instantiate<Ragdoll>();
-			ragdoll.MoveRagdoll(new Vector3(GlobalPosition.X, GlobalPosition.Y - 1.2f, GlobalPosition.Z), GlobalRotation);
+			ragdoll.MoveRagdoll(new Vector3(GlobalPosition.X, GlobalPosition.Y - 1.2f, GlobalPosition.Z), GlobalRotation, velocity);
+
 			GetParent().AddChild(ragdoll, true);
 			ragdoll.playerId = playerId;
 

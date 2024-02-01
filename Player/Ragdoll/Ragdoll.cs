@@ -24,10 +24,18 @@ public partial class Ragdoll : Node3D
         });
     }
 
-    public void MoveRagdoll(Vector3 position, Vector3 rotation)
+    public void MoveRagdoll(Vector3 position, Vector3 rotation, Vector3 linearVelocity)
     {
         Position = position;
         Rotation = new Vector3(Rotation.X, rotation.Y, Rotation.Z);
+        var bones = skeleton.GetChildren().Where(node => node is Bone).Select(node => node as Bone).ToList();
+        GD.Print(bones.Count());
+        bones.ForEach(bone =>
+        {
+            // bone.LinearVelocity = linearVelocity;
+            // bone.Rpc(nameof(bone.SetLinearVelocity), linearVelocity);
+            bone.SetLinearVelocity(linearVelocity);
+        });
     }
 
     public void SwitchCamera()
