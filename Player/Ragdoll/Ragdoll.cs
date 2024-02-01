@@ -16,26 +16,24 @@ public partial class Ragdoll : Node3D
     public override void _Ready()
     {
         skeleton.PhysicalBonesStartSimulation();
-        bones = skeleton.GetChildren().Where(node => node is PhysicalBone3D).Select(node => node as PhysicalBone3D).ToList();
-        bones.ForEach(bone =>
+        foreach (var child in GetChildren())
         {
-            synchronizer.ReplicationConfig.AddProperty($"{bone.GetPath()}:position");
-            synchronizer.ReplicationConfig.AddProperty($"{bone.GetPath()}:rotation");
-        });
+            if (child is Bone)
+            {
+                bones.Add(child as Bone);
+                synchronizer.ReplicationConfig.AddProperty($"{child.GetPath()}:position");
+                synchronizer.ReplicationConfig.AddProperty($"{child.GetPath()}:rotation");
+            }
+        }
     }
 
     public void MoveRagdoll(Vector3 position, Vector3 rotation, Vector3 linearVelocity)
     {
         Position = position;
         Rotation = new Vector3(Rotation.X, rotation.Y, Rotation.Z);
-        var bones = skeleton.GetChildren().Where(node => node is Bone).Select(node => node as Bone).ToList();
-        GD.Print(bones.Count());
-        bones.ForEach(bone =>
-        {
-            // bone.LinearVelocity = linearVelocity;
-            // bone.Rpc(nameof(bone.SetLinearVelocity), linearVelocity);
-            bone.SetLinearVelocity(linearVelocity);
-        });
+        bones.ForEach(bone => 
+            bone.LinearVelocity = linearVelocity
+        );
     }
 
     public void SwitchCamera()
@@ -46,7 +44,7 @@ public partial class Ragdoll : Node3D
 
     public Vector3 GetUpPosition()
     {
-        return  new Vector3(bones[0].GlobalPosition.X, bones[0].GlobalPosition.Y + 1, bones[0].GlobalPosition.Z);
+        return new Vector3(bones[0].GlobalPosition.X, bones[0].GlobalPosition.Y + 1, bones[0].GlobalPosition.Z);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]

@@ -134,7 +134,6 @@ public partial class Vehicle : VehicleBody3D
 	{
 		var steeringReducer = (1 / LinearVelocity.Length() * 10);
 		steeringReducer = Mathf.Clamp(steeringReducer, 0.1f, 1);
-		GD.Print(steeringReducer);
 		if (driverSeat.occupied)
 		{
 			Steering = Mathf.Lerp(Steering, inputDir * steeringReducer * maxSteer, (float)delta * 1f);

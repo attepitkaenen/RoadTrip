@@ -41,4 +41,6 @@ mesh = SubResource("BoxMesh_k2tk5")
 shape = SubResource("BoxShape3D_p4f7m")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.016
+delta_interval = 0.016
 replication_config = SubResource("SceneReplicationConfig_xxydf")

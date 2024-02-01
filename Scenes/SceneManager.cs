@@ -4,10 +4,21 @@ using System.Linq;
 
 public partial class SceneManager : Node3D
 {
-	GameManager gameManager;
+	MultiplayerController multiplayerController;
 
 	public override void _EnterTree()
 	{
-		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+		multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
 	}
+
+    public override void _Ready()
+    {
+		multiplayerController.isGameStarted = true;
+        multiplayerController.RpcId(1, nameof(multiplayerController.PlayerLoaded)); 
+    }
+
+    public override void _ExitTree()
+    {
+        multiplayerController.CloseConnection();
+    }
 }
