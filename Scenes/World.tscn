@@ -305,69 +305,53 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.29574, -1.26434)
 [node name="Item32" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.55407, -1.26434)
 
-[node name="Item33" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item33" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 2.62066, -6.51124)
-multiplayerSynchronizer = NodePath("../Item/MultiplayerSynchronizer")
 
-[node name="Item34" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item34" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 2.96589, -6.50785)
-multiplayerSynchronizer = NodePath("../Item2/MultiplayerSynchronizer")
 
-[node name="Item35" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item35" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.2403, -6.50785)
-multiplayerSynchronizer = NodePath("../Item3/MultiplayerSynchronizer")
 
-[node name="Item36" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item36" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.52894, -6.50785)
-multiplayerSynchronizer = NodePath("../Item4/MultiplayerSynchronizer")
 
-[node name="Item37" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item37" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.78091, -6.50785)
-multiplayerSynchronizer = NodePath("../Item5/MultiplayerSynchronizer")
 
-[node name="Item38" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item38" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 4.03264, -6.51124)
-multiplayerSynchronizer = NodePath("../Item6/MultiplayerSynchronizer")
 
-[node name="Item39" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item39" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 4.29574, -6.51124)
-multiplayerSynchronizer = NodePath("../Item7/MultiplayerSynchronizer")
 
-[node name="Item40" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item40" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 4.55407, -6.51124)
-multiplayerSynchronizer = NodePath("../Item8/MultiplayerSynchronizer")
 
-[node name="Item41" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item41" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 2.62066, -6.51124)
-multiplayerSynchronizer = NodePath("../Item25/MultiplayerSynchronizer")
 
-[node name="Item42" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item42" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 2.96589, -6.50785)
-multiplayerSynchronizer = NodePath("../Item26/MultiplayerSynchronizer")
 
-[node name="Item43" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item43" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 3.2403, -6.50785)
-multiplayerSynchronizer = NodePath("../Item27/MultiplayerSynchronizer")
 
-[node name="Item44" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item44" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 3.52894, -6.50785)
-multiplayerSynchronizer = NodePath("../Item28/MultiplayerSynchronizer")
 
-[node name="Item45" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item45" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 3.78091, -6.50785)
-multiplayerSynchronizer = NodePath("../Item29/MultiplayerSynchronizer")
 
-[node name="Item46" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item46" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.03264, -6.51124)
-multiplayerSynchronizer = NodePath("../Item30/MultiplayerSynchronizer")
 
-[node name="Item47" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item47" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.29574, -6.51124)
-multiplayerSynchronizer = NodePath("../Item31/MultiplayerSynchronizer")
 
-[node name="Item48" parent="Items" node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("5_xddwy")]
+[node name="Item48" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.55407, -6.51124)
-multiplayerSynchronizer = NodePath("../Item32/MultiplayerSynchronizer")
 
 [node name="Item9" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 0.860563, -4.14653)
@@ -594,13 +578,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8995, 7.19749, -4.84512)
 [node name="RevolverDropped2" parent="." instance=ExtResource("9_fswkx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.04105, 6.50563, 8.2407)
 
-[node name="RevolverDropped3" parent="." node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("9_fswkx")]
+[node name="RevolverDropped3" parent="." instance=ExtResource("9_fswkx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.04105, 1.2346, 5.2302)
-multiplayerSynchronizer = NodePath("../RevolverDropped2/MultiplayerSynchronizer")
 
-[node name="RevolverDropped4" parent="." node_paths=PackedStringArray("multiplayerSynchronizer") instance=ExtResource("9_fswkx")]
+[node name="RevolverDropped4" parent="." instance=ExtResource("9_fswkx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47975, 1.2346, 5.2302)
-multiplayerSynchronizer = NodePath("../RevolverDropped2/MultiplayerSynchronizer")
 
 [node name="Path3D" type="Path3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64.1443, 0.5, 20.2667)

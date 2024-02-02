@@ -44,7 +44,6 @@ public partial class Bone : PhysicalBone3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SetLinearVelocity(Vector3 linearVelocity)
 	{
-		GD.Print("Here I am");
 		LinearVelocity = linearVelocity;
 	}
 
