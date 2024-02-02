@@ -17,9 +17,9 @@ config/icon="res://icon.png"
 
 [autoload]
 
-MultiplayerController="*res://Multiplayer/MultiplayerController.cs"
 GameManager="*res://Multiplayer/GameManager.tscn"
 ItemsDatabase="*res://Items/ItemsDatabase.tscn"
+MultiplayerController="*res://Multiplayer/MultiplayerController.cs"
 
 [dotnet]
 

@@ -19,7 +19,7 @@ public partial class MainMenu : Menu
         multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         userName.TextChanged += SaveUserName;
-        gameManager.PlayerJoined += UpdateLobbyNames;
+        multiplayerController.PlayerConnected += UpdateLobbyNames;
         Multiplayer.ConnectionFailed += ConnectionFailed;
         Multiplayer.ServerDisconnected += ConnectionFailed;
         buttons = GetNode("Buttons").GetChildren().Select(node => node as Button).ToList();
@@ -28,26 +28,27 @@ public partial class MainMenu : Menu
     private void ConnectionFailed()
     {
         ToggleHostAndJoinDisabled(false);
+        playerList.Clear();
     }
 
-    public void UpdateLobbyNames(long id)
+    public void UpdateLobbyNames(long peerId, PlayerState peerName)
     {
         playerList.Clear();
-        while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
+        while (playerList.ItemCount < multiplayerController.GetPlayerStates().Count)
         {
             playerList.AddItem("");
         }
         var index = 0;
-        gameManager.GetPlayerStates().ForEach(player =>
+        foreach (var (id, playerState) in multiplayerController.GetPlayerStates())
         {
-            playerList.SetItemText(index, player.Name);
+            playerList.SetItemText(index, playerState.Name);
             index++;
-        });
+        }
     }
 
     private void SaveUserName(string newText)
     {
-        multiplayerController.SetUserName(newText);
+        multiplayerController.UpdateUserName(newText);
     }
 
     public void _on_settings_pressed()
@@ -61,18 +62,18 @@ public partial class MainMenu : Menu
     {
         GD.Print(buttons.Count);
         ToggleHostAndJoinDisabled(true);
-        multiplayerController.OnHostPressed();
+        multiplayerController.CreateGame();
     }
 
     public void _on_join_pressed()
     {
-        multiplayerController.OnJoinPressed(address.Text);
+        multiplayerController.JoinGame(address.Text);
         // ToggleHostAndJoinDisabled(true);
     }
     public void _on_start_pressed()
     {
         ToggleHostAndJoinDisabled(false);
-        multiplayerController.OnStartPressed();
+        multiplayerController.Rpc(nameof(multiplayerController.LoadGame));
     }
 
     public void ToggleHostAndJoinDisabled(bool state)
