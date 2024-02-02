@@ -137,12 +137,12 @@ properties/3/replication_mode = 1
 [sub_resource type="BoxShape3D" id="BoxShape3D_g3boa"]
 size = Vector3(0.2, 0.3, 0.4)
 
-[node name="RevolverDropped" type="RigidBody3D" node_paths=PackedStringArray("multiplayerSynchronizer")]
+[node name="RevolverDropped" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
 collision_layer = 8
 collision_mask = 15
 contact_monitor = true
 script = ExtResource("1_ue5ts")
-multiplayerSynchronizer = NodePath("MultiplayerSynchronizer")
+_synchronizer = NodePath("MultiplayerSynchronizer")
 ItemId = 1
 
 [node name="blasterB" type="MeshInstance3D" parent="."]
@@ -153,6 +153,7 @@ skeleton = NodePath("")
 replication_interval = 0.016
 delta_interval = 0.016
 replication_config = SubResource("SceneReplicationConfig_k5618")
+visibility_update_mode = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_g3boa")

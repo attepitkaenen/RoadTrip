@@ -3,17 +3,6 @@
 [ext_resource type="Script" path="res://Vehicles/Coralli/Coralli.cs" id="1_p5jd5"]
 [ext_resource type="PackedScene" uid="uid://ccgebu0extq6q" path="res://Vehicles/Seat/Seat.tscn" id="1_q5sv6"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_cwr7c"]
-size = Vector3(1.5, 0.2, 3)
-
-[sub_resource type="BoxMesh" id="BoxMesh_55uds"]
-size = Vector3(1.5, 0.2, 3)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_h00jx"]
-top_radius = 0.25
-bottom_radius = 0.25
-height = 0.2
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]
 properties/0/path = NodePath(".:syncRotation")
 properties/0/spawn = true
@@ -30,6 +19,17 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath(".:syncAngularVelocity")
 properties/4/spawn = true
 properties/4/replication_mode = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cwr7c"]
+size = Vector3(1.5, 0.2, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_55uds"]
+size = Vector3(1.5, 0.2, 3)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_h00jx"]
+top_radius = 0.25
+bottom_radius = 0.25
+height = 0.2
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j0v52"]
 size = Vector3(1.5, 0.5, 0.2)
@@ -58,7 +58,7 @@ size = Vector3(1.5, 0.2, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_4mo0s"]
 size = Vector3(1.5, 0.2, 1)
 
-[node name="Coralli" type="VehicleBody3D" node_paths=PackedStringArray("itemCast", "area")]
+[node name="Coralli" type="VehicleBody3D" node_paths=PackedStringArray("itemCast", "area", "_synchronizer")]
 collision_layer = 4
 collision_mask = 6
 mass = 100.0
@@ -67,6 +67,13 @@ center_of_mass = Vector3(0, 0.201208, 0.245741)
 script = ExtResource("1_p5jd5")
 itemCast = NodePath("ItemCast")
 area = NodePath("Area3D")
+_synchronizer = NodePath("MultiplayerSynchronizer")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.016
+delta_interval = 0.016
+replication_config = SubResource("SceneReplicationConfig_4inyu")
+visibility_update_mode = 1
 
 [node name="CenterOfMass" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201208, 0.245741)
@@ -124,11 +131,6 @@ suspension_stiffness = 60.0
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBR"]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_h00jx")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.016
-delta_interval = 0.016
-replication_config = SubResource("SceneReplicationConfig_4inyu")
 
 [node name="DriverSeat" parent="." instance=ExtResource("1_q5sv6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.352479, 0.204348, 0.397925)
