@@ -4,7 +4,7 @@ using Godot;
 public partial class Item : RigidBody3D
 {
 	public int playerHolding = 0;
-	[Export] MultiplayerSynchronizer multiplayerSynchronizer;
+	[Export] MultiplayerSynchronizer _synchronizer;
 	[Export] public int ItemId;
 
 	public Vehicle vehicle;
@@ -33,6 +33,17 @@ public partial class Item : RigidBody3D
 		{
 			return;
 		};
+
+		if (LinearVelocity.Length() < 0.05f)
+		{
+			_synchronizer.ReplicationInterval = 1f;
+			_synchronizer.DeltaInterval = 1f;
+		}
+		else
+		{
+			_synchronizer.ReplicationInterval = 0.016f;
+			_synchronizer.DeltaInterval = 0.016f;
+		}
 
 		syncLinearVelocity = LinearVelocity;
 		syncAngularVelocity = AngularVelocity;
@@ -68,7 +79,7 @@ public partial class Item : RigidBody3D
 
 		if (playerHolding == 0)
 		{
-			LinearVelocity += bulletTravelDirection * 10; 
+			LinearVelocity += bulletTravelDirection * 10;
 		}
 	}
 
