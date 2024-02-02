@@ -48,24 +48,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7535, 1.50125, -4.70504)
 
 [node name="Aito3" parent="." instance=ExtResource("4_ynoyo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7535, 1.50125, 0.656975)
-itemCast = Object(ShapeCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548114, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"shape":null,"exclude_parent":true,"target_position":Vector3(0, 0, 0),"margin":0.0,"max_results":32,"collision_mask":8,"collision_result":[],"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"script":null)
-
-_synchronizer = Object(MultiplayerSynchronizer,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","root_path":NodePath(".."),"replication_interval":0.016,"delta_interval":0.016,"replication_config":null,"visibility_update_mode":1,"public_visibility":true,"script":null)
-
 
 [node name="Aito4" parent="." instance=ExtResource("4_ynoyo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.696, 1.50125, 0.656975)
-itemCast = Object(ShapeCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548114, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"shape":null,"exclude_parent":true,"target_position":Vector3(0, 0, 0),"margin":0.0,"max_results":32,"collision_mask":8,"collision_result":[],"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"script":null)
-
-_synchronizer = Object(MultiplayerSynchronizer,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","root_path":NodePath(".."),"replication_interval":0.016,"delta_interval":0.016,"replication_config":null,"visibility_update_mode":1,"public_visibility":true,"script":null)
-
 
 [node name="Aito2" parent="." instance=ExtResource("4_ynoyo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8542, 1.50125, -4.70504)
-itemCast = Object(ShapeCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548114, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"shape":null,"exclude_parent":true,"target_position":Vector3(0, 0, 0),"margin":0.0,"max_results":32,"collision_mask":8,"collision_result":[],"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"script":null)
-
-_synchronizer = Object(MultiplayerSynchronizer,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","root_path":NodePath(".."),"replication_interval":0.016,"delta_interval":0.016,"replication_config":null,"visibility_update_mode":1,"public_visibility":true,"script":null)
-
 
 [node name="Environment" type="Node3D" parent="."]
 
