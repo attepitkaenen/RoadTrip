@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
-[ext_resource type="PackedScene" uid="uid://r5jkmn54rdln" path="res://Vehicles/Coralli/Coralli.tscn" id="4_5gbf8"]
 [ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
+[ext_resource type="PackedScene" uid="uid://7eis7so5p5lh" path="res://Vehicles/Aito/Aito.tscn" id="4_ynoyo"]
 [ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="5_xddwy"]
 [ext_resource type="PackedScene" uid="uid://f7xtx21m8p4m" path="res://Player/Ragdoll/ragdoll.tscn" id="8_ho0v7"]
 [ext_resource type="Texture2D" uid="uid://mxomojf6kdvw" path="res://Materials/lines-traffic-paved-roads-background.jpg" id="9_doebh"]
@@ -43,23 +43,29 @@ collision_layer = 2
 collision_mask = 3
 size = Vector3(1000, 7, 1000)
 
-[node name="Coralli" parent="." instance=ExtResource("4_5gbf8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9827, 1.92774, -0.241957)
+[node name="Aito" parent="." instance=ExtResource("4_ynoyo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7535, 1.50125, -4.70504)
 
-[node name="Coralli2" parent="." node_paths=PackedStringArray("itemCast", "area") instance=ExtResource("4_5gbf8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5906, 1.92774, -0.241957)
-itemCast = NodePath("../Coralli/ItemCast")
-area = NodePath("../Coralli/Area3D")
+[node name="Aito3" parent="." instance=ExtResource("4_ynoyo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7535, 1.50125, 0.656975)
+itemCast = Object(ShapeCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548114, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"shape":null,"exclude_parent":true,"target_position":Vector3(0, 0, 0),"margin":0.0,"max_results":32,"collision_mask":8,"collision_result":[],"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"script":null)
 
-[node name="Coralli3" parent="." node_paths=PackedStringArray("itemCast", "area") instance=ExtResource("4_5gbf8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9827, 1.92774, -5.65067)
-itemCast = NodePath("../Coralli/ItemCast")
-area = NodePath("../Coralli/Area3D")
+_synchronizer = Object(MultiplayerSynchronizer,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","root_path":NodePath(".."),"replication_interval":0.016,"delta_interval":0.016,"replication_config":null,"visibility_update_mode":1,"public_visibility":true,"script":null)
 
-[node name="Coralli4" parent="." node_paths=PackedStringArray("itemCast", "area") instance=ExtResource("4_5gbf8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5906, 1.92774, -5.65067)
-itemCast = NodePath("../Coralli/ItemCast")
-area = NodePath("../Coralli/Area3D")
+
+[node name="Aito4" parent="." instance=ExtResource("4_ynoyo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.696, 1.50125, 0.656975)
+itemCast = Object(ShapeCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548114, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"shape":null,"exclude_parent":true,"target_position":Vector3(0, 0, 0),"margin":0.0,"max_results":32,"collision_mask":8,"collision_result":[],"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"script":null)
+
+_synchronizer = Object(MultiplayerSynchronizer,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","root_path":NodePath(".."),"replication_interval":0.016,"delta_interval":0.016,"replication_config":null,"visibility_update_mode":1,"public_visibility":true,"script":null)
+
+
+[node name="Aito2" parent="." instance=ExtResource("4_ynoyo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8542, 1.50125, -4.70504)
+itemCast = Object(ShapeCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548114, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"shape":null,"exclude_parent":true,"target_position":Vector3(0, 0, 0),"margin":0.0,"max_results":32,"collision_mask":8,"collision_result":[],"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"script":null)
+
+_synchronizer = Object(MultiplayerSynchronizer,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","root_path":NodePath(".."),"replication_interval":0.016,"delta_interval":0.016,"replication_config":null,"visibility_update_mode":1,"public_visibility":true,"script":null)
+
 
 [node name="Environment" type="Node3D" parent="."]
 
@@ -590,6 +596,9 @@ curve = SubResource("Curve3D_o7oly")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.22, 0, -8.877)
+use_collision = true
+collision_layer = 2
+collision_mask = 0
 polygon = PackedVector2Array(-0.1, 0, -0.1, 0.2, 0.2, 0.2, 0.2, 0)
 mode = 2
 path_node = NodePath("../Path3D")
@@ -604,6 +613,9 @@ path_joined = false
 
 [node name="CSGPolygon3D2" type="CSGPolygon3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.22, 0, -8.877)
+use_collision = true
+collision_layer = 2
+collision_mask = 0
 polygon = PackedVector2Array(9.9, 0, 9.9, 0.2, 10.2, 0.2, 10.2, 0)
 mode = 2
 path_node = NodePath("../Path3D")
@@ -618,6 +630,9 @@ path_joined = false
 
 [node name="Track" type="CSGPolygon3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.22, 0, -8.877)
+use_collision = true
+collision_layer = 2
+collision_mask = 0
 polygon = PackedVector2Array(0, 0, 0, 0.1, 10, 0.1, 10, 0)
 mode = 2
 path_node = NodePath("../Path3D")
@@ -632,4 +647,4 @@ path_joined = true
 material = SubResource("StandardMaterial3D_722k7")
 
 [node name="ragdoll" parent="." instance=ExtResource("8_ho0v7")]
-transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 10.2231, 0.529419, 4.6305)
+transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 10.8875, 1.3221, 7.05007)

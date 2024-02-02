@@ -5,9 +5,8 @@ using System.Linq;
 
 public partial class Vehicle : VehicleBody3D
 {
-	[Export] ShapeCast3D itemCast;
-	[Export] Area3D area;
 	[Export] private MultiplayerSynchronizer _synchronizer;
+	[Export] private Label3D _speedometer;
 	public Seat driverSeat;
 	float enginePower = 200f;
 	float maxSteer = 0.8f;
@@ -38,9 +37,6 @@ public partial class Vehicle : VehicleBody3D
 		seats = GetChildren().Where(x => x is Seat)
 							.Select(x => x as Seat)
 							.ToList();
-
-		area.BodyEntered += ItemEntered;
-		area.BodyExited += ItemExited;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -58,6 +54,10 @@ public partial class Vehicle : VehicleBody3D
 			_synchronizer.DeltaInterval = 0.016f;
 		}
 
+		if (_speedometer is not null)
+		{
+			_speedometer.Text = Math.Round(LinearVelocity.Length() * 3.6f, 0).ToString();
+		}
 		syncLinearVelocity = LinearVelocity;
 		syncAngularVelocity = AngularVelocity;
 		syncPosition = GlobalPosition;
@@ -144,7 +144,7 @@ public partial class Vehicle : VehicleBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Drive(float inputDir, float gas, bool space, double delta)
 	{
-		var steeringReducer = (1 / LinearVelocity.Length() * 10);
+		var steeringReducer = 1 / LinearVelocity.Length() * 10;
 		steeringReducer = Mathf.Clamp(steeringReducer, 0.1f, 1);
 		if (driverSeat.occupied)
 		{
