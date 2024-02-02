@@ -10,13 +10,14 @@ public partial class Ragdoll : Node3D
     [Export] Skeleton3D skeleton;
     [Export] Camera3D camera;
     [Export] MeshInstance3D head;
+    private Vector3 _spawnVelocity = Vector3.Zero;
     public int playerId;
-    List<PhysicalBone3D> bones;
+    List<Bone> bones = new List<Bone>();
 
     public override void _Ready()
     {
         skeleton.PhysicalBonesStartSimulation();
-        foreach (var child in GetChildren())
+        foreach (var child in skeleton.GetChildren())
         {
             if (child is Bone)
             {
@@ -25,15 +26,19 @@ public partial class Ragdoll : Node3D
                 synchronizer.ReplicationConfig.AddProperty($"{child.GetPath()}:rotation");
             }
         }
+
+        foreach (Bone bone in bones)
+        {
+            bone.SetLinearVelocity(_spawnVelocity);
+        }
     }
+
 
     public void MoveRagdoll(Vector3 position, Vector3 rotation, Vector3 linearVelocity)
     {
         Position = position;
         Rotation = new Vector3(Rotation.X, rotation.Y, Rotation.Z);
-        bones.ForEach(bone => 
-            bone.LinearVelocity = linearVelocity
-        );
+        _spawnVelocity = linearVelocity;
     }
 
     public void SwitchCamera()
@@ -50,7 +55,6 @@ public partial class Ragdoll : Node3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     public void Destroy()
     {
-        // if (!Multiplayer.IsServer()) return;
         bones.ForEach(bone =>
         {
             synchronizer.ReplicationConfig.RemoveProperty($"{bone.GetPath()}:position");
