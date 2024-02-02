@@ -2,10 +2,12 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using Godot;
 
 public partial class Player : CharacterBody3D
 {
+	public long Id;
 	GameManager gameManager;
 	MenuHandler menuHandler;
 	MultiplayerController multiplayerController;
@@ -94,6 +96,15 @@ public partial class Player : CharacterBody3D
 		GetNode<MeshInstance3D>("character/Armature/Skeleton3D/Head/Head").Hide();
 		nameTag.Visible = false;
 		camera.Current = true;
+		sensitivity = gameManager.Sensitivity;
+	}
+
+	public override void _Ready()
+	{
+		if (GetMultiplayerAuthority() == Id)
+		{
+			menuHandler.OpenMenu(MenuHandler.MenuType.none);
+		}
 	}
 
 	public override void _Input(InputEvent @event)
@@ -145,22 +156,22 @@ public partial class Player : CharacterBody3D
 			playerList.AddItem("");
 		}
 		var index = 0;
-		gameManager.GetPlayerStates().ForEach(player =>
+		foreach (var (id, playerState) in gameManager.GetPlayerStates())
 		{
-			playerList.SetItemText(index, player.Name);
+			playerList.SetItemText(index, playerState.Name);
 			index++;
-		});
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SetPlayerState(long id, string name)
+	{
+		nameTag.Text = name;
+		Id = id;
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (gameManager is not null)
-		{
-			playerState = gameManager.GetPlayerStates().Find(x => x.Id == int.Parse(Name));
-			sensitivity = gameManager.Sensitivity;
-			nameTag.Text = playerState.Name;
-		}
-
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
 
 		if (movementState == MovementState.unconscious)
@@ -178,7 +189,7 @@ public partial class Player : CharacterBody3D
 		if (!IsMultiplayerAuthority())
 		{
 			var newState = Transform;
-			newState.Origin = GlobalPosition.Lerp(syncPosition, 0.5f);
+			newState.Origin = GlobalPosition.Lerp(syncPosition, 0.2f);
 			var a = newState.Basis.GetRotationQuaternion().Normalized();
 			var b = syncBasis.GetRotationQuaternion().Normalized();
 			var c = a.Slerp(b, 0.5f);
@@ -196,7 +207,6 @@ public partial class Player : CharacterBody3D
 				movementState = MovementState.idle;
 				if (ragdoll is not null)
 				{
-					GD.Print(ragdoll.GetUpPosition());
 					GlobalPosition = ragdoll.GetUpPosition();
 					ragdoll.SwitchCamera();
 					ragdoll.Rpc(nameof(ragdoll.Destroy));

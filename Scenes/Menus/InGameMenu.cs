@@ -21,7 +21,7 @@ public partial class InGameMenu : Menu
     public void _on_mainmenu_pressed()
     {
         menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
-        multiplayerController.ResetGameState();
+        multiplayerController.Disconnect();
     }
 
     public void _on_settings_pressed()
