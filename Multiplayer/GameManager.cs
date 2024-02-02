@@ -79,9 +79,10 @@ public partial class GameManager : Node
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void HoldItem(int itemId, string equipPath)
+	public void HoldItem(long playerId, int itemId, string equipPath)
 	{
 		var item = GetItemResource(itemId).ItemInHand.Instantiate<HeldItem>();
+		item.SetMultiplayerAuthority((int)playerId);
 		GetNode<Marker3D>(equipPath).AddChild(item);
 	}
 

@@ -409,14 +409,14 @@ public partial class Player : CharacterBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	public void Hit(int damage, Vector3 bulletTravelDirection)
+	public void Hit(int damage, Vector3 bulletForce)
 	{
 		GD.Print($"Player {Name} was hit for {damage}");
 		Health -= damage;
 
 		if (Health <= 0)
 		{
-			Rpc(nameof(SpawnRagdoll), int.Parse(Name), Velocity);
+			Rpc(nameof(SpawnRagdoll), int.Parse(Name), Velocity + bulletForce);
 			if (movementState == MovementState.seated)
 			{
 				seat.Rpc(nameof(seat.Stand));
@@ -467,7 +467,7 @@ public partial class Player : CharacterBody3D
 			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
 			if (itemResource.Equippable)
 			{
-				gameManager.Rpc(nameof(gameManager.HoldItem), itemResource.ItemId, equip.GetPath());
+				gameManager.Rpc(nameof(gameManager.HoldItem), Id, itemResource.ItemId, equip.GetPath());
 				gameManager.Rpc(nameof(gameManager.DestroyItem), PickedItem.GetPath());
 				heldItem = equip.GetChild<HeldItem>(0);
 				PickedItem = null;

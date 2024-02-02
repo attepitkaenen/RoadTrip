@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://7eis7so5p5lh"]
+[gd_scene load_steps=18 format=3 uid="uid://7eis7so5p5lh"]
 
 [ext_resource type="Script" path="res://Vehicles/Aito/Aito.cs" id="1_lai86"]
 [ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Aito/aito.blend" id="3_0l07t"]
@@ -40,7 +40,7 @@ material = SubResource("StandardMaterial3D_wtrmi")
 size = Vector3(0.5, 0.1, 0.5)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cwr7c"]
-size = Vector3(1.7, 0.110742, 3.3808)
+size = Vector3(1.7, 0.110742, 2.58591)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j0v52"]
 size = Vector3(1.72943, 0.47699, 0.151279)
@@ -56,9 +56,6 @@ size = Vector3(0.179956, 0.517639, 0.63573)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_khang"]
 size = Vector3(0.179956, 0.360035, 0.66223)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_1sgb1"]
-size = Vector3(0.179956, 0.404627, 0.757873)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.166385, 0.760315)
@@ -164,7 +161,7 @@ mesh = SubResource("BoxMesh_5rl2c")
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.596146, 0.0536157)
 
 [node name="Floor" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0446289, 0.351471)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0446289, -0.045975)
 shape = SubResource("BoxShape3D_cwr7c")
 
 [node name="Back" type="CollisionShape3D" parent="."]
@@ -194,14 +191,6 @@ shape = SubResource("BoxShape3D_khang")
 [node name="FrontRight" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.961516, -0.274748, 0, 0.274748, 0.961516, -0.775682, 0.535521, 1.66391)
 shape = SubResource("BoxShape3D_khang")
-
-[node name="FrontRight2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999999, -0.00155336, 0, 0.00155336, 0.999999, -0.775682, 0.261686, 1.61612)
-shape = SubResource("BoxShape3D_1sgb1")
-
-[node name="FrontLeft2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999999, -0.00155336, 0, 0.00155336, 0.999999, 0.773958, 0.261686, 1.61612)
-shape = SubResource("BoxShape3D_1sgb1")
 
 [node name="Roof1" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.996894, -0.0787549, 0, 0.0787549, 0.996894, 0, 1.35526, 0.127217)
