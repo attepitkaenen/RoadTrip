@@ -414,7 +414,6 @@ public partial class Player : CharacterBody3D
 
 		if (Health <= 0)
 		{
-
 			Rpc(nameof(SpawnRagdoll), int.Parse(Name), Velocity);
 			if (movementState == MovementState.seated)
 			{
@@ -429,15 +428,13 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SpawnRagdoll(int playerId, Vector3 velocity)
 	{
-		GD.Print(velocity);
 		if (Multiplayer.IsServer())
 		{
 			var ragdoll = ragdollScene.Instantiate<Ragdoll>();
 			ragdoll.MoveRagdoll(new Vector3(GlobalPosition.X, GlobalPosition.Y - 1.2f, GlobalPosition.Z), GlobalRotation, velocity);
-
 			GetParent().AddChild(ragdoll, true);
 			ragdoll.playerId = playerId;
 
