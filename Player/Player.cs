@@ -465,8 +465,6 @@ public partial class Player : CharacterBody3D
 			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
 			if (itemResource.Equippable)
 			{
-				// heldItem = itemResource.ItemInHand.Instantiate<HeldItem>();
-				// equip.AddChild(heldItem);
 				gameManager.Rpc(nameof(gameManager.HoldItem), itemResource.ItemId, equip.GetPath());
 				gameManager.Rpc(nameof(gameManager.DestroyItem), PickedItem.GetPath());
 				heldItem = equip.GetChild<HeldItem>(0);
