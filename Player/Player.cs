@@ -376,20 +376,22 @@ public partial class Player : CharacterBody3D
 		{
 			animationTree.Set("parameters/conditions/sit", true);
 			animationTree.Set("parameters/conditions/walk", false);
+			animationTree.Set("parameters/conditions/jump", false);
 			return;
 		}
-
-		if (state == "jumping" || !isGroundedRpc)
+		else if (state == "jumping" || !isGroundedRpc)
 		{
 			animationTree.Set("parameters/conditions/jump", true);
+			animationTree.Set("parameters/conditions/sit", false);
 			animationTree.Set("parameters/conditions/walk", false);
 		}
 		else
 		{
 			velocity *= transform.Basis;
-			animationTree.Set("parameters/conditions/jump", false);
 			animationTree.Set("parameters/conditions/walk", true);
 			animationTree.Set("parameters/Walk/blend_position", new Vector2(-(velocity.Z / (speed * 2)), velocity.X / (speed * 2)));
+			animationTree.Set("parameters/conditions/sit", false);
+			animationTree.Set("parameters/conditions/jump", false);
 
 		}
 	}
