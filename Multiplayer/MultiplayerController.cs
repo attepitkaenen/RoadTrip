@@ -189,5 +189,4 @@ public partial class MultiplayerController : Control
 		EmitSignal(SignalName.PlayerConnected, newPlayerId, newPlayerState);
 		gameManager.StartGame();
 	}
-
 }
