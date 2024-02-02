@@ -39,12 +39,6 @@ public partial class Ragdoll : Node3D
         Position = position;
         Rotation = new Vector3(Rotation.X, rotation.Y, Rotation.Z);
         _spawnVelocity = linearVelocity;
-        // bones.ForEach(bone =>
-        // {
-        //     GD.Print(linearVelocity + " for bone " + bone.Name);
-        //     bone.Rpc(nameof(bone.SetLinearVelocity), linearVelocity);
-        // }
-        // );
     }
 
     public void SwitchCamera()
