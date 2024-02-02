@@ -7,6 +7,7 @@ public partial class Vehicle : VehicleBody3D
 {
 	[Export] ShapeCast3D itemCast;
 	[Export] Area3D area;
+	[Export] private MultiplayerSynchronizer _synchronizer;
 	public Seat driverSeat;
 	float enginePower = 200f;
 	float maxSteer = 0.8f;
@@ -45,6 +46,17 @@ public partial class Vehicle : VehicleBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		if (!IsMultiplayerAuthority()) return;
+
+		if (LinearVelocity.Length() < 0.1f)
+		{
+			_synchronizer.ReplicationInterval = 1f;
+			_synchronizer.DeltaInterval = 1f;
+		}
+		else
+		{
+			_synchronizer.ReplicationInterval = 0.016f;
+			_synchronizer.DeltaInterval = 0.016f;
+		}
 
 		syncLinearVelocity = LinearVelocity;
 		syncAngularVelocity = AngularVelocity;
