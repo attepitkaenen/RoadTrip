@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://c7xhdx3pny06n"]
+
+[ext_resource type="PackedScene" uid="uid://ds7uy52rlletb" path="res://Items/VehicleParts/Engine/EngineI3/EngineI3.tscn" id="1_t13j0"]
+[ext_resource type="PackedScene" uid="uid://ee5filigiwj7" path="res://Items/VehicleParts/Engine/EngineI3/EngineI3Dropped.tscn" id="2_pvren"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="3_1wtpk"]
+
+[resource]
+script = ExtResource("3_1wtpk")
+Equippable = false
+ItemName = "EngineI3"
+ItemId = 2
+Description = ""
+ItemOnFloor = ExtResource("2_pvren")
+ItemInHand = ExtResource("1_t13j0")

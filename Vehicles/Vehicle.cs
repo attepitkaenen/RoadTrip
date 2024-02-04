@@ -7,12 +7,11 @@ public partial class Vehicle : VehicleBody3D
 {
 	[Export] private MultiplayerSynchronizer _synchronizer;
 	[Export] private Label3D _speedometer;
-	public Seat driverSeat;
+	private Seat _driverSeat;
 	float enginePower = 200f;
 	float maxSteer = 0.8f;
 	private Vector2 _inputDir;
 	bool braking;
-	public List<Seat> seats;
 	public List<Item> items = new List<Item>();
 
 	// Sync properties
@@ -33,17 +32,14 @@ public partial class Vehicle : VehicleBody3D
 			CustomIntegrator = true;
 		};
 
-		driverSeat = GetNode<Seat>("DriverSeat");
-		seats = GetChildren().Where(x => x is Seat)
-							.Select(x => x as Seat)
-							.ToList();
+		_driverSeat = GetNode<Seat>("DriverSeat");
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
 		if (!IsMultiplayerAuthority()) return;
 
-		if (LinearVelocity.Length() < 0.1f)
+		if (LinearVelocity.Length() < 0.1f && !_driverSeat.occupied)
 		{
 			_synchronizer.ReplicationInterval = 1f;
 			_synchronizer.DeltaInterval = 1f;
@@ -82,22 +78,41 @@ public partial class Vehicle : VehicleBody3D
 		}
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void Drive(float inputDir, float gas, bool space, double delta)
+	{
+		var steeringReducer = 1 / LinearVelocity.Length() * 10;
+		steeringReducer = Mathf.Clamp(steeringReducer, 0.1f, 1);
+
+		Steering = Mathf.Lerp(Steering, inputDir * steeringReducer * maxSteer, (float)delta * 1f);
+		EngineForce = gas * enginePower;
+
+		if (space)
+		{
+			Brake = 5f;
+		}
+		else
+		{
+			Brake = 0f;
+		}
+	}
+
 	public void ItemEntered(Node3D node)
 	{
-		if (node is Item item)
-		{
-			item.vehicle = this;
-			items.Add(item);
-		}
+		// if (node is Item item)
+		// {
+		// 	item.vehicle = this;
+		// 	items.Add(item);
+		// }
 	}
 
 	public void ItemExited(Node3D node)
 	{
-		if (node is Item item)
-		{
-			item.vehicle = null;
-			items.Remove(item);
-		}
+		// if (node is Item item)
+		// {
+		// 	item.vehicle = null;
+		// 	items.Remove(item);
+		// }
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -139,30 +154,5 @@ public partial class Vehicle : VehicleBody3D
 		Vector3 axis = new Vector3(qt.X, qt.Y, qt.Z) / Mathf.Sqrt(1 - qt.W * qt.W);
 
 		return axis * angle;
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void Drive(float inputDir, float gas, bool space, double delta)
-	{
-		var steeringReducer = 1 / LinearVelocity.Length() * 10;
-		steeringReducer = Mathf.Clamp(steeringReducer, 0.1f, 1);
-		if (driverSeat.occupied)
-		{
-			Steering = Mathf.Lerp(Steering, inputDir * steeringReducer * maxSteer, (float)delta * 1f);
-			EngineForce = gas * enginePower;
-
-			if (space)
-			{
-				Brake = 5f;
-			}
-			else
-			{
-				Brake = 0f;
-			}
-		}
-		else
-		{
-			Brake = 5f;
-		}
 	}
 }
