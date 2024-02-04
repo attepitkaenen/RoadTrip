@@ -460,15 +460,20 @@ public partial class Player : CharacterBody3D
 
 	public void HandleItem()
 	{
+		if (Input.IsActionJustPressed("equip") && PickedItem is PartDropped part && part.isInstallable)
+		{
+			PickedItem = null;
+			part.Install();
+		}
 		// Equip held item
-		if (Input.IsActionJustPressed("equip") && PickedItem is Item && heldItem is null)
+		else if (Input.IsActionJustPressed("equip") && PickedItem is Item && heldItem is null)
 		{
 			GD.Print("Item picked");
 			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
 			if (itemResource.Equippable)
 			{
-				gameManager.Rpc(nameof(gameManager.HoldItem), Id, itemResource.ItemId, equip.GetPath());
-				gameManager.Rpc(nameof(gameManager.DestroyItem), PickedItem.GetPath());
+				gameManager.RpcId(1, nameof(gameManager.HoldItem), Id, itemResource.ItemId, equip.GetPath());
+				PickedItem.DestroyItem();
 				heldItem = equip.GetChild<HeldItem>(0);
 				PickedItem = null;
 			}
@@ -480,8 +485,8 @@ public partial class Player : CharacterBody3D
 			gameManager.Rpc(nameof(gameManager.DestroyItem), heldItem.GetPath());
 			heldItem = null;
 			equip.GetChild(0).QueueFree();
-
 		}
+		
 
 		// Stop picking items when item held
 		if (heldItem is not null) return;

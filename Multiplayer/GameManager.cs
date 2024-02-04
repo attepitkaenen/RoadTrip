@@ -9,7 +9,7 @@ public partial class GameManager : Node
 	[Signal] public delegate void GameStartedEventHandler(long id);
 	[Export] private PackedScene playerScene;
 	[Export] public Array<ItemResource> itemList = new Array<ItemResource>();
-	[Export] public MultiplayerSpawner spawner;
+	[Export] public MultiplayerSpawner multiplayerSpawner;
 	public SceneManager world;
 	private MultiplayerController multiplayerController;
 	public float Sensitivity = 0.001f;
@@ -23,9 +23,13 @@ public partial class GameManager : Node
 			var fileName = fileNameRemap.Replace(".remap", "");
 			var item = GD.Load<ItemResource>("res://ItemData/" + fileName);
 			itemList.Add(item);
+			GD.Print(item.ItemId);
 			GD.Print(itemList[0].ItemName);
 		}
 		multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
+
+		Callable spawnCallable = new Callable(this, MethodName.SpawnItem);
+		multiplayerSpawner.SpawnFunction = spawnCallable;
 	}
 
 
@@ -36,10 +40,10 @@ public partial class GameManager : Node
 
 	public PlayerState GetPlayerState(long id)
 	{
-		return multiplayerController.GetPlayerStates()[id]; 
+		return multiplayerController.GetPlayerStates()[id];
 	}
 
-    public void Respawn()
+	public void Respawn()
 	{
 		GD.Print($"Respawning {Multiplayer.GetUniqueId()}");
 		var player = GetTree().GetNodesInGroup("Player").ToList().Find(player => player.Name == $"{Multiplayer.GetUniqueId()}") as Player;
@@ -81,19 +85,44 @@ public partial class GameManager : Node
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void HoldItem(long playerId, int itemId, string equipPath)
 	{
-		var item = GetItemResource(itemId).ItemInHand.Instantiate<HeldItem>();
+		GD.Print(itemId);
+		// var item = GetItemResource(itemId).ItemInHand.Instantiate<HeldItem>();
+		SpawnProperties properties = new SpawnProperties() {
+			itemId = itemId,
+			inHand = true
+		};
+		var item = multiplayerSpawner.Spawn(properties) as HeldItem;
 		item.SetMultiplayerAuthority((int)playerId);
-		GetNode<Marker3D>(equipPath).AddChild(item);
+		item.Reparent(GetNode<Marker3D>(equipPath), false);
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void DropItem(int playerId, int itemId, Vector3 position)
 	{
-		var item = GetItemResource(itemId).ItemOnFloor.Instantiate<Item>();
-		AddChild(item, true);
+		// var item = GetItemResource(itemId).ItemOnFloor.Instantiate<Item>();
+		SpawnProperties properties = new SpawnProperties() {
+			itemId = itemId,
+			inHand = false
+		};
+		var item = multiplayerSpawner.Spawn(properties) as Item;
+		// AddChild(item, true);
 		item.GlobalPosition = position;
 		var player = GetNode<Player>($"{playerId}");
 		player.RpcId(playerId, nameof(player.SetPickedItem), item.GetPath());
+	}
+
+	Node SpawnItem(SpawnProperties properties)
+	{
+		Node item;
+		if (properties.inHand)
+		{
+			item = GetItemResource(properties.itemId).ItemInHand.Instantiate();
+		}
+		else
+		{
+			item = GetItemResource(properties.itemId).ItemOnFloor.Instantiate();
+		}
+		return item;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -131,7 +160,7 @@ public partial class GameManager : Node
 			GD.Print(GetPlayerStates().Values.Count());
 			foreach (var playerState in GetPlayerStates().Values)
 			{
-				GD.Print(playerState.Name + " " +  playerState.Id);
+				GD.Print(playerState.Name + " " + playerState.Id);
 				SpawnPlayer(playerState);
 			}
 		}
@@ -144,7 +173,7 @@ public partial class GameManager : Node
 		{
 			if (int.Parse((player as Player).Name) == playerState.Id)
 			{
-				GD.Print("Player: " + (player as Player).Name + " has already been spawned" );
+				GD.Print("Player: " + (player as Player).Name + " has already been spawned");
 				return;
 			}
 		}
@@ -169,4 +198,10 @@ public partial class GameManager : Node
 			currentPlayer.Rpc(nameof(currentPlayer.SetPlayerState), playerState.Id, playerState.Name);
 		}
 	}
+}
+
+public partial class SpawnProperties : GodotObject
+{
+	public int itemId;
+	public bool inHand;
 }
