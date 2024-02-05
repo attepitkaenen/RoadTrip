@@ -454,8 +454,16 @@ public partial class Player : CharacterBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void SetPickedItem(string itemPath)
 	{
-		GD.Print($"Should hold {itemPath}");
+		GD.Print($"Should pickup {itemPath}");
 		PickedItem = GetTree().Root.GetNode<Item>(itemPath);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SetHeldItem(string itemPath)
+	{
+		GD.Print($"Should hold {itemPath}");
+		heldItem = GetTree().Root.GetNode<HeldItem>(itemPath);
+		heldItem.Reparent(equip, false);
 	}
 
 	public void HandleItem()
@@ -474,14 +482,13 @@ public partial class Player : CharacterBody3D
 			{
 				gameManager.RpcId(1, nameof(gameManager.HoldItem), Id, itemResource.ItemId, equip.GetPath());
 				PickedItem.DestroyItem();
-				heldItem = equip.GetChild<HeldItem>(0);
 				PickedItem = null;
 			}
 		}
 		// Drop held item
 		else if (Input.IsActionJustPressed("equip") && PickedItem is null && heldItem is not null && itemResource is not null)
 		{
-			gameManager.RpcId(1, nameof(gameManager.DropItem), int.Parse(Name), itemResource.ItemId, hand.GlobalPosition);
+			gameManager.RpcId(1, nameof(gameManager.DropItem), Id, itemResource.ItemId, hand.GlobalPosition);
 			gameManager.Rpc(nameof(gameManager.DestroyItem), heldItem.GetPath());
 			heldItem = null;
 			equip.GetChild(0).QueueFree();
