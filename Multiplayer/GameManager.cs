@@ -82,18 +82,18 @@ public partial class GameManager : Node
 		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void HoldItem(long playerId, int itemId, string equipPath)
-	{
-		GD.Print($"{playerId} : {itemId} : {equipPath}");
-		Dictionary<int, bool> properties = new Dictionary<int, bool>();
-		properties[itemId] = true;
-		var item = multiplayerSpawner.Spawn(properties) as HeldItem;
-		item.SetMultiplayerAuthority((int)playerId);
-		// item.Reparent(GetNode<Marker3D>(equipPath), false);
-		var player = GetNode<Player>($"{playerId}");
-		player.RpcId(playerId, nameof(player.SetHeldItem), item.GetPath());
-	}
+	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	// public void HoldItem(long playerId, int itemId, string equipPath)
+	// {
+	// 	GD.Print($"{playerId} : {itemId} : {equipPath}");
+	// 	Dictionary<int, bool> properties = new Dictionary<int, bool>();
+	// 	properties[itemId] = true;
+	// 	HeldItem item = multiplayerSpawner.Spawn(properties) as HeldItem;
+	// 	item.Reparent(GetNode<Marker3D>(equipPath));
+	// 	// item.SetMultiplayerAuthority((int)playerId);
+	// 	var player = GetNode<Player>($"{playerId}");
+	// 	player.Rpc(nameof(player.SetHeldItem), item.GetPath());
+	// }
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void DropItem(int playerId, int itemId, Vector3 position)
