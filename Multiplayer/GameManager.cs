@@ -9,7 +9,7 @@ public partial class GameManager : Node
 	[Signal] public delegate void GameStartedEventHandler(long id);
 	[Export] private PackedScene playerScene;
 	[Export] public Array<ItemResource> itemList = new Array<ItemResource>();
-	[Export] public MultiplayerSpawner spawner;
+	[Export] public MultiplayerSpawner multiplayerSpawner;
 	public SceneManager world;
 	private MultiplayerController multiplayerController;
 	public float Sensitivity = 0.001f;
@@ -23,9 +23,13 @@ public partial class GameManager : Node
 			var fileName = fileNameRemap.Replace(".remap", "");
 			var item = GD.Load<ItemResource>("res://ItemData/" + fileName);
 			itemList.Add(item);
+			GD.Print(item.ItemId);
 			GD.Print(itemList[0].ItemName);
 		}
 		multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
+
+		Callable spawnCallable = new Callable(this, MethodName.SpawnItem);
+		multiplayerSpawner.SpawnFunction = spawnCallable;
 	}
 
 
@@ -36,10 +40,10 @@ public partial class GameManager : Node
 
 	public PlayerState GetPlayerState(long id)
 	{
-		return multiplayerController.GetPlayerStates()[id]; 
+		return multiplayerController.GetPlayerStates()[id];
 	}
 
-    public void Respawn()
+	public void Respawn()
 	{
 		GD.Print($"Respawning {Multiplayer.GetUniqueId()}");
 		var player = GetTree().GetNodesInGroup("Player").ToList().Find(player => player.Name == $"{Multiplayer.GetUniqueId()}") as Player;
@@ -79,20 +83,41 @@ public partial class GameManager : Node
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void HoldItem(int itemId, string equipPath)
+	public void HoldItem(long playerId, int itemId, string equipPath)
 	{
-		var item = GetItemResource(itemId).ItemInHand.Instantiate<HeldItem>();
-		GetNode<Marker3D>(equipPath).AddChild(item);
+		GD.Print($"{playerId} : {itemId} : {equipPath}");
+		Dictionary<int, bool> properties = new Dictionary<int, bool>();
+		properties[itemId] = true;
+		var item = multiplayerSpawner.Spawn(properties) as HeldItem;
+		item.SetMultiplayerAuthority((int)playerId);
+		// item.Reparent(GetNode<Marker3D>(equipPath), false);
+		var player = GetNode<Player>($"{playerId}");
+		player.RpcId(playerId, nameof(player.SetHeldItem), item.GetPath());
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void DropItem(int playerId, int itemId, Vector3 position)
 	{
-		var item = GetItemResource(itemId).ItemOnFloor.Instantiate<Item>();
-		AddChild(item, true);
+		Dictionary<int, bool> properties = new Dictionary<int, bool>();
+		properties[itemId] = false;
+		var item = multiplayerSpawner.Spawn(properties) as Item;
 		item.GlobalPosition = position;
 		var player = GetNode<Player>($"{playerId}");
 		player.RpcId(playerId, nameof(player.SetPickedItem), item.GetPath());
+	}
+
+	Node SpawnItem(Dictionary<int, bool> properties)
+	{
+		Node item;
+		if (properties.Values.First())
+		{
+			item = GetItemResource(properties.Keys.First()).ItemInHand.Instantiate();
+		}
+		else
+		{
+			item = GetItemResource(properties.Keys.First()).ItemOnFloor.Instantiate();
+		}
+		return item;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -130,7 +155,7 @@ public partial class GameManager : Node
 			GD.Print(GetPlayerStates().Values.Count());
 			foreach (var playerState in GetPlayerStates().Values)
 			{
-				GD.Print(playerState.Name + " " +  playerState.Id);
+				GD.Print(playerState.Name + " " + playerState.Id);
 				SpawnPlayer(playerState);
 			}
 		}
@@ -143,7 +168,7 @@ public partial class GameManager : Node
 		{
 			if (int.Parse((player as Player).Name) == playerState.Id)
 			{
-				GD.Print("Player: " + (player as Player).Name + " has already been spawned" );
+				GD.Print("Player: " + (player as Player).Name + " has already been spawned");
 				return;
 			}
 		}

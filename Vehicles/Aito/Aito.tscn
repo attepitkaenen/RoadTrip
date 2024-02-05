@@ -1,0 +1,215 @@
+[gd_scene load_steps=18 format=3 uid="uid://7eis7so5p5lh"]
+
+[ext_resource type="Script" path="res://Vehicles/Aito/Aito.cs" id="1_lai86"]
+[ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Aito/aito.blend" id="3_0l07t"]
+[ext_resource type="PackedScene" uid="uid://dsiudfpl7vhb0" path="res://Vehicles/Wheels/tire.blend" id="3_o6own"]
+[ext_resource type="Material" uid="uid://c460ngpaswq17" path="res://Vehicles/Aito/aitoTest.tres" id="3_ytiuu"]
+[ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="4_qspcq"]
+[ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay.tscn" id="6_5yy2s"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]
+properties/0/path = NodePath(".:syncRotation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:syncPosition")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:syncBasis")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:syncLinearVelocity")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:syncAngularVelocity")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("Speedometer:text")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0dfu3"]
+size = Vector3(0.5, 0.1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wtrmi"]
+albedo_color = Color(0.431373, 0.223529, 0.113725, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5rl2c"]
+material = SubResource("StandardMaterial3D_wtrmi")
+size = Vector3(0.5, 0.1, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cwr7c"]
+size = Vector3(1.7, 0.110742, 2.58591)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j0v52"]
+size = Vector3(1.72943, 0.47699, 0.151279)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bcaqk"]
+size = Vector3(1.74411, 0.834335, 0.151279)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_snguo"]
+size = Vector3(1.74411, 0.644009, 0.151279)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_avm0q"]
+size = Vector3(0.179956, 0.517639, 0.63573)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_khang"]
+size = Vector3(0.179956, 0.360035, 0.66223)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
+size = Vector3(1.5, 0.102235, 1.44803)
+
+[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "_speedometer")]
+collision_layer = 4
+collision_mask = 6
+mass = 100.0
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, 0.201208, 0.245741)
+script = ExtResource("1_lai86")
+_synchronizer = NodePath("MultiplayerSynchronizer")
+_speedometer = NodePath("Speedometer")
+
+[node name="aito" parent="." instance=ExtResource("3_0l07t")]
+transform = Transform3D(-1.18, 0, -1.78175e-07, 0, 1.18, 0, 1.78175e-07, 0, -1.18, 0, 0.510493, 0.334204)
+
+[node name="Cube" parent="aito" index="0"]
+material_override = ExtResource("3_ytiuu")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.016
+delta_interval = 0.016
+replication_config = SubResource("SceneReplicationConfig_4inyu")
+visibility_update_mode = 1
+
+[node name="CenterOfMass" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201208, 0.245741)
+
+[node name="Speedometer" type="Label3D" parent="."]
+transform = Transform3D(-0.5, 1.56648e-08, -4.08081e-08, 0, 0.466791, 0.179184, 4.37114e-08, 0.179184, -0.466791, 0.341741, 0.719213, 1.33736)
+modulate = Color(1, 0.619608, 0.121569, 1)
+text = "0"
+font_size = 64
+outline_size = 6
+
+[node name="WheelFL" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.1, 1.55)
+use_as_steering = true
+wheel_radius = 0.3
+wheel_rest_length = 0.2
+wheel_friction_slip = 3.0
+suspension_travel = 0.15
+suspension_stiffness = 60.0
+
+[node name="tire" parent="WheelFL" instance=ExtResource("3_o6own")]
+transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
+
+[node name="WheelFR" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.1, 1.55)
+use_as_steering = true
+wheel_radius = 0.3
+wheel_rest_length = 0.2
+wheel_friction_slip = 3.0
+suspension_travel = 0.15
+suspension_stiffness = 60.0
+
+[node name="tire" parent="WheelFR" instance=ExtResource("3_o6own")]
+transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
+
+[node name="WheelBL" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.1, -1)
+use_as_traction = true
+wheel_radius = 0.3
+wheel_rest_length = 0.2
+wheel_friction_slip = 2.0
+suspension_travel = 0.15
+suspension_stiffness = 60.0
+
+[node name="tire" parent="WheelBL" instance=ExtResource("3_o6own")]
+transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
+
+[node name="WheelBR" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.1, -1)
+use_as_traction = true
+wheel_radius = 0.3
+wheel_rest_length = 0.2
+wheel_friction_slip = 2.0
+suspension_travel = 0.15
+suspension_stiffness = 60.0
+
+[node name="tire" parent="WheelBR" instance=ExtResource("3_o6own")]
+transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
+
+[node name="DriverSeat" type="RigidBody3D" parent="." groups=["Seat"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.352479, 0.22269, 0.397925)
+collision_layer = 4
+collision_mask = 15
+freeze = true
+script = ExtResource("4_qspcq")
+isDriverSeat = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DriverSeat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0636719, 0)
+shape = SubResource("BoxShape3D_0dfu3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DriverSeat/CollisionShape3D"]
+mesh = SubResource("BoxMesh_5rl2c")
+
+[node name="SeatPosition" type="Marker3D" parent="DriverSeat"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.596146, 0.0536157)
+
+[node name="Seat2" type="RigidBody3D" parent="." groups=["Seat"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.321629, 0.22269, 0.397925)
+collision_layer = 4
+collision_mask = 15
+freeze = true
+script = ExtResource("4_qspcq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Seat2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0636719, 0)
+shape = SubResource("BoxShape3D_0dfu3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Seat2/CollisionShape3D"]
+mesh = SubResource("BoxMesh_5rl2c")
+
+[node name="SeatPosition" type="Marker3D" parent="Seat2"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.596146, 0.0536157)
+
+[node name="Floor" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0446289, -0.045975)
+shape = SubResource("BoxShape3D_cwr7c")
+
+[node name="Back" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000579834, 0.328091, -1.29058)
+shape = SubResource("BoxShape3D_j0v52")
+
+[node name="Dashboard" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.957259, -0.289232, 0, 0.289232, 0.957259, 0.00675964, 0.423006, 1.2948)
+shape = SubResource("BoxShape3D_bcaqk")
+
+[node name="Dashboard2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.994758, 0.102255, 0, -0.102255, 0.994758, 0.00675964, 0.329271, 1.9876)
+shape = SubResource("BoxShape3D_snguo")
+
+[node name="BackRight" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.775244, 0.309414, -1.02141)
+shape = SubResource("BoxShape3D_avm0q")
+
+[node name="BackLeft" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.775375, 0.30837, -0.928369)
+shape = SubResource("BoxShape3D_avm0q")
+
+[node name="FrontLeft" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.961516, -0.274748, 0, 0.274748, 0.961516, 0.775375, 0.535521, 1.66391)
+shape = SubResource("BoxShape3D_khang")
+
+[node name="FrontRight" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.961516, -0.274748, 0, 0.274748, 0.961516, -0.775682, 0.535521, 1.66391)
+shape = SubResource("BoxShape3D_khang")
+
+[node name="Roof1" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.303, -0.21664)
+shape = SubResource("BoxShape3D_kkank")
+
+[node name="EngineBay" parent="." instance=ExtResource("6_5yy2s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.434783, 1.56482)
+
+[editable path="aito"]

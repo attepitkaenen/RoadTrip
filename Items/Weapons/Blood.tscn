@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://lg1iahs42b7w"]
+
+[ext_resource type="Script" path="res://Items/Weapons/Blood.cs" id="1_uwgqq"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_eswjc"]
+inherit_velocity_ratio = 1.0
+direction = Vector3(2, 2, 0)
+initial_velocity_min = 2.0
+initial_velocity_max = 2.0
+gravity = Vector3(0, -15, 0)
+scale_min = 0.0
+scale_max = 0.2
+color = Color(0.337255, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v2snt"]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_je43j"]
+material = SubResource("StandardMaterial3D_v2snt")
+
+[node name="Blood" type="GPUParticles3D"]
+emitting = false
+amount = 64
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_eswjc")
+draw_pass_1 = SubResource("SphereMesh_je43j")
+script = ExtResource("1_uwgqq")

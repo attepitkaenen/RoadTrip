@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="1_8iabv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j4iee"]
-size = Vector3(0.5, 0.2, 0.5)
+size = Vector3(0.5, 0.0726563, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wtrmi"]
 albedo_color = Color(0.431373, 0.223529, 0.113725, 1)

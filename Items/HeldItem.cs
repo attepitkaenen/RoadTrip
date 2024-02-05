@@ -5,6 +5,7 @@ public partial class HeldItem : Node3D
 {
     public override void _PhysicsProcess(double delta)
     {
+        if (!IsMultiplayerAuthority()) return;
         if (Input.IsActionJustPressed("leftClick"))
         {
             LeftClick();

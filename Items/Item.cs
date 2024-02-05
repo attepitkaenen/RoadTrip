@@ -6,8 +6,7 @@ public partial class Item : RigidBody3D
 	public int playerHolding = 0;
 	[Export] MultiplayerSynchronizer _synchronizer;
 	[Export] public int ItemId;
-
-	public Vehicle vehicle;
+	GameManager gameManager;
 
 	// Sync properties
 	public Vector3 syncPosition;
@@ -18,6 +17,7 @@ public partial class Item : RigidBody3D
 
 	public override void _Ready()
 	{
+		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		ContactMonitor = true;
 		MaxContactsReported = 1;
 		if (!IsMultiplayerAuthority())
@@ -34,7 +34,7 @@ public partial class Item : RigidBody3D
 			return;
 		};
 
-		if (LinearVelocity.Length() < 0.05f)
+		if (LinearVelocity.Length() < 0.05f && AngularVelocity.Length() < 0.05f)
 		{
 			_synchronizer.ReplicationInterval = 1f;
 			_synchronizer.DeltaInterval = 1f;
@@ -70,6 +70,11 @@ public partial class Item : RigidBody3D
 	public bool IsColliding()
 	{
 		return GetCollidingBodies().Count > 0;
+	}
+
+	public void DestroyItem()
+	{
+		gameManager.Rpc(nameof(gameManager.DestroyItem), GetPath());
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
