@@ -439,7 +439,6 @@ public partial class Player : CharacterBody3D
 			ragdoll.MoveRagdoll(new Vector3(GlobalPosition.X, GlobalPosition.Y - 1.2f, GlobalPosition.Z), GlobalRotation, velocity);
 			GetParent().AddChild(ragdoll, true);
 			ragdoll.playerId = playerId;
-
 			RpcId(playerId, nameof(SetRagdoll), ragdoll.GetPath());
 		}
 	}
@@ -461,26 +460,39 @@ public partial class Player : CharacterBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void SetHeldItem(string itemPath)
 	{
+
 		GD.Print($"Should hold {itemPath}");
 		heldItem = GetTree().Root.GetNode<HeldItem>(itemPath);
-		heldItem.Reparent(equip, false);
+		GD.Print(heldItem.Name);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SpawnHeldItem(int playerId, int itemId, string equipPath)
+	{
+		GD.Print($"{playerId} : {itemId} : {equipPath}");
+		HeldItem item = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as HeldItem;
+		item.SetMultiplayerAuthority(playerId);
+		equip.AddChild(item);
+		heldItem = item;
 	}
 
 	public void HandleItem()
 	{
-		if (Input.IsActionJustPressed("equip") && PickedItem is PartDropped part && part.isInstallable)
+		if (Input.IsActionJustPressed("leftClick") && PickedItem is PartDropped part && part.isInstallable && heldItem is Toolbox)
 		{
 			PickedItem = null;
 			part.Install();
 		}
+
 		// Equip held item
-		else if (Input.IsActionJustPressed("equip") && PickedItem is Item && heldItem is null)
+		if (Input.IsActionJustPressed("equip") && PickedItem is Item && heldItem is null)
 		{
 			GD.Print("Item picked");
 			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
 			if (itemResource.Equippable)
 			{
-				gameManager.RpcId(1, nameof(gameManager.HoldItem), Id, itemResource.ItemId, equip.GetPath());
+				// gameManager.RpcId(1, nameof(gameManager.HoldItem), Id, itemResource.ItemId, equip.GetPath());
+				Rpc(nameof(SpawnHeldItem), Id, itemResource.ItemId, equip.GetPath());
 				PickedItem.DestroyItem();
 				PickedItem = null;
 			}
@@ -496,7 +508,7 @@ public partial class Player : CharacterBody3D
 		
 
 		// Stop picking items when item held
-		if (heldItem is not null) return;
+		if (heldItem is not Toolbox && heldItem is not null) return;
 
 		// Pick and drop item
 		if (Input.IsActionJustPressed("leftClick"))
