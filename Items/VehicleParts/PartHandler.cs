@@ -4,7 +4,7 @@ using System.Collections;
 
 public partial class PartHandler : Node3D
 {
-    [Signal] public delegate void PartInstalledEventHandler(int itemId, float condition, string markerPath);
+    [Signal] public delegate void PartInstalledEventHandler(int itemId, float condition, Vector3 partPosition);
     private RayCast3D _rayCast;
     private Marker3D _marker;
     private int _partId;
@@ -36,12 +36,11 @@ public partial class PartHandler : Node3D
             {
                 case Parts.engine:
                     {
-                        if (_rayCast.GetCollider() is EngineDropped engine)
-                        {
-                            GD.Print("Engine spotted");
-                            engine.InstallPart += InstallPart;
-                            engine.isInstallable = true;
-                        }
+                        // if (_rayCast.GetCollider() is EngineDropped engine)
+                        // {
+                        //     engine.InstallPart += InstallPart;
+                        //     engine.isInstallable = true;
+                        // }
                         break;
                     }
                 // case Parts.intake:
@@ -101,6 +100,6 @@ public partial class PartHandler : Node3D
         GD.Print("Trying to install engine");
         _partId = itemId;
         _partCondition = condition;
-        EmitSignal(SignalName.PartInstalled, itemId, condition, _marker.GetPath());
+        EmitSignal(SignalName.PartInstalled, itemId, condition, _marker.Position);
     }
 }
