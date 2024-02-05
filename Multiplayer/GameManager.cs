@@ -96,27 +96,41 @@ public partial class GameManager : Node
 	// }
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SpawnVehiclePart(int itemId, float condition, Vector3 position)
+	{
+		// Currently using dictionary since spawner doesnt accept multiple variables
+		// Dictionary<int, bool> properties = new Dictionary<int, bool>();
+		// properties[itemId] = false;
+		var item = multiplayerSpawner.Spawn(itemId) as PartDropped;
+		item.SetCondition(condition);
+		item.GlobalPosition = position;
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void DropItem(int playerId, int itemId, Vector3 position)
 	{
-		Dictionary<int, bool> properties = new Dictionary<int, bool>();
-		properties[itemId] = false;
-		var item = multiplayerSpawner.Spawn(properties) as Item;
+		// Currently using dictionary since spawner doesnt accept multiple variables
+		// Dictionary<int, bool> properties = new Dictionary<int, bool>();
+		// properties[itemId] = false;
+		var item = multiplayerSpawner.Spawn(itemId) as Item;
 		item.GlobalPosition = position;
+
+		if (playerId == -1) return;
 		var player = GetNode<Player>($"{playerId}");
 		player.RpcId(playerId, nameof(player.SetPickedItem), item.GetPath());
 	}
 
-	Node SpawnItem(Dictionary<int, bool> properties)
+	Node SpawnItem(int itemId)
 	{
 		Node item;
-		if (properties.Values.First())
-		{
-			item = GetItemResource(properties.Keys.First()).ItemInHand.Instantiate();
-		}
-		else
-		{
-			item = GetItemResource(properties.Keys.First()).ItemOnFloor.Instantiate();
-		}
+		// if (properties.Values.First())
+		// {
+		// 	item = GetItemResource(properties.Keys.First()).ItemInHand.Instantiate();
+		// }
+		// else
+		// {
+			item = GetItemResource(itemId).ItemOnFloor.Instantiate();
+		// }
 		return item;
 	}
 

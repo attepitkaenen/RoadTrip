@@ -4,6 +4,13 @@ using System;
 public partial class CarPart : Node3D
 {
     [Export] private float _condition = 100f;
+    public int itemId;
+    EngineBay _engineBay;
+
+    public override void _Ready()
+    {
+        _engineBay = GetParent<EngineBay>();
+    }
 
     public void Damage(float amount)
     {
@@ -18,5 +25,18 @@ public partial class CarPart : Node3D
     public void SetCondition(float condition)
     {
         _condition = condition;
+    }
+
+    public void Uninstall()
+    {
+        _engineBay.RemoveInstalledPart(itemId, _condition, GlobalPosition);
+        Rpc(nameof(DestroyPart));
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void DestroyPart()
+    {
+        GD.Print("Should destroy self");
+        QueueFree();
     }
 }
