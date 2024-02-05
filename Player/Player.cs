@@ -39,7 +39,7 @@ public partial class Player : CharacterBody3D
 	public bool isGrounded { get; set; } = false;
 
 	[ExportGroup("Interaction properties")]
-	[Export] private RayCast3D interaction;
+	[Export] private RayCast3D interactionCast;
 	[Export] private Marker3D hand;
 	[Export] private Marker3D equip;
 	[Export] private StaticBody3D staticBody;
@@ -400,7 +400,7 @@ public partial class Player : CharacterBody3D
 	{
 		if (Input.IsActionPressed("leftClick") && PickedItem is null)
 		{
-			if (interaction.GetCollider() is Vehicle vehicle)
+			if (interactionCast.GetCollider() is Vehicle vehicle)
 			{
 				var axis = -head.GlobalBasis.X;
 				vehicle.Rpc(nameof(vehicle.Flip), axis);
@@ -457,14 +457,14 @@ public partial class Player : CharacterBody3D
 		PickedItem = GetTree().Root.GetNode<Item>(itemPath);
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void SetHeldItem(string itemPath)
-	{
+	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	// public void SetHeldItem(string itemPath)
+	// {
 
-		GD.Print($"Should hold {itemPath}");
-		heldItem = GetTree().Root.GetNode<HeldItem>(itemPath);
-		GD.Print(heldItem.Name);
-	}
+	// 	GD.Print($"Should hold {itemPath}");
+	// 	heldItem = GetTree().Root.GetNode<HeldItem>(itemPath);
+	// 	GD.Print(heldItem.Name);
+	// }
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void SpawnHeldItem(int playerId, int itemId, string equipPath)
@@ -478,14 +478,20 @@ public partial class Player : CharacterBody3D
 
 	public void HandleItem()
 	{
-		if (Input.IsActionJustPressed("leftClick") && PickedItem is PartDropped part && part.isInstallable && heldItem is Toolbox)
+		// Install vehicle part if holding a toolbox
+		if (Input.IsActionJustPressed("equip") && PickedItem is PartDropped part && part.isInstallable && heldItem is Toolbox)
 		{
 			PickedItem = null;
 			part.Install();
+			GD.Print("INSTALL PART");
+		}
+		else if (Input.IsActionJustPressed("equip") && interactionCast.GetCollider() is CarPart installedPart && heldItem is Toolbox && interactionCast.IsColliding())
+		{
+			installedPart.Uninstall();
 		}
 
 		// Equip held item
-		if (Input.IsActionJustPressed("equip") && PickedItem is Item && heldItem is null)
+		else if (Input.IsActionJustPressed("equip") && PickedItem is Item && heldItem is null)
 		{
 			GD.Print("Item picked");
 			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
@@ -505,7 +511,7 @@ public partial class Player : CharacterBody3D
 			heldItem = null;
 			equip.GetChild(0).QueueFree();
 		}
-		
+
 
 		// Stop picking items when item held
 		if (heldItem is not Toolbox && heldItem is not null) return;
@@ -513,11 +519,11 @@ public partial class Player : CharacterBody3D
 		// Pick and drop item
 		if (Input.IsActionJustPressed("leftClick"))
 		{
-			if (interaction.GetCollider() is Item item && PickedItem is null && item.playerHolding == 0)
+			if (interactionCast.GetCollider() is Item item && PickedItem is null && item.playerHolding == 0)
 			{
 				PickItem(item);
 			}
-			else if (interaction.GetCollider() is Bone bone && PickedItem is null && bone.playerHolding == 0)
+			else if (interactionCast.GetCollider() is Bone bone && PickedItem is null && bone.playerHolding == 0)
 			{
 				PickItem(bone);
 			}
