@@ -36,7 +36,7 @@ properties/8/replication_mode = 1
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5ovv6"]
 radius = 0.3
-height = 1.0
+height = 0.9
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ycfhc"]
 height = 1.5
@@ -1382,8 +1382,8 @@ transform = Transform3D(-0.19, 0, -1.66103e-08, 0, 0.19, 0, 1.66103e-08, 0, -0.1
 bones/0/rotation = Quaternion(0, -0.706804, 0, 0.707409)
 bones/1/rotation = Quaternion(0, 0.382486, 0, 0.923961)
 bones/2/rotation = Quaternion(-7.0949e-10, 2.542e-08, -0.81017, 0.586195)
-bones/3/rotation = Quaternion(-0.0338433, -0.00612312, -0.503897, 0.863079)
-bones/4/rotation = Quaternion(0.664673, -0.0118983, -0.129275, 0.735769)
+bones/3/rotation = Quaternion(-0.108957, 0.0606078, -0.497904, 0.858223)
+bones/4/rotation = Quaternion(0.69436, -0.0139737, -0.126045, 0.708365)
 bones/5/rotation = Quaternion(0.415725, 0.063742, -0.0679771, 0.904704)
 bones/6/rotation = Quaternion(0.0715439, 0.109467, -0.808789, 0.573375)
 bones/6/scale = Vector3(1, 1, 1)
@@ -1400,8 +1400,8 @@ bones/15/rotation = Quaternion(-0.141731, -8.82028e-11, 0.00446347, 0.989895)
 bones/15/scale = Vector3(1, 1, 1)
 bones/16/rotation = Quaternion(0, -0.707107, 0, 0.707107)
 bones/17/rotation = Quaternion(-7.0949e-10, -2.542e-08, 0.81017, 0.586195)
-bones/18/rotation = Quaternion(0.000571357, 0.0365683, 0.504929, 0.862386)
-bones/19/rotation = Quaternion(0.650229, 0.0109082, 0.130731, 0.748326)
+bones/18/rotation = Quaternion(0.046426, 0.077044, 0.50464, 0.858631)
+bones/19/rotation = Quaternion(0.674799, 0.0125976, 0.128211, 0.72667)
 bones/20/rotation = Quaternion(0.415725, -0.063742, 0.0679772, 0.904704)
 bones/21/rotation = Quaternion(0.0715439, -0.109467, 0.808789, 0.573375)
 bones/21/scale = Vector3(1, 1, 1)
@@ -1414,18 +1414,18 @@ bones/26/rotation = Quaternion(0.0110941, -0.0188879, 0.891239, 0.453005)
 bones/27/rotation = Quaternion(-0.143017, -7.53574e-08, 0.0449539, 0.988699)
 bones/27/scale = Vector3(1, 1, 1)
 bones/28/rotation = Quaternion(0.649351, 0.2799, 0.64935, -0.2799)
-bones/29/rotation = Quaternion(-0.336311, -0.0689279, -0.136812, 0.929207)
+bones/29/rotation = Quaternion(-0.319944, -0.153381, -0.304439, 0.883984)
 bones/29/scale = Vector3(1, 1, 1)
-bones/30/rotation = Quaternion(-0.0118435, 0.0700238, 0.6755, 0.733932)
+bones/30/rotation = Quaternion(-0.0147054, 0.042432, 0.409329, 0.911281)
 bones/31/rotation = Quaternion(0.462806, -3.86938e-08, -0.187114, 0.866486)
 bones/32/rotation = Quaternion(0.649351, -0.2799, -0.64935, -0.2799)
-bones/33/rotation = Quaternion(-0.339509, 0.0312137, 0.0619547, 0.938041)
+bones/33/rotation = Quaternion(-0.338629, -0.0449132, -0.0891462, 0.93561)
 bones/33/scale = Vector3(1, 1, 1)
-bones/34/rotation = Quaternion(-0.0161097, -0.00578968, -0.0558506, 0.998292)
+bones/34/rotation = Quaternion(-0.015189, -0.034788, -0.33559, 0.941243)
 bones/35/rotation = Quaternion(0.462806, 3.86938e-08, 0.187114, 0.866486)
 
 [node name="Head" parent="character/Armature/Skeleton3D" index="0"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 0)
+transform = Transform3D(1.37091e-06, 0, -1, 0, 1, 0, 1, 0, 1.37091e-06, 0, 0, 0)
 
 [node name="NameTag" type="Label3D" parent="."]
 transform = Transform3D(-0.3, 0, -4.52987e-08, 0, 0.3, 0, 4.52987e-08, 0, -0.3, 0, -0.0464681, -0.195011)

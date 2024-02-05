@@ -58,15 +58,13 @@ size = Vector3(1.5, 0.2, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_4mo0s"]
 size = Vector3(1.5, 0.2, 1)
 
-[node name="Coralli" type="VehicleBody3D" node_paths=PackedStringArray("itemCast", "area", "_synchronizer")]
+[node name="Coralli" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer")]
 collision_layer = 4
 collision_mask = 6
 mass = 100.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, 0.201208, 0.245741)
 script = ExtResource("1_p5jd5")
-itemCast = NodePath("ItemCast")
-area = NodePath("Area3D")
 _synchronizer = NodePath("MultiplayerSynchronizer")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
