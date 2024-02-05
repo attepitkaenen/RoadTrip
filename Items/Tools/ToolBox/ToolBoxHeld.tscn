@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://v416y10fnay4"]
 
-[ext_resource type="Script" path="res://Items/HeldItem.cs" id="1_jpon8"]
+[ext_resource type="Script" path="res://Items/Tools/ToolBox/Toolbox.cs" id="1_jgyo6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2tg67"]
 albedo_color = Color(0.8, 0.0901961, 0, 1)
@@ -12,7 +12,7 @@ material = SubResource("StandardMaterial3D_2tg67")
 size = Vector3(0.2, 0.3, 0.4)
 
 [node name="ToolBoxHeld" type="Node3D"]
-script = ExtResource("1_jpon8")
+script = ExtResource("1_jgyo6")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_qifv1")
