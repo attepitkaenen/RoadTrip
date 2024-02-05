@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://qtf1m1jdet0q"]
+[gd_scene load_steps=2 format=3 uid="uid://qtf1m1jdet0q"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/EngineBay.cs" id="1_mqoyn"]
-[ext_resource type="Script" path="res://Items/VehicleParts/PartHandler.cs" id="2_m8upx"]
 
 [node name="EngineBay" type="Node3D" node_paths=PackedStringArray("multiplayerSpawner")]
 script = ExtResource("1_mqoyn")
@@ -11,7 +10,6 @@ multiplayerSpawner = NodePath("MultiplayerSpawner")
 spawn_path = NodePath("..")
 
 [node name="Engine" type="Node3D" parent="."]
-script = ExtResource("2_m8upx")
 
 [node name="Marker3D" type="Marker3D" parent="Engine"]
 
