@@ -85,42 +85,37 @@ public partial class GameManager : Node
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void HoldItem(long playerId, int itemId, string equipPath)
 	{
-		GD.Print(itemId);
-		// var item = GetItemResource(itemId).ItemInHand.Instantiate<HeldItem>();
-		SpawnProperties properties = new SpawnProperties() {
-			itemId = itemId,
-			inHand = true
-		};
+		GD.Print($"{playerId} : {itemId} : {equipPath}");
+		Dictionary<int, bool> properties = new Dictionary<int, bool>();
+		properties[itemId] = true;
 		var item = multiplayerSpawner.Spawn(properties) as HeldItem;
 		item.SetMultiplayerAuthority((int)playerId);
-		item.Reparent(GetNode<Marker3D>(equipPath), false);
+		// item.Reparent(GetNode<Marker3D>(equipPath), false);
+		var player = GetNode<Player>($"{playerId}");
+		player.RpcId(playerId, nameof(player.SetHeldItem), item.GetPath());
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void DropItem(int playerId, int itemId, Vector3 position)
 	{
-		// var item = GetItemResource(itemId).ItemOnFloor.Instantiate<Item>();
-		SpawnProperties properties = new SpawnProperties() {
-			itemId = itemId,
-			inHand = false
-		};
+		Dictionary<int, bool> properties = new Dictionary<int, bool>();
+		properties[itemId] = false;
 		var item = multiplayerSpawner.Spawn(properties) as Item;
-		// AddChild(item, true);
 		item.GlobalPosition = position;
 		var player = GetNode<Player>($"{playerId}");
 		player.RpcId(playerId, nameof(player.SetPickedItem), item.GetPath());
 	}
 
-	Node SpawnItem(SpawnProperties properties)
+	Node SpawnItem(Dictionary<int, bool> properties)
 	{
 		Node item;
-		if (properties.inHand)
+		if (properties.Values.First())
 		{
-			item = GetItemResource(properties.itemId).ItemInHand.Instantiate();
+			item = GetItemResource(properties.Keys.First()).ItemInHand.Instantiate();
 		}
 		else
 		{
-			item = GetItemResource(properties.itemId).ItemOnFloor.Instantiate();
+			item = GetItemResource(properties.Keys.First()).ItemOnFloor.Instantiate();
 		}
 		return item;
 	}
@@ -198,10 +193,4 @@ public partial class GameManager : Node
 			currentPlayer.Rpc(nameof(currentPlayer.SetPlayerState), playerState.Id, playerState.Name);
 		}
 	}
-}
-
-public partial class SpawnProperties : GodotObject
-{
-	public int itemId;
-	public bool inHand;
 }
