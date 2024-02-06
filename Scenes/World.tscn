@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=16 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dqqqnhev4fhpv" path="res://Items/Weapons/Revolver/RevolverDropped.tscn" id="9_fswkx"]
 [ext_resource type="PackedScene" uid="uid://ee5filigiwj7" path="res://Items/VehicleParts/Engine/EngineI3/EngineI3Dropped.tscn" id="9_wu0kr"]
 [ext_resource type="PackedScene" uid="uid://dx5pju4b5bjye" path="res://Items/Tools/ToolBox/ToolBoxDropped.tscn" id="10_s3uay"]
+[ext_resource type="PackedScene" uid="uid://wt475qfxcfm" path="res://Items/VehicleParts/Engine/EngineV8/EngineV8Dropped.tscn" id="11_bvh0f"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -648,6 +649,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2, 6)
 [node name="Engine2" parent="." instance=ExtResource("9_wu0kr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.3939, 2.1906, 5.02577)
 
+[node name="Engine3" parent="." instance=ExtResource("11_bvh0f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2, 5)
+
 [editable path="Aito3"]
-[editable path="Aito3/aito"]
 [editable path="Items/Item31"]

@@ -42,6 +42,11 @@ public partial class Vehicle : VehicleBody3D
 
 		enginePower = _engineBay.GetHorsePower();
 
+		if (_driverSeat.seatedPlayerId == -1)
+		{
+			Brake = 5f;
+		}
+
 		if (LinearVelocity.Length() < 0.1f && !_driverSeat.occupied)
 		{
 			_synchronizer.ReplicationInterval = 1f;

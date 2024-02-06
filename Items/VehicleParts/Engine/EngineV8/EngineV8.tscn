@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://c6p8rflg4u1x"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/Engine/Engine.cs" id="1_3idgn"]
+[ext_resource type="Resource" uid="uid://cid0m8wyugy8g" path="res://Items/VehicleParts/Engine/EngineV8/EngineV8.tres" id="2_g5otb"]
+[ext_resource type="PackedScene" uid="uid://bm6h1pyti3rlk" path="res://Items/VehicleParts/Engine/EngineI3/engine.blend" id="3_46se5"]
+[ext_resource type="Material" uid="uid://cs3w4qi8idrrr" path="res://Items/VehicleParts/Engine/EngineV8/EngineV8TempMaterial.tres" id="4_5caqx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_md8aq"]
+size = Vector3(0.2, 0.35, 0.45)
+
+[node name="Engine" type="RigidBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+collision_layer = 8
+collision_mask = 8
+freeze = true
+script = ExtResource("1_3idgn")
+stats = ExtResource("2_g5otb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_md8aq")
+
+[node name="engine" parent="." instance=ExtResource("3_46se5")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="Block" parent="engine" index="0"]
+material_override = ExtResource("4_5caqx")
+
+[editable path="engine"]
