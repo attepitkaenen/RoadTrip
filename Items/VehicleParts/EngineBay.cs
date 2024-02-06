@@ -63,6 +63,7 @@ public partial class EngineBay : Node3D
         
         if (part is Engine engine)
         {
+            GD.Print(engine.GetEnginePower());
             _engine = engine;
         }
     }
@@ -108,8 +109,12 @@ public partial class EngineBay : Node3D
         gameManager.RpcId(1, nameof(gameManager.SpawnVehiclePart), itemId, condition, position);
     }
 
-    public void GetHorsePower()
+    public float GetHorsePower()
     {
-
+        if (_engine is null)
+        {
+            return 0;
+        }
+        return _engine.GetEnginePower();
     }
 }
