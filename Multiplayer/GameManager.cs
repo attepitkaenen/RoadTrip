@@ -104,9 +104,7 @@ public partial class GameManager : Node
 	Node SpawnItem(int itemId)
 	{
 		Node item;
-
 		item = GetItemResource(itemId).ItemOnFloor.Instantiate();
-
 		return item;
 	}
 
