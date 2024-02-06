@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://bla1qrt58aftl"]
+
+[ext_resource type="PackedScene" uid="uid://c6p8rflg4u1x" path="res://Items/VehicleParts/Engine/EngineV8/EngineV8.tscn" id="1_2blh8"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_jj4wm"]
+[ext_resource type="PackedScene" uid="uid://wt475qfxcfm" path="res://Items/VehicleParts/Engine/EngineV8/EngineV8Dropped.tscn" id="2_kwu1i"]
+
+[resource]
+script = ExtResource("1_jj4wm")
+Equippable = false
+ItemName = "EngineV8"
+ItemId = 101
+Description = ""
+ItemOnFloor = ExtResource("2_kwu1i")
+ItemInHand = ExtResource("1_2blh8")

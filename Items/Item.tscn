@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://btmag5dkf8psn"]
 
 [ext_resource type="Script" path="res://Items/Item.cs" id="1_7ofr0"]
-[ext_resource type="Material" uid="uid://dummx5f06o3ry" path="res://Materials/orange.tres" id="1_pjmki"]
+[ext_resource type="Material" uid="uid://dummx5f06o3ry" path="res://Materials/Orange/orange.tres" id="1_pjmki"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7eo7n"]
 rough = true

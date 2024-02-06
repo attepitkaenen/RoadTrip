@@ -1,15 +1,17 @@
-[gd_scene load_steps=15 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=17 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
 [ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
 [ext_resource type="PackedScene" uid="uid://7eis7so5p5lh" path="res://Vehicles/Aito/Aito.tscn" id="4_ynoyo"]
+[ext_resource type="Material" uid="uid://bjl7ucopgkb2s" path="res://Materials/Orange/orange1m.tres" id="5_cxm0r"]
 [ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="5_xddwy"]
 [ext_resource type="PackedScene" uid="uid://f7xtx21m8p4m" path="res://Player/Ragdoll/ragdoll.tscn" id="8_ho0v7"]
 [ext_resource type="Texture2D" uid="uid://mxomojf6kdvw" path="res://Materials/lines-traffic-paved-roads-background.jpg" id="9_doebh"]
 [ext_resource type="PackedScene" uid="uid://dqqqnhev4fhpv" path="res://Items/Weapons/Revolver/RevolverDropped.tscn" id="9_fswkx"]
 [ext_resource type="PackedScene" uid="uid://ee5filigiwj7" path="res://Items/VehicleParts/Engine/EngineI3/EngineI3Dropped.tscn" id="9_wu0kr"]
 [ext_resource type="PackedScene" uid="uid://dx5pju4b5bjye" path="res://Items/Tools/ToolBox/ToolBoxDropped.tscn" id="10_s3uay"]
+[ext_resource type="PackedScene" uid="uid://wt475qfxcfm" path="res://Items/VehicleParts/Engine/EngineV8/EngineV8Dropped.tscn" id="11_bvh0f"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -45,18 +47,6 @@ collision_layer = 2
 collision_mask = 3
 size = Vector3(1000, 7, 1000)
 
-[node name="Aito" parent="." instance=ExtResource("4_ynoyo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7535, 1.50125, -4.70504)
-
-[node name="Aito3" parent="." instance=ExtResource("4_ynoyo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7535, 1.50125, 0.656975)
-
-[node name="Aito4" parent="." instance=ExtResource("4_ynoyo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.696, 1.50125, 0.656975)
-
-[node name="Aito2" parent="." instance=ExtResource("4_ynoyo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8542, 1.50125, -4.70504)
-
 [node name="Environment" type="Node3D" parent="."]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
@@ -79,29 +69,45 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0347291, 7.73395, 8.14572)
 [node name="3" type="Node3D" parent="SpawnPoints" groups=["SpawnPoints"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.77343, 2, 4.12149)
 
+[node name="Label3D4" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.1899, 2.93741, -7.77789)
+text = "Installing parts:
+Equip the Toolbox™ and press F when vehicle part is in position
+"
+horizontal_alignment = 0
+
 [node name="TutorialSign" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.10191, 2.0826, 3.81614)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.10191, 2.0826, 2.91099)
 material_override = ExtResource("3_4b1jl")
 use_collision = true
 collision_layer = 2
-size = Vector3(0.32666, 3.13576, 6.47314)
+size = Vector3(0.32666, 3.13576, 8.28345)
 
 [node name="Label3D" type="Label3D" parent="TutorialSign"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.169392, 1.32582, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.190348, 1.32054, -0.136451)
 text = "Controlls:"
 
 [node name="Label3D2" type="Label3D" parent="TutorialSign"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.169392, -0.00813484, 2.48586)
-text = "WASD: Move
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.169392, -0.0447156, 3.84871)
+text = "Character:
+WASD: Move
 Shift: Sprint
-Space: Jump & handbreak
+Space: Jump
 Left Ctrl: Crouch
 Esc: Open menu
 Mouse1: Grab items
 Mouse2: Throw picked item
 E + Mouse: Rotate held item 
-Scroll wheel: Move held item closer and further
-F: Sit while on top of seat & equip currently held item"
+Scroll wheel: Move picked item closer and further
+F: Equip held item, sit and install parts"
+horizontal_alignment = 0
+
+[node name="Label3D3" type="Label3D" parent="TutorialSign"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.169392, 0.85481, -0.101837)
+text = "Vehicles:
+WASD: Accelerate, Brake and steer
+Space: handbreak
+"
 horizontal_alignment = 0
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
@@ -138,6 +144,41 @@ material_override = ExtResource("3_4b1jl")
 use_collision = true
 collision_layer = 2
 size = Vector3(1, 0.94339, 1)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.7511, 0.616534, -4.75512)
+material_override = ExtResource("3_4b1jl")
+use_collision = true
+collision_layer = 2
+size = Vector3(16.111, 0.203629, 6.57129)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.7511, 2.77766, -7.91674)
+material_override = ExtResource("5_cxm0r")
+use_collision = true
+collision_layer = 2
+size = Vector3(16.111, 4.11457, 0.248047)
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.7511, 4.9, -4.7763)
+material_override = ExtResource("5_cxm0r")
+use_collision = true
+collision_layer = 2
+size = Vector3(16.111, 0.230135, 6.52893)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.81, 2.77766, -4.76684)
+material_override = ExtResource("5_cxm0r")
+use_collision = true
+collision_layer = 2
+size = Vector3(0.228827, 4.11457, 6.54785)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.7013, 2.77766, -4.75597)
+material_override = ExtResource("5_cxm0r")
+use_collision = true
+collision_layer = 2
+size = Vector3(0.210639, 4.11457, 6.56958)
 
 [node name="CSGBox3D9" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.958845, 0.283931, 0, -0.283931, 0.958845, 11.8008, 1.45686, 42.2507)
@@ -254,100 +295,103 @@ size = Vector3(5.81396, 0.580909, 2.63043)
 [node name="Items" type="Node3D" parent="."]
 
 [node name="Item" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 2.62066, -1.26434)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1485, 2.64758, -6.1015)
 
 [node name="Item2" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 2.96589, -1.26095)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1499, 2.99281, -6.09811)
 
 [node name="Item3" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.2403, -1.26095)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1499, 3.26722, -6.09811)
 
 [node name="Item4" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.52894, -1.26095)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1499, 3.55586, -6.09811)
 
 [node name="Item5" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.78091, -1.26095)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1499, 3.80783, -6.09811)
 
 [node name="Item6" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 4.03264, -1.26434)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1485, 4.05956, -6.1015)
 
 [node name="Item7" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 4.29574, -1.26434)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1485, 4.32266, -6.1015)
 
 [node name="Item8" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 4.55407, -1.26434)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1485, 4.58099, -6.1015)
 
 [node name="Item25" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 2.62066, -1.26434)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.289, 2.62066, -5.78804)
 
 [node name="Item26" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 2.96589, -1.26095)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2904, 2.96589, -5.78465)
 
 [node name="Item27" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 3.2403, -1.26095)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2904, 3.2403, -5.78465)
 
 [node name="Item28" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 3.52894, -1.26095)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2904, 3.52894, -5.78465)
 
 [node name="Item29" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 3.78091, -1.26095)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2904, 3.78091, -5.78465)
 
 [node name="Item30" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.03264, -1.26434)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.289, 4.03264, -5.78804)
 
 [node name="Item31" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1411, 4.29574, -1.26434)
 
+[node name="MeshInstance3D" parent="Items/Item31" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.15558, 0, -4.5237)
+
 [node name="Item32" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.55407, -1.26434)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.289, 4.55407, -5.78804)
 
 [node name="Item33" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 2.62066, -6.51124)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7956, 2.62066, -5.85418)
 
 [node name="Item34" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 2.96589, -6.50785)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.797, 2.96589, -5.85079)
 
 [node name="Item35" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.2403, -6.50785)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.797, 3.2403, -5.85079)
 
 [node name="Item36" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.52894, -6.50785)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.797, 3.52894, -5.85079)
 
 [node name="Item37" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1005, 3.78091, -6.50785)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.797, 3.78091, -5.85079)
 
 [node name="Item38" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 4.03264, -6.51124)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7956, 4.03264, -5.85418)
 
 [node name="Item39" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 4.29574, -6.51124)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7956, 4.29574, -5.85418)
 
 [node name="Item40" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0991, 4.55407, -6.51124)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7956, 4.55407, -5.85418)
 
 [node name="Item41" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 2.62066, -6.51124)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2855, 2.62066, -5.79401)
 
 [node name="Item42" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 2.96589, -6.50785)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2869, 2.96589, -5.79062)
 
 [node name="Item43" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 3.2403, -6.50785)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2869, 3.2403, -5.79062)
 
 [node name="Item44" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 3.52894, -6.50785)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2869, 3.52894, -5.79062)
 
 [node name="Item45" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5958, 3.78091, -6.50785)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2869, 3.78091, -5.79062)
 
 [node name="Item46" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.03264, -6.51124)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2855, 4.03264, -5.79401)
 
 [node name="Item47" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.29574, -6.51124)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2855, 4.29574, -5.79401)
 
 [node name="Item48" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5944, 4.55407, -6.51124)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2855, 4.55407, -5.79401)
 
 [node name="Item9" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 0.860563, -4.14653)
@@ -639,15 +683,43 @@ material = SubResource("StandardMaterial3D_722k7")
 [node name="ragdoll" parent="." instance=ExtResource("8_ho0v7")]
 transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 10.8875, 1.3221, 7.05007)
 
-[node name="Engine" parent="." instance=ExtResource("9_wu0kr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 1, 5)
-
 [node name="ToolBoxDropped" parent="." instance=ExtResource("10_s3uay")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2, 6)
+transform = Transform3D(0.202992, 0, -0.97918, 0, 1, 0, 0.97918, 0, 0.202992, 18.0998, 0.947184, -7.21793)
+
+[node name="ToolBoxDropped2" parent="." node_paths=PackedStringArray("_synchronizer") instance=ExtResource("10_s3uay")]
+transform = Transform3D(-0.388995, 0, -0.92124, 0, 1, 0, 0.92124, 0, -0.388995, 18.5793, 0.947184, -7.21793)
+_synchronizer = NodePath("../ToolBoxDropped/MultiplayerSynchronizer")
+
+[node name="ToolBoxDropped3" parent="." node_paths=PackedStringArray("_synchronizer") instance=ExtResource("10_s3uay")]
+transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 18.3453, 1.27677, -7.21793)
+_synchronizer = NodePath("../ToolBoxDropped/MultiplayerSynchronizer")
+
+[node name="ToolBoxDropped4" parent="." node_paths=PackedStringArray("_synchronizer") instance=ExtResource("10_s3uay")]
+transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 19.0738, 1.27677, -7.21793)
+_synchronizer = NodePath("../ToolBoxDropped/MultiplayerSynchronizer")
+
+[node name="Engine" parent="." instance=ExtResource("9_wu0kr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2454, 1.07358, 0.0958824)
 
 [node name="Engine2" parent="." instance=ExtResource("9_wu0kr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.3939, 2.1906, 5.02577)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.6733, 1.07358, 0.0708647)
 
-[editable path="Aito3"]
-[editable path="Aito3/aito"]
+[node name="Engine3" parent="." instance=ExtResource("11_bvh0f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8555, 1.07358, 1.09098)
+
+[node name="Engine4" parent="." instance=ExtResource("11_bvh0f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.3552, 1.07358, 1.0662)
+
+[node name="Aito" parent="." instance=ExtResource("4_ynoyo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.96, 1.54219, -4.77876)
+
+[node name="Aito2" parent="." instance=ExtResource("4_ynoyo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.1684, 1.41643, -4.72592)
+
+[node name="Aito3" parent="." instance=ExtResource("4_ynoyo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2946, 1.44355, -4.72863)
+
+[node name="Aito4" parent="." instance=ExtResource("4_ynoyo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5276, 1.52999, -5.05233)
+
 [editable path="Items/Item31"]
