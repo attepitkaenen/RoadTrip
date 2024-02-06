@@ -645,6 +645,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 1, 5)
 [node name="ToolBoxDropped" parent="." instance=ExtResource("10_s3uay")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2, 6)
 
+[node name="Engine2" parent="." instance=ExtResource("9_wu0kr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.3939, 2.1906, 5.02577)
+
 [editable path="Aito3"]
 [editable path="Aito3/aito"]
 [editable path="Items/Item31"]

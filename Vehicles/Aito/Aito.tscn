@@ -26,6 +26,9 @@ properties/4/replication_mode = 1
 properties/5/path = NodePath("Speedometer:text")
 properties/5/spawn = true
 properties/5/replication_mode = 1
+properties/6/path = NodePath("EngineBay:_engineId")
+properties/6/spawn = true
+properties/6/replication_mode = 1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0dfu3"]
 size = Vector3(0.5, 0.1, 0.5)
@@ -58,7 +61,7 @@ size = Vector3(0.179956, 0.360035, 0.66223)
 [sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.102235, 1.44803)
 
-[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "_speedometer")]
+[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "_speedometer", "_engineBay")]
 collision_layer = 4
 collision_mask = 6
 mass = 100.0
@@ -67,6 +70,7 @@ center_of_mass = Vector3(0, 0.201208, 0.245741)
 script = ExtResource("1_lai86")
 _synchronizer = NodePath("MultiplayerSynchronizer")
 _speedometer = NodePath("Speedometer")
+_engineBay = NodePath("EngineBay")
 
 [node name="aito" parent="." instance=ExtResource("3_0l07t")]
 transform = Transform3D(-1.18, 0, -1.78175e-07, 0, 1.18, 0, 1.78175e-07, 0, -1.18, 0, 0.510493, 0.334204)
@@ -173,6 +177,9 @@ mesh = SubResource("BoxMesh_5rl2c")
 [node name="SeatPosition" type="Marker3D" parent="Seat2"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.596146, 0.0536157)
 
+[node name="EngineBay" parent="." instance=ExtResource("6_5yy2s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.434783, 1.56482)
+
 [node name="Floor" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0446289, -0.045975)
 shape = SubResource("BoxShape3D_cwr7c")
@@ -208,8 +215,5 @@ shape = SubResource("BoxShape3D_khang")
 [node name="Roof1" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.303, -0.21664)
 shape = SubResource("BoxShape3D_kkank")
-
-[node name="EngineBay" parent="." instance=ExtResource("6_5yy2s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.434783, 1.56482)
 
 [editable path="aito"]

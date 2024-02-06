@@ -3,7 +3,7 @@ using System;
 
 public partial class Engine : CarPart
 {
-	[Export] public EngineResource engineStats;
+	[Export] public EngineResource stats;
 	[Export] float oil = 100;
 	bool running = false;
 	public Timer timer;
@@ -58,11 +58,11 @@ public partial class Engine : CarPart
 
 	public float GetEnginePower()
 	{
-		if (!running)
-		{
-			return 0f;
-		}
-		return engineStats.Horsepower - (engineStats.Horsepower * 0.4f * (100f - GetCondition()));
+		// if (!running)
+		// {
+		// 	return 0f;
+		// }
+		return stats.Horsepower - (stats.Horsepower * 0.4f * (100f - GetCondition()));
 	}
 
 	public bool IsRunning()

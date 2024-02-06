@@ -7,8 +7,9 @@ public partial class Vehicle : VehicleBody3D
 {
 	[Export] private MultiplayerSynchronizer _synchronizer;
 	[Export] private Label3D _speedometer;
+	[Export] private EngineBay _engineBay;
 	private Seat _driverSeat;
-	float enginePower = 200f;
+	float enginePower = 0;
 	float maxSteer = 0.8f;
 	private Vector2 _inputDir;
 	bool braking;
@@ -38,6 +39,8 @@ public partial class Vehicle : VehicleBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		if (!IsMultiplayerAuthority()) return;
+
+		enginePower = _engineBay.GetHorsePower();
 
 		if (LinearVelocity.Length() < 0.1f && !_driverSeat.occupied)
 		{
