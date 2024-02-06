@@ -45,6 +45,7 @@ public partial class Player : CharacterBody3D
 	[Export] private StaticBody3D staticBody;
 	private dynamic PickedItem;
 	private ItemResource itemResource;
+	private int _heldItemId;
 	private HeldItem heldItem;
 	private float Strength = 40f;
 	private int Health = 10;
@@ -163,13 +164,6 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SetPlayerState(long id, string name)
-	{
-		nameTag.Text = name;
-		Id = id;
-	}
-
 	public override void _PhysicsProcess(double delta)
 	{
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
@@ -184,6 +178,8 @@ public partial class Player : CharacterBody3D
 			Visible = true;
 			collisionShape3D.Disabled = false;
 		}
+
+		HandleHeldItem();
 
 		//Lerp movement for other players
 		if (!IsMultiplayerAuthority())
@@ -243,14 +239,14 @@ public partial class Player : CharacterBody3D
 
 		HandleDebugLines();
 
-		// Stop movement if seated
+		// Stop movement if seated and handle driving
 		if (movementState == MovementState.seated)
 		{
 			Velocity = Vector3.Zero;
 			if (seat is Seat && seat.isDriverSeat)
 			{
 				Vehicle vehicle = seat.GetParent<Vehicle>();
-				vehicle.Rpc(nameof(vehicle.Drive), Input.GetActionStrength("left") - Input.GetActionStrength("right"), Input.GetActionStrength("up") - Input.GetActionStrength("down"), Input.IsActionPressed("jump"), delta);
+				vehicle.RpcId(1, nameof(vehicle.Drive), Input.GetActionStrength("left") - Input.GetActionStrength("right"), Input.GetActionStrength("up") - Input.GetActionStrength("down"), Input.IsActionPressed("jump"), delta);
 			}
 			return;
 		}
@@ -362,40 +358,6 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void MovePlayer(Vector3 position, Vector3 rotation)
-	{
-		GlobalPosition = position;
-		GlobalRotation = rotation;
-	}
-
-	[Rpc(CallLocal = true)]
-	public void HandleRpcAnimations(string state, bool isGroundedRpc, Vector3 velocity, Transform3D transform)
-	{
-		if (state == "seated")
-		{
-			animationTree.Set("parameters/conditions/sit", true);
-			animationTree.Set("parameters/conditions/walk", false);
-			animationTree.Set("parameters/conditions/jump", false);
-			return;
-		}
-		else if (state == "jumping" || !isGroundedRpc)
-		{
-			animationTree.Set("parameters/conditions/jump", true);
-			animationTree.Set("parameters/conditions/sit", false);
-			animationTree.Set("parameters/conditions/walk", false);
-		}
-		else
-		{
-			velocity *= transform.Basis;
-			animationTree.Set("parameters/conditions/walk", true);
-			animationTree.Set("parameters/Walk/blend_position", new Vector2(-(velocity.Z / (speed * 2)), velocity.X / (speed * 2)));
-			animationTree.Set("parameters/conditions/sit", false);
-			animationTree.Set("parameters/conditions/jump", false);
-
-		}
-	}
-
 	public void FlipCar()
 	{
 		if (Input.IsActionPressed("leftClick") && PickedItem is null)
@@ -408,72 +370,20 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	public void Hit(int damage, Vector3 bulletForce)
+	public void HandleHeldItem()
 	{
-		GD.Print($"Player {Name} was hit for {damage}");
-		Health -= damage;
-
-		if (Health <= 0)
+		if (_heldItemId != 0 && heldItem is null)
 		{
-			Rpc(nameof(SpawnRagdoll), int.Parse(Name), Velocity + bulletForce);
-			if (movementState == MovementState.seated)
-			{
-				seat.Rpc(nameof(seat.Stand));
-				seat = null;
-				GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
-			}
-			movementState = MovementState.unconscious;
-			GD.Print($"Spawn ragdoll for {Name}");
-			Visible = false;
-			collisionShape3D.Disabled = true;
+			HeldItem item = gameManager.GetItemResource(_heldItemId).ItemInHand.Instantiate() as HeldItem;
+			item.SetMultiplayerAuthority((int)Id);
+			equip.AddChild(item);
+			heldItem = item;
 		}
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SpawnRagdoll(int playerId, Vector3 velocity)
-	{
-		if (Multiplayer.IsServer())
+		else if (heldItem is not null && _heldItemId == 0)
 		{
-			var ragdoll = ragdollScene.Instantiate<Ragdoll>();
-			ragdoll.MoveRagdoll(new Vector3(GlobalPosition.X, GlobalPosition.Y - 1.2f, GlobalPosition.Z), GlobalRotation, velocity);
-			GetParent().AddChild(ragdoll, true);
-			ragdoll.playerId = playerId;
-			RpcId(playerId, nameof(SetRagdoll), ragdoll.GetPath());
+			heldItem = null;
+			equip.GetChild(0).QueueFree();
 		}
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void SetRagdoll(string ragdollPath)
-	{
-		ragdoll = GetNode<Ragdoll>(ragdollPath);
-		ragdoll.SwitchCamera();
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void SetPickedItem(string itemPath)
-	{
-		GD.Print($"Should pickup {itemPath}");
-		PickedItem = GetTree().Root.GetNode<Item>(itemPath);
-	}
-
-	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	// public void SetHeldItem(string itemPath)
-	// {
-
-	// 	GD.Print($"Should hold {itemPath}");
-	// 	heldItem = GetTree().Root.GetNode<HeldItem>(itemPath);
-	// 	GD.Print(heldItem.Name);
-	// }
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void SpawnHeldItem(int playerId, int itemId, string equipPath)
-	{
-		GD.Print($"{playerId} : {itemId} : {equipPath}");
-		HeldItem item = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as HeldItem;
-		item.SetMultiplayerAuthority(playerId);
-		equip.AddChild(item);
-		heldItem = item;
 	}
 
 	public void HandleItem()
@@ -497,8 +407,7 @@ public partial class Player : CharacterBody3D
 			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
 			if (itemResource.Equippable)
 			{
-				// gameManager.RpcId(1, nameof(gameManager.HoldItem), Id, itemResource.ItemId, equip.GetPath());
-				Rpc(nameof(SpawnHeldItem), Id, itemResource.ItemId, equip.GetPath());
+				Rpc(nameof(SetHeldItem), itemResource.ItemId);
 				PickedItem.DestroyItem();
 				PickedItem = null;
 			}
@@ -507,9 +416,7 @@ public partial class Player : CharacterBody3D
 		else if (Input.IsActionJustPressed("equip") && PickedItem is null && heldItem is not null && itemResource is not null)
 		{
 			gameManager.RpcId(1, nameof(gameManager.DropItem), Id, itemResource.ItemId, hand.GlobalPosition);
-			gameManager.Rpc(nameof(gameManager.DestroyItem), heldItem.GetPath());
-			heldItem = null;
-			equip.GetChild(0).QueueFree();
+			Rpc(nameof(SetHeldItem), 0);
 		}
 
 
@@ -580,5 +487,101 @@ public partial class Player : CharacterBody3D
 		PickedItem = item;
 		hand.GlobalPosition = item.GlobalPosition;
 		staticBody.GlobalBasis = PickedItem.GlobalBasis;
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SetPlayerState(long id, string name)
+	{
+		nameTag.Text = name;
+		Id = id;
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void MovePlayer(Vector3 position, Vector3 rotation)
+	{
+		GlobalPosition = position;
+		GlobalRotation = rotation;
+	}
+
+	[Rpc(CallLocal = true)]
+	public void HandleRpcAnimations(string state, bool isGroundedRpc, Vector3 velocity, Transform3D transform)
+	{
+		if (state == "seated")
+		{
+			animationTree.Set("parameters/conditions/sit", true);
+			animationTree.Set("parameters/conditions/walk", false);
+			animationTree.Set("parameters/conditions/jump", false);
+			return;
+		}
+		else if (state == "jumping" || !isGroundedRpc)
+		{
+			animationTree.Set("parameters/conditions/jump", true);
+			animationTree.Set("parameters/conditions/sit", false);
+			animationTree.Set("parameters/conditions/walk", false);
+		}
+		else
+		{
+			velocity *= transform.Basis;
+			animationTree.Set("parameters/conditions/walk", true);
+			animationTree.Set("parameters/Walk/blend_position", new Vector2(-(velocity.Z / (speed * 2)), velocity.X / (speed * 2)));
+			animationTree.Set("parameters/conditions/sit", false);
+			animationTree.Set("parameters/conditions/jump", false);
+
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	public void Hit(int damage, Vector3 bulletForce)
+	{
+		GD.Print($"Player {Name} was hit for {damage}");
+		Health -= damage;
+
+		if (Health <= 0)
+		{
+			Rpc(nameof(SpawnRagdoll), int.Parse(Name), Velocity + bulletForce);
+			if (movementState == MovementState.seated)
+			{
+				seat.Rpc(nameof(seat.Stand));
+				seat = null;
+				GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
+			}
+			movementState = MovementState.unconscious;
+			GD.Print($"Spawn ragdoll for {Name}");
+			Visible = false;
+			collisionShape3D.Disabled = true;
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SpawnRagdoll(int playerId, Vector3 velocity)
+	{
+		if (Multiplayer.IsServer())
+		{
+			var ragdoll = ragdollScene.Instantiate<Ragdoll>();
+			ragdoll.MoveRagdoll(new Vector3(GlobalPosition.X, GlobalPosition.Y - 1.2f, GlobalPosition.Z), GlobalRotation, velocity);
+			GetParent().AddChild(ragdoll, true);
+			ragdoll.playerId = playerId;
+			RpcId(playerId, nameof(SetRagdoll), ragdoll.GetPath());
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SetRagdoll(string ragdollPath)
+	{
+		ragdoll = GetNode<Ragdoll>(ragdollPath);
+		ragdoll.SwitchCamera();
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SetPickedItem(string itemPath)
+	{
+		GD.Print($"Should pickup {itemPath}");
+		PickedItem = GetTree().Root.GetNode<Item>(itemPath);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SetHeldItem(int itemId)
+	{
+		_heldItemId = itemId;
 	}
 }

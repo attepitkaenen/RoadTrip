@@ -82,25 +82,9 @@ public partial class GameManager : Node
 		}
 	}
 
-	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	// public void HoldItem(long playerId, int itemId, string equipPath)
-	// {
-	// 	GD.Print($"{playerId} : {itemId} : {equipPath}");
-	// 	Dictionary<int, bool> properties = new Dictionary<int, bool>();
-	// 	properties[itemId] = true;
-	// 	HeldItem item = multiplayerSpawner.Spawn(properties) as HeldItem;
-	// 	item.Reparent(GetNode<Marker3D>(equipPath));
-	// 	// item.SetMultiplayerAuthority((int)playerId);
-	// 	var player = GetNode<Player>($"{playerId}");
-	// 	player.Rpc(nameof(player.SetHeldItem), item.GetPath());
-	// }
-
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SpawnVehiclePart(int itemId, float condition, Vector3 position)
 	{
-		// Currently using dictionary since spawner doesnt accept multiple variables
-		// Dictionary<int, bool> properties = new Dictionary<int, bool>();
-		// properties[itemId] = false;
 		var item = multiplayerSpawner.Spawn(itemId) as PartDropped;
 		item.SetCondition(condition);
 		item.GlobalPosition = position;
@@ -109,9 +93,6 @@ public partial class GameManager : Node
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void DropItem(int playerId, int itemId, Vector3 position)
 	{
-		// Currently using dictionary since spawner doesnt accept multiple variables
-		// Dictionary<int, bool> properties = new Dictionary<int, bool>();
-		// properties[itemId] = false;
 		var item = multiplayerSpawner.Spawn(itemId) as Item;
 		item.GlobalPosition = position;
 
@@ -123,14 +104,9 @@ public partial class GameManager : Node
 	Node SpawnItem(int itemId)
 	{
 		Node item;
-		// if (properties.Values.First())
-		// {
-		// 	item = GetItemResource(properties.Keys.First()).ItemInHand.Instantiate();
-		// }
-		// else
-		// {
-			item = GetItemResource(itemId).ItemOnFloor.Instantiate();
-		// }
+
+		item = GetItemResource(itemId).ItemOnFloor.Instantiate();
+
 		return item;
 	}
 
