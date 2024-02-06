@@ -1,9 +1,8 @@
-[gd_scene load_steps=18 format=3 uid="uid://7eis7so5p5lh"]
+[gd_scene load_steps=21 format=3 uid="uid://7eis7so5p5lh"]
 
 [ext_resource type="Script" path="res://Vehicles/Aito/Aito.cs" id="1_lai86"]
 [ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Aito/aito.blend" id="3_0l07t"]
 [ext_resource type="PackedScene" uid="uid://dsiudfpl7vhb0" path="res://Vehicles/Wheels/tire.blend" id="3_o6own"]
-[ext_resource type="Material" uid="uid://c460ngpaswq17" path="res://Vehicles/Aito/aitoTest.tres" id="3_ytiuu"]
 [ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="4_qspcq"]
 [ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay.tscn" id="6_5yy2s"]
 
@@ -46,6 +45,12 @@ size = Vector3(1.7, 0.110742, 2.58591)
 [sub_resource type="BoxShape3D" id="BoxShape3D_j0v52"]
 size = Vector3(1.72943, 0.47699, 0.151279)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_3263a"]
+size = Vector3(0.525619, 0.135727, 0.151279)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ry87i"]
+size = Vector3(0.169014, 0.769833, 0.178667)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_bcaqk"]
 size = Vector3(1.74411, 0.834335, 0.151279)
 
@@ -55,8 +60,14 @@ size = Vector3(1.74411, 0.644009, 0.151279)
 [sub_resource type="BoxShape3D" id="BoxShape3D_avm0q"]
 size = Vector3(0.179956, 0.517639, 0.63573)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_odob8"]
+size = Vector3(0.234998, 0.352081, 0.605466)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_khang"]
 size = Vector3(0.179956, 0.360035, 0.66223)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ta441"]
+size = Vector3(0.179956, 0.135584, 1.01154)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.102235, 1.44803)
@@ -64,7 +75,7 @@ size = Vector3(1.5, 0.102235, 1.44803)
 [node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "_speedometer", "_engineBay")]
 collision_layer = 4
 collision_mask = 6
-mass = 100.0
+mass = 900.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, 0.201208, 0.245741)
 script = ExtResource("1_lai86")
@@ -74,9 +85,6 @@ _engineBay = NodePath("EngineBay")
 
 [node name="aito" parent="." instance=ExtResource("3_0l07t")]
 transform = Transform3D(-1.18, 0, -1.78175e-07, 0, 1.18, 0, 1.78175e-07, 0, -1.18, 0, 0.510493, 0.334204)
-
-[node name="Cube" parent="aito" index="0"]
-material_override = ExtResource("3_ytiuu")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.016
@@ -99,9 +107,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.1, 1.55)
 use_as_steering = true
 wheel_radius = 0.3
 wheel_rest_length = 0.2
-wheel_friction_slip = 3.0
+wheel_friction_slip = 1.5
 suspension_travel = 0.15
-suspension_stiffness = 60.0
+suspension_stiffness = 70.0
 
 [node name="tire" parent="WheelFL" instance=ExtResource("3_o6own")]
 transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
@@ -111,9 +119,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.1, 1.55)
 use_as_steering = true
 wheel_radius = 0.3
 wheel_rest_length = 0.2
-wheel_friction_slip = 3.0
+wheel_friction_slip = 1.5
 suspension_travel = 0.15
-suspension_stiffness = 60.0
+suspension_stiffness = 70.0
 
 [node name="tire" parent="WheelFR" instance=ExtResource("3_o6own")]
 transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
@@ -123,9 +131,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.1, -1)
 use_as_traction = true
 wheel_radius = 0.3
 wheel_rest_length = 0.2
-wheel_friction_slip = 2.0
+wheel_friction_slip = 1.3
 suspension_travel = 0.15
-suspension_stiffness = 60.0
+suspension_stiffness = 70.0
 
 [node name="tire" parent="WheelBL" instance=ExtResource("3_o6own")]
 transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
@@ -135,9 +143,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.1, -1)
 use_as_traction = true
 wheel_radius = 0.3
 wheel_rest_length = 0.2
-wheel_friction_slip = 2.0
+wheel_friction_slip = 1.3
 suspension_travel = 0.15
-suspension_stiffness = 60.0
+suspension_stiffness = 70.0
 
 [node name="tire" parent="WheelBR" instance=ExtResource("3_o6own")]
 transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
@@ -188,6 +196,22 @@ shape = SubResource("BoxShape3D_cwr7c")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000579834, 0.328091, -1.29058)
 shape = SubResource("BoxShape3D_j0v52")
 
+[node name="Back2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.98178, -0.190021, 0, 0.190021, 0.98178, 0.601326, 0.612022, -1.26729)
+shape = SubResource("BoxShape3D_3263a")
+
+[node name="Back4" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.987627, -0.156791, -0.00313047, 0.143228, 0.909963, -0.38917, 0.063867, 0.383907, 0.921161, 0.712644, 0.93565, -1.06351)
+shape = SubResource("BoxShape3D_ry87i")
+
+[node name="Back5" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.987744, 0.156051, 0.00321554, -0.142517, 0.910094, -0.389124, -0.0636498, 0.383896, 0.92118, -0.713, 0.936, -1.064)
+shape = SubResource("BoxShape3D_ry87i")
+
+[node name="Back3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.98178, -0.190021, 0, 0.190021, 0.98178, -0.601, 0.612, -1.267)
+shape = SubResource("BoxShape3D_3263a")
+
 [node name="Dashboard" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.957259, -0.289232, 0, 0.289232, 0.957259, 0.00675964, 0.423006, 1.2948)
 shape = SubResource("BoxShape3D_bcaqk")
@@ -204,9 +228,25 @@ shape = SubResource("BoxShape3D_avm0q")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.775375, 0.30837, -0.928369)
 shape = SubResource("BoxShape3D_avm0q")
 
+[node name="BackLeft2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.568115, 0.225591, -0.96011)
+shape = SubResource("BoxShape3D_odob8")
+
+[node name="BackRight2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.571201, 0.225591, -1.00698)
+shape = SubResource("BoxShape3D_odob8")
+
 [node name="FrontLeft" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.961516, -0.274748, 0, 0.274748, 0.961516, 0.775375, 0.535521, 1.66391)
 shape = SubResource("BoxShape3D_khang")
+
+[node name="FrontLeft2" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.988657, 0.0732126, 0.131138, 0, 0.873143, -0.487463, -0.150191, 0.481934, 0.863239, 0.692148, 1.05603, 0.943935)
+shape = SubResource("BoxShape3D_ta441")
+
+[node name="FrontRight2" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.988756, -0.0729522, -0.130533, 0, 0.872922, -0.48786, 0.149535, 0.482374, 0.863107, -0.692, 1.056, 0.944)
+shape = SubResource("BoxShape3D_ta441")
 
 [node name="FrontRight" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.961516, -0.274748, 0, 0.274748, 0.961516, -0.775682, 0.535521, 1.66391)
@@ -215,5 +255,3 @@ shape = SubResource("BoxShape3D_khang")
 [node name="Roof1" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.303, -0.21664)
 shape = SubResource("BoxShape3D_kkank")
-
-[editable path="aito"]
