@@ -13,7 +13,7 @@ collision_layer = 8
 collision_mask = 8
 freeze = true
 script = ExtResource("1_a1ftg")
-engineStats = ExtResource("2_tdggh")
+stats = ExtResource("2_tdggh")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_md8aq")

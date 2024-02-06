@@ -18,11 +18,11 @@ public partial class HeldItem : Node3D
 
     public virtual void LeftClick()
     {
-        GD.Print("leftClick");
+        
     }
 
     public virtual void rightClick()
     {
-        GD.Print("rightClick");
+        
     }
 }
