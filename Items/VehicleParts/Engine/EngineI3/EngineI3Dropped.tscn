@@ -109,7 +109,7 @@ physics_material_override = SubResource("PhysicsMaterial_7eo7n")
 script = ExtResource("1_hb4bc")
 _condition = 100.0
 _synchronizer = NodePath("MultiplayerSynchronizer")
-ItemId = 2
+ItemId = 100
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_p4f7m")

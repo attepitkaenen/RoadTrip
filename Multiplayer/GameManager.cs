@@ -19,12 +19,9 @@ public partial class GameManager : Node
 		// Load all itemResources
 		foreach (string fileNameRemap in DirAccess.GetFilesAt("res://ItemData"))
 		{
-			GD.Print(fileNameRemap);
 			var fileName = fileNameRemap.Replace(".remap", "");
 			var item = GD.Load<ItemResource>("res://ItemData/" + fileName);
 			itemList.Add(item);
-			GD.Print(item.ItemId);
-			GD.Print(itemList[0].ItemName);
 		}
 		multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
 
@@ -140,10 +137,8 @@ public partial class GameManager : Node
 	{
 		if (Multiplayer.IsServer())
 		{
-			GD.Print(GetPlayerStates().Values.Count());
 			foreach (var playerState in GetPlayerStates().Values)
 			{
-				GD.Print(playerState.Name + " " + playerState.Id);
 				SpawnPlayer(playerState);
 			}
 		}
