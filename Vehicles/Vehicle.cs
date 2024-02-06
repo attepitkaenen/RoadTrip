@@ -42,9 +42,10 @@ public partial class Vehicle : VehicleBody3D
 
 		enginePower = _engineBay.GetHorsePower();
 
-		if (_driverSeat.seatedPlayerId == -1)
+		if (_driverSeat.seatedPlayerId < 1)
 		{
-			Brake = 5f;
+			Brake = 25f;
+			EngineForce = 0;
 		}
 
 		if (LinearVelocity.Length() < 0.1f && !_driverSeat.occupied)
@@ -97,7 +98,7 @@ public partial class Vehicle : VehicleBody3D
 
 		if (space)
 		{
-			Brake = 5f;
+			Brake = 25f;
 		}
 		else
 		{
