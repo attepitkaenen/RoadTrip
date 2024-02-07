@@ -35,18 +35,17 @@ public partial class GameManager : Node
 		return multiplayerController.GetPlayerStates();
 	}
 
-	public PlayerState GetPlayerState(long id)
+	public int GetPlayerIndex(long id)
 	{
-		return multiplayerController.GetPlayerStates()[id];
+		return GetPlayerStates().Keys.ToList().IndexOf(id);
 	}
 
 	public void Respawn()
 	{
 		GD.Print($"Respawning {Multiplayer.GetUniqueId()}");
 		var player = GetTree().GetNodesInGroup("Player").ToList().Find(player => player.Name == $"{Multiplayer.GetUniqueId()}") as Player;
-
-		int playerIndex = GetPlayerStates().Values.ToList().IndexOf(player.playerState);
-
+		int playerIndex = GetPlayerIndex(player.Id);
+		GD.Print(playerIndex);
 		var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
 		foreach (Node3D spawnPoint in spawnPoints)
 		{
@@ -161,10 +160,10 @@ public partial class GameManager : Node
 			Player currentPlayer = playerScene.Instantiate<Player>();
 			currentPlayer.Name = playerState.Id.ToString();
 
-			int playerIndex = GetPlayerStates().Values.ToList().IndexOf(playerState);
 			GD.Print($"Spawning player {playerState.Name} with id: {playerState.Id}");
 			AddChild(currentPlayer);
 
+			int playerIndex = GetPlayerStates().Values.ToList().IndexOf(playerState);
 			var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
 			foreach (Node3D spawnPoint in spawnPoints)
 			{
