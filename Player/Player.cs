@@ -8,6 +8,7 @@ using Godot;
 public partial class Player : CharacterBody3D
 {
 	public long Id;
+	public string userName;
 	GameManager gameManager;
 	MenuHandler menuHandler;
 	MultiplayerController multiplayerController;
@@ -72,7 +73,6 @@ public partial class Player : CharacterBody3D
 	public Basis syncBasis;
 
 	public Vector3 spawnLocation = new Vector3(0, 3, 0);
-	public PlayerState playerState;
 
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -136,31 +136,6 @@ public partial class Player : CharacterBody3D
 			{
 				RotateY(-mouseMotion.Relative.X * sensitivity);
 			}
-		}
-	}
-
-	public void HandleDebugLines()
-	{
-		if (Input.IsActionJustPressed("debug"))
-		{
-			debugWindow.Visible = !debugWindow.Visible;
-		}
-
-		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
-
-		stateLabel.Text = movementState.ToString();
-		speedLabel.Text = Math.Round(currentSpeed, 2).ToString();
-
-		playerList.Clear();
-		while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
-		{
-			playerList.AddItem("");
-		}
-		var index = 0;
-		foreach (var (id, playerState) in gameManager.GetPlayerStates())
-		{
-			playerList.SetItemText(index, playerState.Name);
-			index++;
 		}
 	}
 
@@ -340,6 +315,31 @@ public partial class Player : CharacterBody3D
 		MoveAndSlide();
 	}
 
+	public void HandleDebugLines()
+	{
+		if (Input.IsActionJustPressed("debug"))
+		{
+			debugWindow.Visible = !debugWindow.Visible;
+		}
+
+		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
+
+		stateLabel.Text = movementState.ToString();
+		speedLabel.Text = Math.Round(currentSpeed, 2).ToString();
+
+		playerList.Clear();
+		while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
+		{
+			playerList.AddItem("");
+		}
+		var index = 0;
+		foreach (var (id, playerState) in gameManager.GetPlayerStates())
+		{
+			playerList.SetItemText(index, $"{playerState.Name} : {playerState.Id}");
+			index++;
+		}
+	}
+
 	public void HandleSeat()
 	{
 		var newSeat = floatMachine.GetSeat();
@@ -493,12 +493,14 @@ public partial class Player : CharacterBody3D
 	public void SetPlayerState(long id, string name)
 	{
 		nameTag.Text = name;
+		userName = name;
 		Id = id;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void MovePlayer(Vector3 position, Vector3 rotation)
 	{
+		GD.Print("Move player called");
 		GlobalPosition = position;
 		GlobalRotation = rotation;
 	}
