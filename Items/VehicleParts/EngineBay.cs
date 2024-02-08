@@ -18,10 +18,10 @@ public partial class EngineBay : Node3D
     private int _radiatorId;
     private float _radiatorCondition;
 
-    private Carburetor _injector;
-    private Area3D _injectorArea;
-    private int _injectorId;
-    private float _injectorCondition;
+    private Carburetor _fuelInjector;
+    private Area3D _fuelInjectorArea;
+    private int _fuelInjectorId;
+    private float _fuelInjectorCondition;
 
     private Battery _battery;
     private Area3D _batteryArea;
@@ -51,6 +51,10 @@ public partial class EngineBay : Node3D
         _radiatorArea = GetNode<Area3D>("Radiator/Area3D");
         _radiatorArea.BodyEntered += PartEntered;
         _radiatorArea.BodyExited += PartExited;
+
+        _batteryArea = GetNode<Area3D>("Battery/Area3D");
+        _batteryArea.BodyEntered += PartEntered;
+        _batteryArea.BodyExited += PartExited;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -58,6 +62,8 @@ public partial class EngineBay : Node3D
         HandleEngine();
 
         HandleRadiator();
+
+        HandleBattery();
     }
 
     // General part handling
@@ -73,6 +79,11 @@ public partial class EngineBay : Node3D
             radiator.InstallPart -= InstallRadiator;
             radiator.isInstallable = false;
         }
+        else if (body is BatteryDropped battery)
+        {
+            battery.InstallPart -= InstallBattery;
+            battery.isInstallable = false;
+        }
     }
 
     private void PartEntered(Node3D body)
@@ -86,6 +97,11 @@ public partial class EngineBay : Node3D
         {
             radiator.InstallPart += InstallRadiator;
             radiator.isInstallable = true;
+        }
+        else if (body is BatteryDropped battery)
+        {
+            battery.InstallPart += InstallBattery;
+            battery.isInstallable = true;
         }
     }
 
@@ -105,9 +121,9 @@ public partial class EngineBay : Node3D
         {
             _engineId = 0;
         }
-        else if (_injectorId == itemId)
+        else if (_fuelInjectorId == itemId)
         {
-            _injectorId = 0;
+            _fuelInjectorId = 0;
         }
         else if (_alternatorId == itemId)
         {
@@ -193,5 +209,33 @@ public partial class EngineBay : Node3D
     {
         _radiatorCondition = condition;
         _radiatorId = id;
+    }
+
+    // Battery
+    private void InstallBattery(int itemId, float condition)
+    {
+        if (_battery is null)
+        {
+            Rpc(nameof(SetBatteryIdAndCondition), itemId, condition);
+        }
+    }
+
+    private void HandleBattery()
+    {
+        if (_batteryId != 0 && _battery is null)
+        {
+            _battery = SpawnInstalledPart(_batteryId, _batteryCondition, _batteryArea.Position) as Battery;
+        }
+        else if (_batteryId == 0 && _battery is not null)
+        {
+            _battery = null;
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SetBatteryIdAndCondition(int id, float condition)
+    {
+        _batteryCondition = condition;
+        _batteryId = id;
     }
 }

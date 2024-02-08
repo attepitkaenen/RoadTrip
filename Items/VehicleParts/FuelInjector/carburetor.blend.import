@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bs11rj8vpgpsk"
-path="res://.godot/imported/carburetor.blend-73a28b0aa522b40152afb6124d87b0f8.scn"
+path="res://.godot/imported/carburetor.blend-b928e5b7161461bada69886a4e97c089.scn"
 
 [deps]
 
-source_file="res://Items/VehicleParts/Carburetor/carburetor.blend"
-dest_files=["res://.godot/imported/carburetor.blend-73a28b0aa522b40152afb6124d87b0f8.scn"]
+source_file="res://Items/VehicleParts/FuelInjector/carburetor.blend"
+dest_files=["res://.godot/imported/carburetor.blend-b928e5b7161461bada69886a4e97c089.scn"]
 
 [params]
 
