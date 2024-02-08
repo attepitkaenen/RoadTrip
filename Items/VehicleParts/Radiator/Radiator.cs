@@ -3,6 +3,7 @@ using System;
 
 public partial class Radiator : CarPart
 {
+    [Export] public EngineResource stats;
 	public float coolant = 100f;
 
     public Timer timer;
