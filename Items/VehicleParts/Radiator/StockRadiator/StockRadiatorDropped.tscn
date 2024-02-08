@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2m4o4wnn7vc5"]
+
+[ext_resource type="PackedScene" uid="uid://cnqemox7c8iit" path="res://Items/VehicleParts/Radiator/StockRadiator/radiator.blend" id="1_x2ncf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s8c8n"]
+size = Vector3(0.1, 0.3, 0.5)
+
+[node name="StockRadiatorDropped" type="RigidBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_s8c8n")
+
+[node name="radiator" parent="." instance=ExtResource("1_x2ncf")]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)

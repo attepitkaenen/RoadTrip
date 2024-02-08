@@ -1,6 +1,6 @@
 [gd_scene load_steps=16 format=3 uid="uid://r5jkmn54rdln"]
 
-[ext_resource type="Script" path="res://Vehicles/Coralli/Coralli.cs" id="1_p5jd5"]
+[ext_resource type="Script" path="res://Vehicles/Leluota Coralli/Coralli.cs" id="1_p5jd5"]
 [ext_resource type="PackedScene" uid="uid://ccgebu0extq6q" path="res://Vehicles/Seat/Seat.tscn" id="1_q5sv6"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]

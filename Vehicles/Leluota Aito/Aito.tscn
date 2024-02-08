@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3 uid="uid://7eis7so5p5lh"]
 
-[ext_resource type="Script" path="res://Vehicles/Aito/Aito.cs" id="1_lai86"]
-[ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Aito/aito.blend" id="3_0l07t"]
+[ext_resource type="Script" path="res://Vehicles/Leluota Aito/Aito.cs" id="1_lai86"]
+[ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Leluota Aito/aito.blend" id="3_0l07t"]
 [ext_resource type="PackedScene" uid="uid://dsiudfpl7vhb0" path="res://Vehicles/Wheels/tire.blend" id="3_o6own"]
 [ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="4_qspcq"]
 [ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay.tscn" id="6_5yy2s"]

@@ -1,9 +1,9 @@
-[gd_scene load_steps=17 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=18 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
 [ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
-[ext_resource type="PackedScene" uid="uid://7eis7so5p5lh" path="res://Vehicles/Aito/Aito.tscn" id="4_ynoyo"]
+[ext_resource type="PackedScene" uid="uid://7eis7so5p5lh" path="res://Vehicles/Leluota Aito/Aito.tscn" id="4_ynoyo"]
 [ext_resource type="Material" uid="uid://bjl7ucopgkb2s" path="res://Materials/Orange/orange1m.tres" id="5_cxm0r"]
 [ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="5_xddwy"]
 [ext_resource type="PackedScene" uid="uid://f7xtx21m8p4m" path="res://Player/Ragdoll/ragdoll.tscn" id="8_ho0v7"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://ee5filigiwj7" path="res://Items/VehicleParts/Engine/EngineI3/EngineI3Dropped.tscn" id="9_wu0kr"]
 [ext_resource type="PackedScene" uid="uid://dx5pju4b5bjye" path="res://Items/Tools/ToolBox/ToolBoxDropped.tscn" id="10_s3uay"]
 [ext_resource type="PackedScene" uid="uid://wt475qfxcfm" path="res://Items/VehicleParts/Engine/EngineV8/EngineV8Dropped.tscn" id="11_bvh0f"]
+[ext_resource type="PackedScene" uid="uid://cpmtrckjvnc0n" path="res://Vehicles/Sonta Kivik/Kivik.tscn" id="13_pb255"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -716,10 +717,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.96, 1.54219, -4.77876)
 [node name="Aito2" parent="." instance=ExtResource("4_ynoyo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.1684, 1.41643, -4.72592)
 
-[node name="Aito3" parent="." instance=ExtResource("4_ynoyo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2946, 1.44355, -4.72863)
+[node name="Kivik" parent="." instance=ExtResource("13_pb255")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.3023, 5.08204, 2.02906)
 
-[node name="Aito4" parent="." instance=ExtResource("4_ynoyo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5276, 1.52999, -5.05233)
+[node name="Kivik2" parent="." instance=ExtResource("13_pb255")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.9244, 1.50088, -4.63505)
 
 [editable path="Items/Item31"]
