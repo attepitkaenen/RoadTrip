@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://c4qttmqo2alsw"]
+
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_akv2s"]
+[ext_resource type="PackedScene" uid="uid://clcvnqkwgkygc" path="res://Items/VehicleParts/Radiator/StockRadiator/StockRadiator.tscn" id="1_vcxph"]
+[ext_resource type="PackedScene" uid="uid://d2m4o4wnn7vc5" path="res://Items/VehicleParts/Radiator/StockRadiator/StockRadiatorDropped.tscn" id="2_4bv4g"]
+
+[resource]
+script = ExtResource("1_akv2s")
+Equippable = false
+ItemName = "StockRadiator"
+ItemId = 102
+Description = ""
+ItemOnFloor = ExtResource("2_4bv4g")
+ItemInHand = ExtResource("1_vcxph")
