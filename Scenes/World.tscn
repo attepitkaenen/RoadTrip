@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=21 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cpmtrckjvnc0n" path="res://Vehicles/Sonta Kivik/Kivik.tscn" id="13_pb255"]
 [ext_resource type="PackedScene" uid="uid://d2m4o4wnn7vc5" path="res://Items/VehicleParts/Radiator/StockRadiator/StockRadiatorDropped.tscn" id="14_jwm4e"]
 [ext_resource type="PackedScene" uid="uid://v251b5nk0v47" path="res://Items/VehicleParts/Battery/StockBattery/StockBatteryDropped.tscn" id="15_3gwkl"]
+[ext_resource type="PackedScene" uid="uid://dqou5oo4sgp12" path="res://Items/VehicleParts/FuelInjector/StockFuelInjector/StockFuelInjectorDropped.tscn" id="16_fhtvx"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -698,7 +699,7 @@ transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.01024
 _synchronizer = NodePath("../ToolBoxDropped/MultiplayerSynchronizer")
 
 [node name="ToolBoxDropped4" parent="." node_paths=PackedStringArray("_synchronizer") instance=ExtResource("10_s3uay")]
-transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 19.0738, 1.27677, -7.21793)
+transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 12.397, 1.27677, 0.7609)
 _synchronizer = NodePath("../ToolBoxDropped/MultiplayerSynchronizer")
 
 [node name="Engine" parent="." instance=ExtResource("9_wu0kr")]
@@ -720,7 +721,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.96, 1.54219, -4.77876)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.1684, 1.41643, -4.72592)
 
 [node name="Kivik" parent="." instance=ExtResource("13_pb255")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.3023, 1.73935, -4.36182)
+transform = Transform3D(0.0104543, 0, -0.999945, 0, 1, 0, 0.999945, 0, 0.0104543, 15.8073, 1.73935, 1.72144)
 
 [node name="Kivik2" parent="." instance=ExtResource("13_pb255")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.9244, 1.50088, -4.63505)
@@ -730,5 +731,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 1.21076, 2)
 
 [node name="StockBatteryDropped" parent="." instance=ExtResource("15_3gwkl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8504, 1.27957, 2.10821)
+
+[node name="StockFuelInjectorDropped" parent="." instance=ExtResource("16_fhtvx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2, 3)
 
 [editable path="Items/Item31"]

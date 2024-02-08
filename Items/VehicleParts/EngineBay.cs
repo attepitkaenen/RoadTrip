@@ -18,7 +18,7 @@ public partial class EngineBay : Node3D
     private int _radiatorId;
     private float _radiatorCondition;
 
-    private Carburetor _fuelInjector;
+    private FuelInjector _fuelInjector;
     private Area3D _fuelInjectorArea;
     private int _fuelInjectorId;
     private float _fuelInjectorCondition;
@@ -55,6 +55,10 @@ public partial class EngineBay : Node3D
         _batteryArea = GetNode<Area3D>("Battery/Area3D");
         _batteryArea.BodyEntered += PartEntered;
         _batteryArea.BodyExited += PartExited;
+
+        _fuelInjectorArea = GetNode<Area3D>("FuelInjector/Area3D");
+        _fuelInjectorArea.BodyEntered += PartEntered;
+        _fuelInjectorArea.BodyExited += PartExited;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -64,6 +68,8 @@ public partial class EngineBay : Node3D
         HandleRadiator();
 
         HandleBattery();
+
+        HandleFuelInjector();
     }
 
     // General part handling
@@ -84,6 +90,11 @@ public partial class EngineBay : Node3D
             battery.InstallPart -= InstallBattery;
             battery.isInstallable = false;
         }
+        else if (body is FuelInjectorDropped fuelInjector)
+        {
+            fuelInjector.InstallPart -= InstallFuelInjector;
+            fuelInjector.isInstallable = false;
+        }
     }
 
     private void PartEntered(Node3D body)
@@ -102,6 +113,11 @@ public partial class EngineBay : Node3D
         {
             battery.InstallPart += InstallBattery;
             battery.isInstallable = true;
+        }
+        else if (body is FuelInjectorDropped fuelInjector)
+        {
+            fuelInjector.InstallPart += InstallFuelInjector;
+            fuelInjector.isInstallable = true;
         }
     }
 
@@ -237,5 +253,33 @@ public partial class EngineBay : Node3D
     {
         _batteryCondition = condition;
         _batteryId = id;
+    }
+
+    // FuelInjector
+    private void InstallFuelInjector(int itemId, float condition)
+    {
+        if (_fuelInjector is null)
+        {
+            Rpc(nameof(SetFuelInjectorIdAndCondition), itemId, condition);
+        }
+    }
+
+    private void HandleFuelInjector()
+    {
+        if (_fuelInjectorId != 0 && _fuelInjector is null)
+        {
+            _fuelInjector = SpawnInstalledPart(_fuelInjectorId, _fuelInjectorCondition, _fuelInjectorArea.Position) as FuelInjector;
+        }
+        else if (_fuelInjectorId == 0 && _fuelInjector is not null)
+        {
+            _fuelInjector = null;
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SetFuelInjectorIdAndCondition(int id, float condition)
+    {
+        _fuelInjectorCondition = condition;
+        _fuelInjectorId = id;
     }
 }

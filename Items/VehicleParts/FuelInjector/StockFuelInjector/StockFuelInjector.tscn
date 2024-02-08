@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://gqq00he4s2ql"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/FuelInjector/FuelInjector.cs" id="1_8ol4j"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0g71f"]
+size = Vector3(0.2, 0.3, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_l5j6m"]
+size = Vector3(0.2, 0.2, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_e4eia"]
+size = Vector3(0.1, 0.2, 0.1)
+
+[node name="StockFuelInjector" type="RigidBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+collision_layer = 8
+collision_mask = 8
+freeze = true
+script = ExtResource("1_8ol4j")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0502667, 0)
+shape = SubResource("BoxShape3D_0g71f")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_l5j6m")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.24687e-09, -0.105085, 0.142912)
+mesh = SubResource("BoxMesh_e4eia")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.09885e-11, -0.105085, -0.00208157)
+mesh = SubResource("BoxMesh_e4eia")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.24491e-09, -0.105085, -0.142867)
+mesh = SubResource("BoxMesh_e4eia")

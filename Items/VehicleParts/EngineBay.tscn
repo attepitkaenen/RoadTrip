@@ -41,8 +41,16 @@ collision_mask = 8
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Battery/Area3D"]
 shape = SubResource("BoxShape3D_23afp")
 
+[node name="FuelInjector" type="Node3D" parent="."]
+
+[node name="Area3D" type="Area3D" parent="FuelInjector"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.250756, -0.164183)
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FuelInjector/Area3D"]
+shape = SubResource("BoxShape3D_23afp")
+
 [node name="Alternator" type="Node3D" parent="."]
 
 [node name="Intake" type="Node3D" parent="."]
-
-[node name="Carburetor" type="Node3D" parent="."]
