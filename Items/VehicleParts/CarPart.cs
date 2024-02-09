@@ -29,7 +29,7 @@ public partial class CarPart : Node3D
 
     public void Uninstall()
     {
-        _engineBay.RemoveInstalledPart(itemId, _condition, GlobalPosition);
+        _engineBay.RpcId(1, nameof(_engineBay.RemoveInstalledPart), itemId, _condition, GlobalPosition);
         Rpc(nameof(DestroyPart));
     }
 

@@ -6,6 +6,7 @@ using Godot.Collections;
 public partial class EngineBay : Node3D
 {
     [Export] MultiplayerSpawner multiplayerSpawner;
+    MultiplayerSynchronizer multiplayerSynchronizer;
     GameManager gameManager;
 
     private Engine _engine;
@@ -43,6 +44,18 @@ public partial class EngineBay : Node3D
     public override void _Ready()
     {
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+        multiplayerSynchronizer = GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_engineId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_engineCondition");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_radiatorId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_radiatorCondition");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_batteryId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_batteryCondition");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_fuelInjectorId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_fuelInjectorCondition");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_alternatorId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_alternatorCondition");
 
         _engineArea = GetNode<Area3D>("Engine/Area3D");
         _engineArea.BodyEntered += PartEntered;
@@ -59,10 +72,16 @@ public partial class EngineBay : Node3D
         _fuelInjectorArea = GetNode<Area3D>("FuelInjector/Area3D");
         _fuelInjectorArea.BodyEntered += PartEntered;
         _fuelInjectorArea.BodyExited += PartExited;
+
+        _alternatorArea = GetNode<Area3D>("Alternator/Area3D");
+        _alternatorArea.BodyEntered += PartEntered;
+        _alternatorArea.BodyExited += PartExited;
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        // The fucking ids of the parts change to 0 for 3 frames and then back to the correct one forever, I have no idea why
+
         HandleEngine();
 
         HandleRadiator();
@@ -70,6 +89,8 @@ public partial class EngineBay : Node3D
         HandleBattery();
 
         HandleFuelInjector();
+
+        HandleAlternator();
     }
 
     // General part handling
@@ -95,6 +116,11 @@ public partial class EngineBay : Node3D
             fuelInjector.InstallPart -= InstallFuelInjector;
             fuelInjector.isInstallable = false;
         }
+        else if (body is AlternatorDropped alternator)
+        {
+            alternator.InstallPart -= InstallAlternator;
+            alternator.isInstallable = false;
+        }
     }
 
     private void PartEntered(Node3D body)
@@ -119,6 +145,11 @@ public partial class EngineBay : Node3D
             fuelInjector.InstallPart += InstallFuelInjector;
             fuelInjector.isInstallable = true;
         }
+        else if (body is AlternatorDropped alternator)
+        {
+            alternator.InstallPart += InstallAlternator;
+            alternator.isInstallable = true;
+        }
     }
 
     public CarPart SpawnInstalledPart(int itemId, float condition, Vector3 partPosition)
@@ -131,6 +162,7 @@ public partial class EngineBay : Node3D
         return part;
     }
 
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void RemoveInstalledPart(int itemId, float condition, Vector3 position)
     {
         if (_engineId == itemId)
@@ -173,7 +205,7 @@ public partial class EngineBay : Node3D
     // Engine
     private void InstallEngine(int itemId, float condition)
     {
-        if (_engine is null)
+        if (_engineId == 0)
         {
             Rpc(nameof(SetEngineIdAndCondition), itemId, condition);
         }
@@ -197,7 +229,6 @@ public partial class EngineBay : Node3D
         _engineCondition = condition;
         _engineId = id;
     }
-
 
     // Radiator
     private void InstallRadiator(int itemId, float condition)
@@ -281,5 +312,33 @@ public partial class EngineBay : Node3D
     {
         _fuelInjectorCondition = condition;
         _fuelInjectorId = id;
+    }
+
+    // Alternator
+    private void InstallAlternator(int itemId, float condition)
+    {
+        if (_alternator is null)
+        {
+            Rpc(nameof(SetAlternatorIdAndCondition), itemId, condition);
+        }
+    }
+
+    private void HandleAlternator()
+    {
+        if (_alternatorId != 0 && _alternator is null)
+        {
+            _alternator = SpawnInstalledPart(_alternatorId, _alternatorCondition, _alternatorArea.Position) as Alternator;
+        }
+        else if (_alternatorId == 0 && _alternator is not null)
+        {
+            _alternator = null;
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SetAlternatorIdAndCondition(int id, float condition)
+    {
+        _alternatorCondition = condition;
+        _alternatorId = id;
     }
 }
