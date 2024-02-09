@@ -6,7 +6,7 @@ using System.Threading;
 
 public partial class Ragdoll : Node3D
 {
-    [Export] MultiplayerSynchronizer synchronizer;
+    [Export] MultiplayerSynchronizer multiplayerSynchronizer;
     [Export] Skeleton3D skeleton;
     [Export] Camera3D camera;
     [Export] MeshInstance3D head;
@@ -22,8 +22,8 @@ public partial class Ragdoll : Node3D
             if (child is Bone)
             {
                 bones.Add(child as Bone);
-                synchronizer.ReplicationConfig.AddProperty($"{child.GetPath()}:position");
-                synchronizer.ReplicationConfig.AddProperty($"{child.GetPath()}:rotation");
+                multiplayerSynchronizer.ReplicationConfig.AddProperty($"{child.GetPath()}:position");
+                multiplayerSynchronizer.ReplicationConfig.AddProperty($"{child.GetPath()}:rotation");
             }
         }
 
@@ -57,8 +57,8 @@ public partial class Ragdoll : Node3D
     {
         bones.ForEach(bone =>
         {
-            synchronizer.ReplicationConfig.RemoveProperty($"{bone.GetPath()}:position");
-            synchronizer.ReplicationConfig.RemoveProperty($"{bone.GetPath()}:rotation");
+            multiplayerSynchronizer.ReplicationConfig.RemoveProperty($"{bone.GetPath()}:position");
+            multiplayerSynchronizer.ReplicationConfig.RemoveProperty($"{bone.GetPath()}:rotation");
         });
         QueueFree();
     }

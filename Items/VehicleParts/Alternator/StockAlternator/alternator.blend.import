@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://ckqu8bqnxgpp0"
-path="res://.godot/imported/alternator.blend-817e0055acc2bec8602eda8afed623c9.scn"
+path="res://.godot/imported/alternator.blend-0a653553e70430f778c46a22a0199086.scn"
 
 [deps]
 
-source_file="res://Items/VehicleParts/Alternator/alternator.blend"
-dest_files=["res://.godot/imported/alternator.blend-817e0055acc2bec8602eda8afed623c9.scn"]
+source_file="res://Items/VehicleParts/Alternator/StockAlternator/alternator.blend"
+dest_files=["res://.godot/imported/alternator.blend-0a653553e70430f778c46a22a0199086.scn"]
 
 [params]
 

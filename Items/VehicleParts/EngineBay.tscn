@@ -53,4 +53,12 @@ shape = SubResource("BoxShape3D_23afp")
 
 [node name="Alternator" type="Node3D" parent="."]
 
+[node name="Area3D" type="Area3D" parent="Alternator"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.327215, -0.124834, 0.13429)
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Alternator/Area3D"]
+shape = SubResource("BoxShape3D_23afp")
+
 [node name="Intake" type="Node3D" parent="."]

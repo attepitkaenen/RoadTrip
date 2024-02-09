@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=22 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://d2m4o4wnn7vc5" path="res://Items/VehicleParts/Radiator/StockRadiator/StockRadiatorDropped.tscn" id="14_jwm4e"]
 [ext_resource type="PackedScene" uid="uid://v251b5nk0v47" path="res://Items/VehicleParts/Battery/StockBattery/StockBatteryDropped.tscn" id="15_3gwkl"]
 [ext_resource type="PackedScene" uid="uid://dqou5oo4sgp12" path="res://Items/VehicleParts/FuelInjector/StockFuelInjector/StockFuelInjectorDropped.tscn" id="16_fhtvx"]
+[ext_resource type="PackedScene" uid="uid://bbdseej3vgkp2" path="res://Items/VehicleParts/Alternator/StockAlternator/StockAlternatorDropped.tscn" id="17_u3glf"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -734,5 +735,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8504, 1.27957, 2.10821)
 
 [node name="StockFuelInjectorDropped" parent="." instance=ExtResource("16_fhtvx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2, 3)
+
+[node name="StockAlternatorDropped" parent="." instance=ExtResource("17_u3glf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2, 3)
 
 [editable path="Items/Item31"]
