@@ -44,7 +44,7 @@ shape = SubResource("BoxShape3D_23afp")
 [node name="FuelInjector" type="Node3D" parent="."]
 
 [node name="Area3D" type="Area3D" parent="FuelInjector"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.250756, -0.164183)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.148732, -0.136577)
 collision_layer = 8
 collision_mask = 8
 
@@ -62,3 +62,21 @@ collision_mask = 8
 shape = SubResource("BoxShape3D_23afp")
 
 [node name="Intake" type="Node3D" parent="."]
+
+[node name="Area3D" type="Area3D" parent="Intake"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.205102, 0)
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Intake/Area3D"]
+shape = SubResource("BoxShape3D_23afp")
+
+[node name="WaterTank" type="Node3D" parent="."]
+
+[node name="Area3D" type="Area3D" parent="WaterTank"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.540001, 0, -0.103851)
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WaterTank/Area3D"]
+shape = SubResource("BoxShape3D_23afp")
