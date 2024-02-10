@@ -1,10 +1,11 @@
-[gd_scene load_steps=21 format=3 uid="uid://7eis7so5p5lh"]
+[gd_scene load_steps=22 format=3 uid="uid://7eis7so5p5lh"]
 
 [ext_resource type="Script" path="res://Vehicles/Leluota Aito/Aito.cs" id="1_lai86"]
 [ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Leluota Aito/aito.blend" id="3_0l07t"]
+[ext_resource type="PackedScene" uid="uid://cluf4svnj38ms" path="res://Items/VehicleParts/Dashboard/Dashboard.tscn" id="3_65ber"]
 [ext_resource type="PackedScene" uid="uid://dsiudfpl7vhb0" path="res://Vehicles/Wheels/tire.blend" id="3_o6own"]
 [ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="4_qspcq"]
-[ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay.tscn" id="6_5yy2s"]
+[ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay/EngineBay.tscn" id="5_5blaa"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]
 properties/0/path = NodePath(".:syncRotation")
@@ -69,7 +70,7 @@ size = Vector3(0.179956, 0.135584, 1.01154)
 [sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.102235, 1.44803)
 
-[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "_speedometer", "_engineBay")]
+[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "_speedometer", "engineBay")]
 collision_layer = 4
 collision_mask = 6
 mass = 900.0
@@ -78,7 +79,13 @@ center_of_mass = Vector3(0, 0.201208, 0.245741)
 script = ExtResource("1_lai86")
 _synchronizer = NodePath("MultiplayerSynchronizer")
 _speedometer = NodePath("Speedometer")
-_engineBay = NodePath("EngineBay")
+engineBay = NodePath("EngineBay")
+
+[node name="EngineBay" parent="." instance=ExtResource("5_5blaa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.434783, 1.56482)
+
+[node name="Dashboard3" parent="." instance=ExtResource("3_65ber")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.634657, 1.21247)
 
 [node name="aito" parent="." instance=ExtResource("3_0l07t")]
 transform = Transform3D(-1.18, 0, -1.78175e-07, 0, 1.18, 0, 1.78175e-07, 0, -1.18, 0, 0.510493, 0.334204)
@@ -181,9 +188,6 @@ mesh = SubResource("BoxMesh_5rl2c")
 
 [node name="SeatPosition" type="Marker3D" parent="Seat2"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.596146, 0.0536157)
-
-[node name="EngineBay" parent="." instance=ExtResource("6_5yy2s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.434783, 1.56482)
 
 [node name="Floor" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0446289, -0.045975)

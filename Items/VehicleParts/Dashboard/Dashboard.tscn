@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://cluf4svnj38ms"]
+
+[ext_resource type="Script" path="res://Items/Interactable.cs" id="1_fs0m8"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Dashboard/Dashboard.cs" id="1_u22b2"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_th3uu"]
+radius = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_rjq1y"]
+radius = 0.1
+height = 0.2
+
+[node name="Dashboard" type="Node3D"]
+script = ExtResource("1_u22b2")
+
+[node name="Ignition" type="RigidBody3D" parent="."]
+collision_layer = 8
+collision_mask = 0
+freeze = true
+script = ExtResource("1_fs0m8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ignition"]
+shape = SubResource("SphereShape3D_th3uu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ignition"]
+mesh = SubResource("SphereMesh_rjq1y")
+
+[node name="Label3D" type="Label3D" parent="Ignition"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -0.118781)
+text = "Ignition"

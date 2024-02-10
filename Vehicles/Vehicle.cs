@@ -7,7 +7,7 @@ public partial class Vehicle : VehicleBody3D
 {
 	[Export] private MultiplayerSynchronizer _synchronizer;
 	[Export] private Label3D _speedometer;
-	[Export] private EngineBay _engineBay;
+	[Export] public EngineBay engineBay;
 	private Seat _driverSeat;
 	float enginePower = 0;
 	float maxSteer = 0.8f;
@@ -40,7 +40,7 @@ public partial class Vehicle : VehicleBody3D
 	{
 		if (!IsMultiplayerAuthority()) return;
 
-		enginePower = _engineBay.GetHorsePower();
+		enginePower = engineBay.GetHorsePower();
 
 		if (_driverSeat.seatedPlayerId < 1)
 		{

@@ -122,7 +122,7 @@ public partial class EngineBay : Node3D
         // The fucking ids of the parts change to 0 for 3 frames and then back to the correct one forever, I have no idea why
 
         // if any required parts missing, stop running
-        if (_engine is null || _battery is null)
+        if (_engine is null || _battery is null || _starter is null)
         {
             _running = false;
         }
@@ -148,7 +148,7 @@ public partial class EngineBay : Node3D
     // Gameplay logic
     public void ToggleEngine()
     {
-        if (_engine is null || _battery is null) return;
+        if (_engine is null || _battery is null || _starter is null) return;
         _running = !_running;
     }
 
