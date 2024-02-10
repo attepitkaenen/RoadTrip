@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://d38o4luy7jwis"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/Intake/Intake.cs" id="1_y3avp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0g71f"]
+size = Vector3(0.3, 0.2, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6hbvf"]
+albedo_color = Color(0.196078, 0.196078, 0.196078, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6iy7m"]
+material = SubResource("StandardMaterial3D_6hbvf")
+size = Vector3(0.3, 0.15, 0.4)
+
+[node name="StockIntake" type="RigidBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+collision_layer = 8
+collision_mask = 8
+freeze = true
+script = ExtResource("1_y3avp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_0g71f")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_6iy7m")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, 0, 0.103355, 0)
+text = "Intake"

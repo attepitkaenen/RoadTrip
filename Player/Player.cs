@@ -500,7 +500,6 @@ public partial class Player : CharacterBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void MovePlayer(Vector3 position, Vector3 rotation)
 	{
-		GD.Print("Move player called");
 		GlobalPosition = position;
 		GlobalRotation = rotation;
 	}

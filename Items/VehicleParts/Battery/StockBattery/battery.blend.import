@@ -3,20 +3,20 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://ckqu8bqnxgpp0"
-path="res://.godot/imported/alternator.blend-817e0055acc2bec8602eda8afed623c9.scn"
+uid="uid://d3u3thn1c3452"
+path="res://.godot/imported/battery.blend-5f50118d93c239ed7638f3a173edecb9.scn"
 
 [deps]
 
-source_file="res://Items/VehicleParts/Alternator/alternator.blend"
-dest_files=["res://.godot/imported/alternator.blend-817e0055acc2bec8602eda8afed623c9.scn"]
+source_file="res://Items/VehicleParts/Battery/StockBattery/battery.blend"
+dest_files=["res://.godot/imported/battery.blend-5f50118d93c239ed7638f3a173edecb9.scn"]
 
 [params]
 
 nodes/root_type="Node3D"
 nodes/root_name="Scene Root"
 nodes/apply_root_scale=true
-nodes/root_scale=1.0
+nodes/root_scale=0.2
 meshes/ensure_tangents=true
 meshes/generate_lods=true
 meshes/create_shadow_meshes=true
@@ -37,7 +37,7 @@ blender/nodes/punctual_lights=true
 blender/nodes/cameras=true
 blender/nodes/custom_properties=true
 blender/nodes/modifiers=1
-blender/meshes/colors=false
+blender/meshes/colors=true
 blender/meshes/uvs=true
 blender/meshes/normals=true
 blender/meshes/tangents=true

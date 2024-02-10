@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://ckg17c1utdkwi"]
+
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_2myah"]
+[ext_resource type="PackedScene" uid="uid://bw8hx6doiw4cs" path="res://Items/VehicleParts/Battery/StockBattery/StockBattery.tscn" id="1_8i0ri"]
+[ext_resource type="PackedScene" uid="uid://v251b5nk0v47" path="res://Items/VehicleParts/Battery/StockBattery/StockBatteryDropped.tscn" id="2_bsj2a"]
+
+[resource]
+script = ExtResource("1_2myah")
+Equippable = false
+ItemName = "StockBattery"
+ItemId = 103
+Description = ""
+ItemOnFloor = ExtResource("2_bsj2a")
+ItemInHand = ExtResource("1_8i0ri")
