@@ -3,7 +3,6 @@ using System;
 
 public partial class Radiator : CarPart
 {
-    [Export] public EngineResource stats;
 	public float coolant = 100f;
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

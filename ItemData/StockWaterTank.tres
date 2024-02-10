@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://co6qbotslwhe8"]
+
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_rhm2b"]
+[ext_resource type="PackedScene" uid="uid://cnck4lgdg4man" path="res://Items/VehicleParts/WaterTank/StockWaterTank/StockWaterTank.tscn" id="1_ylvqa"]
+[ext_resource type="PackedScene" uid="uid://dumbu12ex0tq0" path="res://Items/VehicleParts/WaterTank/StockWaterTank/StockWaterTankDropped.tscn" id="2_k8pl0"]
+
+[resource]
+script = ExtResource("1_rhm2b")
+Equippable = false
+ItemName = "StockWaterTank"
+ItemId = 106
+Description = ""
+ItemOnFloor = ExtResource("2_k8pl0")
+ItemInHand = ExtResource("1_ylvqa")

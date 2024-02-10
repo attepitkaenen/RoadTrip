@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://dmbyds4otpt4l"]
+
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_aqiy3"]
+[ext_resource type="PackedScene" uid="uid://d38o4luy7jwis" path="res://Items/VehicleParts/Intake/StockIntake/StockIntake.tscn" id="1_w3tu1"]
+[ext_resource type="PackedScene" uid="uid://d1lrao08ldrp" path="res://Items/VehicleParts/Intake/StockIntake/StockIntakeDropped.tscn" id="2_cliks"]
+
+[resource]
+script = ExtResource("1_aqiy3")
+Equippable = false
+ItemName = "StockIntake"
+ItemId = 107
+Description = ""
+ItemOnFloor = ExtResource("2_cliks")
+ItemInHand = ExtResource("1_w3tu1")

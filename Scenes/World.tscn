@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=24 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -17,6 +17,8 @@
 [ext_resource type="PackedScene" uid="uid://v251b5nk0v47" path="res://Items/VehicleParts/Battery/StockBattery/StockBatteryDropped.tscn" id="15_3gwkl"]
 [ext_resource type="PackedScene" uid="uid://dqou5oo4sgp12" path="res://Items/VehicleParts/FuelInjector/StockFuelInjector/StockFuelInjectorDropped.tscn" id="16_fhtvx"]
 [ext_resource type="PackedScene" uid="uid://bbdseej3vgkp2" path="res://Items/VehicleParts/Alternator/StockAlternator/StockAlternatorDropped.tscn" id="17_u3glf"]
+[ext_resource type="PackedScene" uid="uid://dumbu12ex0tq0" path="res://Items/VehicleParts/WaterTank/StockWaterTank/StockWaterTankDropped.tscn" id="18_24wwe"]
+[ext_resource type="PackedScene" uid="uid://d1lrao08ldrp" path="res://Items/VehicleParts/Intake/StockIntake/StockIntakeDropped.tscn" id="19_8qxit"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -721,6 +723,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.96, 1.54219, -4.77876)
 [node name="Aito2" parent="." instance=ExtResource("4_ynoyo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.1684, 1.41643, -4.72592)
 
+[node name="EngineBay" parent="Aito2" index="10"]
+_engineId = 100
+_engineCondition = 100.0
+_radiatorId = 102
+_fuelInjectorId = 104
+_batteryId = 103
+_alternatorId = 105
+_waterTankId = 106
+
 [node name="Kivik" parent="." instance=ExtResource("13_pb255")]
 transform = Transform3D(0.0104543, 0, -0.999945, 0, 1, 0, 0.999945, 0, 0.0104543, 15.8073, 1.73935, 1.72144)
 
@@ -739,4 +750,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2, 3)
 [node name="StockAlternatorDropped" parent="." instance=ExtResource("17_u3glf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2, 3)
 
+[node name="StockWaterTankDropped" parent="." instance=ExtResource("18_24wwe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, 0)
+
+[node name="StockFuelInjectorDropped2" parent="." instance=ExtResource("19_8qxit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.4193, 1.17989, 2.32172)
+
 [editable path="Items/Item31"]
+[editable path="Aito2"]

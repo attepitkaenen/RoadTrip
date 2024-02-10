@@ -9,35 +9,48 @@ public partial class EngineBay : Node3D
     MultiplayerSynchronizer multiplayerSynchronizer;
     GameManager gameManager;
 
+    [ExportGroup("Engine properties")]
     private Engine _engine;
     private Area3D _engineArea;
-    private int _engineId;
-    private float _engineCondition;
+    [Export] private int _engineId;
+    [Export] private float _engineCondition;
 
+    [ExportGroup("Radiator properties")]
     private Radiator _radiator;
     private Area3D _radiatorArea;
-    private int _radiatorId;
-    private float _radiatorCondition;
+    [Export] private int _radiatorId;
+    [Export] private float _radiatorCondition;
 
+    [ExportGroup("Fuel injector properties")]
     private FuelInjector _fuelInjector;
     private Area3D _fuelInjectorArea;
-    private int _fuelInjectorId;
-    private float _fuelInjectorCondition;
+    [Export] private int _fuelInjectorId;
+    [Export] private float _fuelInjectorCondition;
 
+    [ExportGroup("Battery properties")]
     private Battery _battery;
     private Area3D _batteryArea;
-    private int _batteryId;
-    private float _batteryCondition;
+    [Export] private int _batteryId;
+    [Export] private float _batteryCondition;
 
+    [ExportGroup("Alternator properties")]
     private Alternator _alternator;
     private Area3D _alternatorArea;
-    private int _alternatorId;
-    private float _alternatorCondition;
+    [Export] private int _alternatorId;
+    [Export] private float _alternatorCondition;
 
+    [ExportGroup("Intake properties")]
     private Intake _intake;
     private Area3D _intakeArea;
-    private int _intakeId;
-    private float _intakeCondition;
+    [Export] private int _intakeId;
+    [Export] private float _intakeCondition;
+
+    [ExportGroup("Water tank properties")]
+    private WaterTank _waterTank;
+    private Area3D _waterTankArea;
+    [Export] private int _waterTankId;
+    [Export] private float _waterTankCondition;
+
 
 
 
@@ -56,6 +69,10 @@ public partial class EngineBay : Node3D
         multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_fuelInjectorCondition");
         multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_alternatorId");
         multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_alternatorCondition");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_waterTankId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_waterTankCondition");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_intakeId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_intakeCondition");
 
         _engineArea = GetNode<Area3D>("Engine/Area3D");
         _engineArea.BodyEntered += PartEntered;
@@ -76,6 +93,14 @@ public partial class EngineBay : Node3D
         _alternatorArea = GetNode<Area3D>("Alternator/Area3D");
         _alternatorArea.BodyEntered += PartEntered;
         _alternatorArea.BodyExited += PartExited;
+
+        _waterTankArea = GetNode<Area3D>("WaterTank/Area3D");
+        _waterTankArea.BodyEntered += PartEntered;
+        _waterTankArea.BodyExited += PartExited;
+
+        _intakeArea = GetNode<Area3D>("Intake/Area3D");
+        _intakeArea.BodyEntered += PartEntered;
+        _intakeArea.BodyExited += PartExited;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -91,6 +116,10 @@ public partial class EngineBay : Node3D
         HandleFuelInjector();
 
         HandleAlternator();
+
+        HandleWaterTank();
+
+        HandleIntake();
     }
 
     // General part handling
@@ -121,6 +150,16 @@ public partial class EngineBay : Node3D
             alternator.InstallPart -= InstallAlternator;
             alternator.isInstallable = false;
         }
+        else if (body is WaterTankDropped waterTank)
+        {
+            waterTank.InstallPart -= InstallWaterTank;
+            waterTank.isInstallable = false;
+        }
+        else if (body is IntakeDropped intake)
+        {
+            intake.InstallPart -= InstallIntake;
+            intake.isInstallable = false;
+        }
     }
 
     private void PartEntered(Node3D body)
@@ -150,12 +189,23 @@ public partial class EngineBay : Node3D
             alternator.InstallPart += InstallAlternator;
             alternator.isInstallable = true;
         }
+        else if (body is WaterTankDropped waterTank)
+        {
+            waterTank.InstallPart += InstallWaterTank;
+            waterTank.isInstallable = true;
+        }
+        else if (body is IntakeDropped intake)
+        {
+            intake.InstallPart += InstallIntake;
+            intake.isInstallable = true;
+        }
     }
 
     public CarPart SpawnInstalledPart(int itemId, float condition, Vector3 partPosition)
     {
         var part = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as CarPart;
         AddChild(part);
+        part.SetEngineBay(this);
         part.SetCondition(condition);
         part.itemId = itemId;
         part.Position = partPosition;
@@ -188,6 +238,10 @@ public partial class EngineBay : Node3D
         else if (_intakeId == itemId)
         {
             _intakeId = 0;
+        }
+        else if (_waterTankId == itemId)
+        {
+            _waterTankId = 0;
         }
 
         gameManager.RpcId(1, nameof(gameManager.SpawnVehiclePart), itemId, condition, position);
@@ -331,6 +385,7 @@ public partial class EngineBay : Node3D
         }
         else if (_alternatorId == 0 && _alternator is not null)
         {
+            GD.Print("make alternator null");
             _alternator = null;
         }
     }
@@ -340,5 +395,61 @@ public partial class EngineBay : Node3D
     {
         _alternatorCondition = condition;
         _alternatorId = id;
+    }
+
+    // WaterTank
+    private void InstallWaterTank(int itemId, float condition)
+    {
+        if (_waterTank is null)
+        {
+            Rpc(nameof(SetWaterTankIdAndCondition), itemId, condition);
+        }
+    }
+
+    private void HandleWaterTank()
+    {
+        if (_waterTankId != 0 && _waterTank is null)
+        {
+            _waterTank = SpawnInstalledPart(_waterTankId, _waterTankCondition, _waterTankArea.Position) as WaterTank;
+        }
+        else if (_waterTankId == 0 && _waterTank is not null)
+        {
+            _waterTank = null;
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SetWaterTankIdAndCondition(int id, float condition)
+    {
+        _waterTankCondition = condition;
+        _waterTankId = id;
+    }
+
+    // Intake
+    private void InstallIntake(int itemId, float condition)
+    {
+        if (_intake is null)
+        {
+            Rpc(nameof(SetIntakeIdAndCondition), itemId, condition);
+        }
+    }
+
+    private void HandleIntake()
+    {
+        if (_intakeId != 0 && _intake is null)
+        {
+            _intake = SpawnInstalledPart(_intakeId, _intakeCondition, _intakeArea.Position) as Intake;
+        }
+        else if (_intakeId == 0 && _intake is not null)
+        {
+            _intake = null;
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SetIntakeIdAndCondition(int id, float condition)
+    {
+        _intakeCondition = condition;
+        _intakeId = id;
     }
 }

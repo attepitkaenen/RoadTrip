@@ -27,6 +27,11 @@ public partial class CarPart : Node3D
         _condition = condition;
     }
 
+    public void SetEngineBay(EngineBay engineBay)
+    {
+        _engineBay = engineBay;
+    }
+
     public void Uninstall()
     {
         _engineBay.RpcId(1, nameof(_engineBay.RemoveInstalledPart), itemId, _condition, GlobalPosition);
@@ -36,7 +41,6 @@ public partial class CarPart : Node3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void DestroyPart()
     {
-        GD.Print("Should destroy self");
         QueueFree();
     }
 }

@@ -62,7 +62,11 @@ public partial class Engine : CarPart
 		// {
 		// 	return 0f;
 		// }
-		return stats.Horsepower - (stats.Horsepower * 0.4f * (100f - GetCondition()));
+		if (GetCondition() == 0)
+		{
+			return 0;
+		}
+		return stats.Horsepower - (stats.Horsepower * 0.4f * (1 - GetCondition() * 0.01f));
 	}
 
 	public bool IsRunning()
