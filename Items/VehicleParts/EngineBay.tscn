@@ -80,3 +80,13 @@ collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WaterTank/Area3D"]
 shape = SubResource("BoxShape3D_23afp")
+
+[node name="Starter" type="Node3D" parent="."]
+
+[node name="Area3D" type="Area3D" parent="Starter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.130256, -0.139955, -0.187007)
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Starter/Area3D"]
+shape = SubResource("BoxShape3D_23afp")
