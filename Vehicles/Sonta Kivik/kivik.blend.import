@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://d36bofrno2ln1"
-path="res://.godot/imported/aito.blend-89563be3952bc32c037c08ea87eaeaaf.scn"
+uid="uid://b8caqr8dvhr4v"
+path="res://.godot/imported/kivik.blend-bcfdd37528b37b41726ca9b6886fab32.scn"
 
 [deps]
 
-source_file="res://Vehicles/Aito/aito.blend"
-dest_files=["res://.godot/imported/aito.blend-89563be3952bc32c037c08ea87eaeaaf.scn"]
+source_file="res://Vehicles/Sonta Kivik/kivik.blend"
+dest_files=["res://.godot/imported/kivik.blend-bcfdd37528b37b41726ca9b6886fab32.scn"]
 
 [params]
 
@@ -22,7 +22,7 @@ meshes/generate_lods=true
 meshes/create_shadow_meshes=true
 meshes/light_baking=1
 meshes/lightmap_texel_size=0.2
-meshes/force_disable_compression=false
+meshes/force_disable_compression=true
 skins/use_named_skins=true
 animation/import=true
 animation/fps=30

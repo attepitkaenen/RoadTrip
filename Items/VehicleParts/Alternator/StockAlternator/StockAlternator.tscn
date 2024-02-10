@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dj3uiv2byc3f8"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/Alternator/Alternator.cs" id="1_fw312"]
+[ext_resource type="PackedScene" uid="uid://ckqu8bqnxgpp0" path="res://Items/VehicleParts/Alternator/StockAlternator/alternator.blend" id="3_42pbl"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1sjsb"]
+height = 0.2
+radius = 0.1
+
+[node name="StockAlternator" type="RigidBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+collision_layer = 8
+collision_mask = 8
+freeze = true
+script = ExtResource("1_fw312")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_1sjsb")
+
+[node name="alternator" parent="." instance=ExtResource("3_42pbl")]
+transform = Transform3D(0.07, 0, 0, 0, -3.0598e-09, 0.07, 0, -0.07, -3.0598e-09, 0, 0, 0)

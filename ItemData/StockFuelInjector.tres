@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://xd58gljbrq7d"]
+
+[ext_resource type="PackedScene" uid="uid://gqq00he4s2ql" path="res://Items/VehicleParts/FuelInjector/StockFuelInjector/StockFuelInjector.tscn" id="1_6mi3j"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_ranig"]
+[ext_resource type="PackedScene" uid="uid://dqou5oo4sgp12" path="res://Items/VehicleParts/FuelInjector/StockFuelInjector/StockFuelInjectorDropped.tscn" id="2_um6ne"]
+
+[resource]
+script = ExtResource("1_ranig")
+Equippable = false
+ItemName = ""
+ItemId = 104
+Description = ""
+ItemOnFloor = ExtResource("2_um6ne")
+ItemInHand = ExtResource("1_6mi3j")
