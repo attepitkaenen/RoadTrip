@@ -1,0 +1,63 @@
+[gd_scene load_steps=8 format=3 uid="uid://cqmsky4dxvuqh"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/Starter/StarterDropped.cs" id="1_hi8v0"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jiwei"]
+properties/0/path = NodePath(".:syncPosition")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:syncBasis")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:syncLinearVelocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:syncAngularVelocity")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_no7e3"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_35xa0"]
+albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wtkex"]
+material = SubResource("StandardMaterial3D_35xa0")
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pave2"]
+albedo_color = Color(0.941176, 0.678431, 0.254902, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_y7ri6"]
+material = SubResource("StandardMaterial3D_pave2")
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.15
+
+[node name="StockStarterDropped" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
+collision_layer = 8
+collision_mask = 15
+script = ExtResource("1_hi8v0")
+_condition = 100.0
+_synchronizer = NodePath("MultiplayerSynchronizer")
+ItemId = 108
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.016
+delta_interval = 0.016
+replication_config = SubResource("SceneReplicationConfig_jiwei")
+visibility_update_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_no7e3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.66981e-09, 0, -0.0382008)
+mesh = SubResource("CylinderMesh_wtkex")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2139e-09, 0.0249763, 0.0506481)
+mesh = SubResource("CylinderMesh_y7ri6")
