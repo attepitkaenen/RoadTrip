@@ -208,6 +208,8 @@ public partial class Player : CharacterBody3D
 
 		HandleItem();
 
+		HandleInteraction();
+
 		FlipCar();
 
 		HandleSeat();
@@ -383,6 +385,14 @@ public partial class Player : CharacterBody3D
 		{
 			heldItem = null;
 			equip.GetChild(0).QueueFree();
+		}
+	}
+
+	public void HandleInteraction()
+	{
+		if (PickedItem is null && heldItem is null && Input.IsActionJustPressed("leftClick") && interactionCast.GetCollider() is Interactable interactable)
+		{
+			interactable.Rpc(nameof(interactable.Press));
 		}
 	}
 
