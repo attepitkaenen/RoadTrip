@@ -14,6 +14,7 @@ public partial class Vehicle : VehicleBody3D
 	private Vector2 _inputDir;
 	bool braking;
 	public List<Item> items = new List<Item>();
+	public List<VehicleWheel3D> wheels = new List<VehicleWheel3D>();
 
 	// Sync properties
 	Vector3 syncPosition;

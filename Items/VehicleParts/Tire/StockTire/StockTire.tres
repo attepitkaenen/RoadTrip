@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TireResource" load_steps=2 format=3 uid="uid://dbve3vl2ykebe"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/Tire/TireResource.cs" id="1_3q4em"]
+
+[resource]
+script = ExtResource("1_3q4em")
+TireRadius = 0.3
+TireWidth = 0.2
