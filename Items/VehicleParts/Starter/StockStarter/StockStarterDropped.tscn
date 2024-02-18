@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://cqmsky4dxvuqh"]
+[gd_scene load_steps=6 format=3 uid="uid://cqmsky4dxvuqh"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/Starter/StarterDropped.cs" id="1_hi8v0"]
+[ext_resource type="PackedScene" uid="uid://b3p507lkyj6eo" path="res://Items/VehicleParts/Starter/StockStarter/stockStarter.blend" id="2_t77d1"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jiwei"]
 properties/0/path = NodePath(".:syncPosition")
@@ -16,28 +17,15 @@ properties/3/path = NodePath(".:syncAngularVelocity")
 properties/3/spawn = true
 properties/3/replication_mode = 1
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_no7e3"]
-size = Vector3(0.2, 0.2, 0.2)
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_uu3lp"]
+height = 0.321959
+radius = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_35xa0"]
-albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_wtkex"]
-material = SubResource("StandardMaterial3D_35xa0")
-top_radius = 0.06
-bottom_radius = 0.06
-height = 0.2
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pave2"]
-albedo_color = Color(0.941176, 0.678431, 0.254902, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_y7ri6"]
-material = SubResource("StandardMaterial3D_pave2")
-top_radius = 0.04
-bottom_radius = 0.04
-height = 0.15
+[sub_resource type="BoxShape3D" id="BoxShape3D_i85i1"]
+size = Vector3(0.1, 0.176139, 0.151559)
 
 [node name="StockStarterDropped" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
+transform = Transform3D(-4.37114e-08, -1, 4.37114e-08, 0, -4.37114e-08, -1, 1, -4.37114e-08, 1.91069e-15, 0, 0, 0)
 collision_layer = 8
 collision_mask = 15
 script = ExtResource("1_hi8v0")
@@ -51,13 +39,13 @@ delta_interval = 0.016
 replication_config = SubResource("SceneReplicationConfig_jiwei")
 visibility_update_mode = 1
 
+[node name="stockStarter" parent="." instance=ExtResource("2_t77d1")]
+transform = Transform3D(0.27, 0, 0, 0, -1.18021e-08, -0.27, 0, 0.27, -1.18021e-08, 7.23469e-10, 0.046047, -0.0294959)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_no7e3")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.18784e-09, 0.00692421, -0.0340988)
+shape = SubResource("CylinderShape3D_uu3lp")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.66981e-09, 0, -0.0382008)
-mesh = SubResource("CylinderMesh_wtkex")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2139e-09, 0.0249763, 0.0506481)
-mesh = SubResource("CylinderMesh_y7ri6")
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.046)
+shape = SubResource("BoxShape3D_i85i1")

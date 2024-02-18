@@ -67,7 +67,7 @@ transform = Transform3D(1, 0, 0, 0, 0.548906, 0.835884, 0, -0.835884, 0.548906, 
 [node name="SpawnPoints" type="Node3D" parent="."]
 
 [node name="0" type="Node3D" parent="SpawnPoints" groups=["SpawnPoints"]]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.571409, 7.93874, -4.4275)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 16.3574, 2.72084, -1.28632)
 
 [node name="1" type="Node3D" parent="SpawnPoints" groups=["SpawnPoints"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002588, 8.20235, 10.7265)

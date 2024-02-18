@@ -8,6 +8,7 @@ public partial class Vehicle : VehicleBody3D
 	[Export] private MultiplayerSynchronizer _synchronizer;
 	[Export] private Label3D _speedometer;
 	[Export] public EngineBay engineBay;
+	[Export] public float breakForce = 50;
 	private Seat _driverSeat;
 	float enginePower = 0;
 	float maxSteer = 0.8f;
@@ -45,7 +46,7 @@ public partial class Vehicle : VehicleBody3D
 
 		if (_driverSeat.seatedPlayerId < 1)
 		{
-			Brake = 25f;
+			Brake = breakForce;
 			EngineForce = 0;
 		}
 
@@ -99,7 +100,7 @@ public partial class Vehicle : VehicleBody3D
 
 		if (space)
 		{
-			Brake = 25f;
+			Brake = breakForce;
 		}
 		else
 		{
