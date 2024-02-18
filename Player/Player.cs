@@ -139,7 +139,7 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	public override void _PhysicsProcess(double delta)
+	public override void _Process(double delta)
 	{
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
 

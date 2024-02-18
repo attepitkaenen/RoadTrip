@@ -56,7 +56,7 @@ size = Vector3(0.169014, 0.769833, 0.178667)
 size = Vector3(1.74411, 0.834335, 0.151279)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_snguo"]
-size = Vector3(1.74411, 0.644009, 0.151279)
+size = Vector3(1.74411, 0.644009, 0.116533)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_avm0q"]
 size = Vector3(0.179956, 0.517639, 0.63573)
@@ -83,6 +83,7 @@ script = ExtResource("1_lai86")
 _synchronizer = NodePath("MultiplayerSynchronizer")
 _speedometer = NodePath("Speedometer")
 engineBay = NodePath("EngineBay")
+breakForce = 50.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.016
@@ -237,7 +238,7 @@ transform = Transform3D(1, 0, 0, 0, 0.957259, -0.289232, 0, 0.289232, 0.957259, 
 shape = SubResource("BoxShape3D_bcaqk")
 
 [node name="Dashboard2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.994758, 0.102255, 0, -0.102255, 0.994758, 0.00675964, 0.329271, 1.9876)
+transform = Transform3D(1, 0, 0, 0, 0.994758, 0.102255, 0, -0.102255, 0.994758, 0.00675964, 0.327495, 2.04766)
 shape = SubResource("BoxShape3D_snguo")
 
 [node name="BackRight" type="CollisionShape3D" parent="."]

@@ -1,42 +1,29 @@
-[gd_scene load_steps=7 format=3 uid="uid://bw6hq3tjkskgm"]
+[gd_scene load_steps=5 format=3 uid="uid://bw6hq3tjkskgm"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/Starter/Starter.cs" id="1_25fap"]
+[ext_resource type="PackedScene" uid="uid://b3p507lkyj6eo" path="res://Items/VehicleParts/Starter/StockStarter/stockStarter.blend" id="2_6o0yg"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_0g71f"]
-size = Vector3(0.2, 0.2, 0.2)
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_uytuo"]
+height = 0.321959
+radius = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7sqqd"]
-albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_qutpp"]
-material = SubResource("StandardMaterial3D_7sqqd")
-top_radius = 0.06
-bottom_radius = 0.06
-height = 0.2
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jxjkk"]
-albedo_color = Color(0.941176, 0.678431, 0.254902, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_tns7m"]
-material = SubResource("StandardMaterial3D_jxjkk")
-top_radius = 0.04
-bottom_radius = 0.04
-height = 0.15
+[sub_resource type="BoxShape3D" id="BoxShape3D_f4pdx"]
+size = Vector3(0.1, 0.176139, 0.151559)
 
 [node name="StockStarter" type="RigidBody3D"]
-transform = Transform3D(-4.37114e-08, -1, 0, -4.37114e-08, 1.91069e-15, -1, 1, -4.37114e-08, -4.37114e-08, 0, 0, 0)
+transform = Transform3D(-4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, 0, 0, 0)
 collision_layer = 8
 collision_mask = 8
 freeze = true
 script = ExtResource("1_25fap")
 
+[node name="stockStarter" parent="." instance=ExtResource("2_6o0yg")]
+transform = Transform3D(0.27, 0, 0, 0, -1.18021e-08, -0.27, 0, 0.27, -1.18021e-08, 7.23469e-10, 0.046047, -0.0294959)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_0g71f")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.18784e-09, 0.00692421, -0.0340988)
+shape = SubResource("CylinderShape3D_uytuo")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.66981e-09, 0, -0.0382008)
-mesh = SubResource("CylinderMesh_qutpp")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2139e-09, 0.0249763, 0.0506481)
-mesh = SubResource("CylinderMesh_tns7m")
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.046)
+shape = SubResource("BoxShape3D_f4pdx")

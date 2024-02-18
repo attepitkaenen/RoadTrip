@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cnqemox7c8iit" path="res://Items/VehicleParts/Radiator/StockRadiator/radiator.blend" id="1_x2ncf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_s8c8n"]
-size = Vector3(0.2, 0.3, 0.5)
+size = Vector3(0.2, 0.333728, 0.522217)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jiwei"]
 properties/0/path = NodePath(".:syncPosition")
@@ -29,6 +29,7 @@ _synchronizer = NodePath("MultiplayerSynchronizer")
 ItemId = 102
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.000982672, -0.00012207)
 shape = SubResource("BoxShape3D_s8c8n")
 
 [node name="radiator" parent="." instance=ExtResource("1_x2ncf")]

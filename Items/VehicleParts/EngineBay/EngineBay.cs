@@ -297,6 +297,10 @@ public partial class EngineBay : Node3D
         {
             _waterTankId = 0;
         }
+        else if (_starterId == itemId)
+        {
+            _starterId = 0;
+        }
 
         gameManager.RpcId(1, nameof(gameManager.SpawnVehiclePart), itemId, condition, position);
     }
