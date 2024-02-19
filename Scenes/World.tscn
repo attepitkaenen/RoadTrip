@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=27 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://d1lrao08ldrp" path="res://Items/VehicleParts/Intake/StockIntake/StockIntakeDropped.tscn" id="19_8qxit"]
 [ext_resource type="PackedScene" uid="uid://cqmsky4dxvuqh" path="res://Items/VehicleParts/Starter/StockStarter/StockStarterDropped.tscn" id="20_sy6bp"]
 [ext_resource type="PackedScene" uid="uid://cxajf8p8axryv" path="res://Items/VehicleParts/Tire/StockTire/StockTireDropped.tscn" id="21_rh7hh"]
+[ext_resource type="PackedScene" uid="uid://i7fsio0ejwv1" path="res://Items/VehicleParts/Engine/EngineI3/engineSmooth.blend" id="22_sbi4h"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -826,6 +827,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5563, 1.26041, -4.52446)
 
 [node name="StockTireDropped4" parent="." instance=ExtResource("21_rh7hh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.1589, 1.40439, -4.81572)
+
+[node name="engineSmooth" parent="." instance=ExtResource("22_sbi4h")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 21.872, 1.84445, 2.25628)
 
 [editable path="Items/Item31"]
 [editable path="Aito2"]
