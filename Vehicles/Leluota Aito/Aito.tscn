@@ -83,7 +83,6 @@ script = ExtResource("1_lai86")
 _synchronizer = NodePath("MultiplayerSynchronizer")
 _speedometer = NodePath("Speedometer")
 engineBay = NodePath("EngineBay")
-breakForce = 50.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.016

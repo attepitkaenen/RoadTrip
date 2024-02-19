@@ -144,6 +144,11 @@ public partial class EngineBay : Node3D
         HandleStarter();
     }
 
+    public void HandleEngineUpdate()
+    {
+        
+    }
+
 
     // Gameplay logic
     public void ToggleEngine()
