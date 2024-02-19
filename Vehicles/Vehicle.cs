@@ -7,13 +7,15 @@ public partial class Vehicle : VehicleBody3D
 {
 	[Export] private MultiplayerSynchronizer _synchronizer;
 	[Export] private Label3D _speedometer;
-	[Export] private EngineBay _engineBay;
+	[Export] public EngineBay engineBay;
+	[Export] public float breakForce = 50;
 	private Seat _driverSeat;
 	float enginePower = 0;
 	float maxSteer = 0.8f;
 	private Vector2 _inputDir;
 	bool braking;
 	public List<Item> items = new List<Item>();
+	public List<VehicleWheel3D> wheels = new List<VehicleWheel3D>();
 
 	// Sync properties
 	Vector3 syncPosition;
@@ -40,11 +42,11 @@ public partial class Vehicle : VehicleBody3D
 	{
 		if (!IsMultiplayerAuthority()) return;
 
-		enginePower = _engineBay.GetHorsePower();
+		enginePower = engineBay.GetHorsePower();
 
 		if (_driverSeat.seatedPlayerId < 1)
 		{
-			Brake = 25f;
+			Brake = breakForce;
 			EngineForce = 0;
 		}
 
@@ -98,7 +100,7 @@ public partial class Vehicle : VehicleBody3D
 
 		if (space)
 		{
-			Brake = 25f;
+			Brake = breakForce;
 		}
 		else
 		{

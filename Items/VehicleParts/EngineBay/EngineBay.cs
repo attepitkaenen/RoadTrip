@@ -9,6 +9,8 @@ public partial class EngineBay : Node3D
     MultiplayerSynchronizer multiplayerSynchronizer;
     GameManager gameManager;
 
+    private bool _running;
+
     [ExportGroup("Engine properties")]
     private Engine _engine;
     private Area3D _engineArea;
@@ -51,6 +53,12 @@ public partial class EngineBay : Node3D
     [Export] private int _waterTankId;
     [Export] private float _waterTankCondition;
 
+    [ExportGroup("Starter properties")]
+    private Starter _starter;
+    private Area3D _starterArea;
+    [Export] private int _starterId;
+    [Export] private float _starterCondition;
+
 
 
 
@@ -73,6 +81,8 @@ public partial class EngineBay : Node3D
         multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_waterTankCondition");
         multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_intakeId");
         multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_intakeCondition");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_starterId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_starterCondition");
 
         _engineArea = GetNode<Area3D>("Engine/Area3D");
         _engineArea.BodyEntered += PartEntered;
@@ -101,11 +111,21 @@ public partial class EngineBay : Node3D
         _intakeArea = GetNode<Area3D>("Intake/Area3D");
         _intakeArea.BodyEntered += PartEntered;
         _intakeArea.BodyExited += PartExited;
+
+        _starterArea = GetNode<Area3D>("Starter/Area3D");
+        _starterArea.BodyEntered += PartEntered;
+        _starterArea.BodyExited += PartExited;
     }
 
     public override void _PhysicsProcess(double delta)
     {
         // The fucking ids of the parts change to 0 for 3 frames and then back to the correct one forever, I have no idea why
+
+        // if any required parts missing, stop running
+        if (_engine is null || _battery is null || _starter is null)
+        {
+            _running = false;
+        }
 
         HandleEngine();
 
@@ -120,9 +140,35 @@ public partial class EngineBay : Node3D
         HandleWaterTank();
 
         HandleIntake();
+        
+        HandleStarter();
+    }
+
+    public void HandleEngineUpdate()
+    {
+        
+    }
+
+
+    // Gameplay logic
+    public void ToggleEngine()
+    {
+        if (_engine is null || _battery is null || _starter is null) return;
+        _running = !_running;
+    }
+
+    public float GetHorsePower()
+    {
+        if (!_running)
+        {
+            return 0;
+        }
+        return _engine.GetEnginePower();
     }
 
     // General part handling
+
+    // Make part not eligible to be installed
     private void PartExited(Node3D body)
     {
         if (body is EngineDropped engine)
@@ -160,8 +206,14 @@ public partial class EngineBay : Node3D
             intake.InstallPart -= InstallIntake;
             intake.isInstallable = false;
         }
+        else if (body is StarterDropped starter)
+        {
+            starter.InstallPart -= InstallStarter;
+            starter.isInstallable = false;
+        }
     }
 
+    // Make part eligible to be installed
     private void PartEntered(Node3D body)
     {
         if (body is EngineDropped engine)
@@ -199,8 +251,14 @@ public partial class EngineBay : Node3D
             intake.InstallPart += InstallIntake;
             intake.isInstallable = true;
         }
+        else if (body is StarterDropped starter)
+        {
+            starter.InstallPart += InstallStarter;
+            starter.isInstallable = true;
+        }
     }
 
+    // Spawns installed part and sets its condition and itemId
     public CarPart SpawnInstalledPart(int itemId, float condition, Vector3 partPosition)
     {
         var part = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as CarPart;
@@ -212,6 +270,7 @@ public partial class EngineBay : Node3D
         return part;
     }
 
+    // Handles part removing
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void RemoveInstalledPart(int itemId, float condition, Vector3 position)
     {
@@ -243,17 +302,12 @@ public partial class EngineBay : Node3D
         {
             _waterTankId = 0;
         }
+        else if (_starterId == itemId)
+        {
+            _starterId = 0;
+        }
 
         gameManager.RpcId(1, nameof(gameManager.SpawnVehiclePart), itemId, condition, position);
-    }
-
-    public float GetHorsePower()
-    {
-        if (_engine is null)
-        {
-            return 0;
-        }
-        return _engine.GetEnginePower();
     }
 
     // Engine
@@ -451,5 +505,33 @@ public partial class EngineBay : Node3D
     {
         _intakeCondition = condition;
         _intakeId = id;
+    }
+
+    // Starter
+    private void InstallStarter(int itemId, float condition)
+    {
+        if (_starter is null)
+        {
+            Rpc(nameof(SetStarterIdAndCondition), itemId, condition);
+        }
+    }
+
+    private void HandleStarter()
+    {
+        if (_starterId != 0 && _starter is null)
+        {
+            _starter = SpawnInstalledPart(_starterId, _starterCondition, _starterArea.Position) as Starter;
+        }
+        else if (_starterId == 0 && _starter is not null)
+        {
+            _starter = null;
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SetStarterIdAndCondition(int id, float condition)
+    {
+        _starterCondition = condition;
+        _starterId = id;
     }
 }
