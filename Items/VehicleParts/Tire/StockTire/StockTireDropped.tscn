@@ -1,6 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://bx0kmxtkqie43"]
+[gd_scene load_steps=10 format=3 uid="uid://cxajf8p8axryv"]
 
-[ext_resource type="Script" path="res://Vehicles/Coralli/Tire/Wheel.cs" id="1_qegih"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Tire/TireDropped.cs" id="1_65y7e"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jiwei"]
+properties/0/path = NodePath(".:syncPosition")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:syncBasis")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:syncLinearVelocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:syncAngularVelocity")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g0rvq"]
 resource_name = "Material.002"
@@ -34,7 +48,7 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_pgbxv"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_gxtuj"]
 resource_name = "tire-1c679c70dfb27b3cf26be0e5d5890f40_Cylinder"
 _surfaces = [{
 "aabb": AABB(-1, -1, -1, 2, 2, 2),
@@ -87,7 +101,7 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_6uo0u"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_q6u5e"]
 resource_name = "tire-1c679c70dfb27b3cf26be0e5d5890f40_Cylinder_001"
 _surfaces = [{
 "aabb": AABB(-1, -0.270347, -1, 2, 0.540693, 2),
@@ -106,28 +120,37 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_vpdut")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_2ll2a"]
-height = 0.198419
-radius = 0.354906
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_vcm0m"]
+height = 0.2
+radius = 0.3
 
-[node name="tire" type="RigidBody3D"]
-collision_layer = 68
-collision_mask = 63
-script = ExtResource("1_qegih")
+[node name="StockTireDropped" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
+collision_layer = 8
+collision_mask = 15
+script = ExtResource("1_65y7e")
+_condition = 100.0
+_synchronizer = NodePath("MultiplayerSynchronizer")
+ItemId = 109
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.016
+delta_interval = 0.016
+replication_config = SubResource("SceneReplicationConfig_jiwei")
+visibility_update_mode = 1
 
 [node name="Meshes" type="Node3D" parent="."]
-transform = Transform3D(-4.37114e-09, -0.1, 0, 0.1, -4.37114e-09, 0, 0, 0, 0.1, 0, 0, 0)
+transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
 
 [node name="Cylinder" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(3.53563, 0, 0, 0, 1, 0, 0, 0, 3.53563, 0, 0, 0)
-mesh = SubResource("ArrayMesh_pgbxv")
+mesh = SubResource("ArrayMesh_gxtuj")
 skeleton = NodePath("")
 
 [node name="Cylinder_001" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
-mesh = SubResource("ArrayMesh_6uo0u")
+mesh = SubResource("ArrayMesh_q6u5e")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
-shape = SubResource("CylinderShape3D_2ll2a")
+shape = SubResource("CylinderShape3D_vcm0m")

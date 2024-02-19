@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://d1lrao08ldrp"]
+[gd_scene load_steps=7 format=3 uid="uid://d1lrao08ldrp"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/Intake/IntakeDropped.cs" id="1_r53n5"]
+[ext_resource type="PackedScene" uid="uid://bincyc6lx1u84" path="res://Items/VehicleParts/Intake/StockIntake/stockIntake.blend" id="2_lfinn"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jiwei"]
 properties/0/path = NodePath(".:syncPosition")
@@ -17,14 +18,13 @@ properties/3/spawn = true
 properties/3/replication_mode = 1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kiume"]
-size = Vector3(0.3, 0.2, 0.4)
+size = Vector3(0.379, 0.2, 0.413)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bwiy1"]
-albedo_color = Color(0.196078, 0.196078, 0.196078, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_037b5"]
+size = Vector3(0.100513, 0.206152, 0.109937)
 
-[sub_resource type="BoxMesh" id="BoxMesh_n2egf"]
-material = SubResource("StandardMaterial3D_bwiy1")
-size = Vector3(0.3, 0.15, 0.4)
+[sub_resource type="BoxShape3D" id="BoxShape3D_y4rju"]
+size = Vector3(0.100513, 0.126514, 0.255756)
 
 [node name="StockFuelInjectorDropped" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
 collision_layer = 8
@@ -41,11 +41,16 @@ replication_config = SubResource("SceneReplicationConfig_jiwei")
 visibility_update_mode = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.039502, 0.0108638, 0.00668944)
 shape = SubResource("BoxShape3D_kiume")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_n2egf")
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.178748, -0.0286382, -0.0482056)
+shape = SubResource("BoxShape3D_037b5")
 
-[node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(-4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, 0, 0.103355, 0)
-text = "Intake"
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0810947, 0.0111812, -0.178629)
+shape = SubResource("BoxShape3D_y4rju")
+
+[node name="stockIntake" parent="." instance=ExtResource("2_lfinn")]
+transform = Transform3D(-6.11959e-09, 0, 0.14, 0, 0.14, 0, -0.14, 0, -6.11959e-09, 0, 0, 0)

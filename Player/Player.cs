@@ -139,7 +139,7 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	public override void _PhysicsProcess(double delta)
+	public override void _Process(double delta)
 	{
 		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
 
@@ -207,6 +207,8 @@ public partial class Player : CharacterBody3D
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
 
 		HandleItem();
+
+		HandleInteraction();
 
 		FlipCar();
 
@@ -383,6 +385,14 @@ public partial class Player : CharacterBody3D
 		{
 			heldItem = null;
 			equip.GetChild(0).QueueFree();
+		}
+	}
+
+	public void HandleInteraction()
+	{
+		if (PickedItem is null && heldItem is null && Input.IsActionJustPressed("leftClick") && interactionCast.GetCollider() is Interactable interactable)
+		{
+			interactable.Rpc(nameof(interactable.Press));
 		}
 	}
 

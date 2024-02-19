@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://0v8otcpmvspo"]
+
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_7i2gs"]
+[ext_resource type="PackedScene" uid="uid://bw6hq3tjkskgm" path="res://Items/VehicleParts/Starter/StockStarter/StockStarter.tscn" id="1_ou7q6"]
+[ext_resource type="PackedScene" uid="uid://cqmsky4dxvuqh" path="res://Items/VehicleParts/Starter/StockStarter/StockStarterDropped.tscn" id="2_jdail"]
+
+[resource]
+script = ExtResource("1_7i2gs")
+Equippable = false
+ItemName = "StockStarter"
+ItemId = 108
+Description = ""
+ItemOnFloor = ExtResource("2_jdail")
+ItemInHand = ExtResource("1_ou7q6")
