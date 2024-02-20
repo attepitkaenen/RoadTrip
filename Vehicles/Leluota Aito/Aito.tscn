@@ -104,7 +104,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.510382, 1.63163)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.634657, 1.21247)
 
 [node name="aito" parent="." instance=ExtResource("3_0l07t")]
-transform = Transform3D(-1.18, 0, -1.78175e-07, 0, 1.18, 0, 1.78175e-07, 0, -1.18, 0, 0.51908, 0.334204)
+transform = Transform3D(-1.18, 0, -1.78175e-07, 0, 1.18, 0, 1.78175e-07, 0, -1.18, 0, 0.514511, 0.334204)
 
 [node name="CenterOfMass" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201208, 0.245741)

@@ -793,5 +793,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5563, 1.26041, -4.52446)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.1589, 1.40439, -4.81572)
 
 [editable path="Items/Item31"]
-[editable path="Aito2"]
 [editable path="Kivik2"]
