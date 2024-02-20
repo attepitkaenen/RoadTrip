@@ -1,21 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dx5pju4b5bjye"]
+[gd_scene load_steps=5 format=3 uid="uid://dx5pju4b5bjye"]
 
 [ext_resource type="Script" path="res://Items/Item.cs" id="1_v18cb"]
 [ext_resource type="PackedScene" uid="uid://bgxlblsr5042g" path="res://Items/Tools/ToolBox/toolbox.blend" id="2_s5mhf"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ethdm"]
-properties/0/path = NodePath(".:syncPosition")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:syncBasis")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:syncLinearVelocity")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-properties/3/path = NodePath(".:syncAngularVelocity")
-properties/3/spawn = true
-properties/3/replication_mode = 1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2poue"]
 size = Vector3(0.2, 0.201953, 0.448389)
@@ -23,15 +9,11 @@ size = Vector3(0.2, 0.201953, 0.448389)
 [sub_resource type="BoxShape3D" id="BoxShape3D_nlhxn"]
 size = Vector3(0.0476761, 0.213455, 0.449135)
 
-[node name="ToolBoxDropped" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
+[node name="ToolBoxDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 15
 script = ExtResource("1_v18cb")
-_synchronizer = NodePath("MultiplayerSynchronizer")
 ItemId = 3
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_ethdm")
 
 [node name="toolbox" parent="." instance=ExtResource("2_s5mhf")]
 transform = Transform3D(-1.66103e-08, 0, 0.38, 0, 0.38, 0, -0.38, 0, -1.66103e-08, 0.035, 0, 0)

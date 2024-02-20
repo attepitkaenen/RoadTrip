@@ -1,38 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://dqou5oo4sgp12"]
+[gd_scene load_steps=4 format=3 uid="uid://dqou5oo4sgp12"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/FuelInjector/FuelInjectorDropped.cs" id="1_3nxe7"]
 [ext_resource type="PackedScene" uid="uid://dq0gvgid81bpn" path="res://Items/VehicleParts/FuelInjector/StockFuelInjector/stockFuelInjector.blend" id="2_4j0ge"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jiwei"]
-properties/0/path = NodePath(".:syncPosition")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:syncBasis")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:syncLinearVelocity")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-properties/3/path = NodePath(".:syncAngularVelocity")
-properties/3/spawn = true
-properties/3/replication_mode = 1
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_0gwii"]
 size = Vector3(0.2, 0.238379, 0.534729)
 
-[node name="StockFuelInjectorDropped" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
+[node name="StockFuelInjectorDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 15
 script = ExtResource("1_3nxe7")
 _condition = 100.0
-_synchronizer = NodePath("MultiplayerSynchronizer")
 ItemId = 104
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.016
-delta_interval = 0.016
-replication_config = SubResource("SceneReplicationConfig_jiwei")
-visibility_update_mode = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5786e-16, -0.0194562, -0.000631087)

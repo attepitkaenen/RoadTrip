@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://wt475qfxcfm"]
+[gd_scene load_steps=11 format=3 uid="uid://wt475qfxcfm"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/Engine/EngineDropped.cs" id="1_6v60d"]
 [ext_resource type="Material" uid="uid://cs3w4qi8idrrr" path="res://Items/VehicleParts/Engine/EngineV8/EngineV8TempMaterial.tres" id="2_f641k"]
@@ -89,27 +89,12 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_h1hwm")
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xxydf"]
-properties/0/path = NodePath(".:syncPosition")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:syncBasis")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:syncLinearVelocity")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-properties/3/path = NodePath(".:syncAngularVelocity")
-properties/3/spawn = true
-properties/3/replication_mode = 1
-
-[node name="Engine" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
+[node name="Engine" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 15
 physics_material_override = SubResource("PhysicsMaterial_7eo7n")
 script = ExtResource("1_6v60d")
 _condition = 100.0
-_synchronizer = NodePath("MultiplayerSynchronizer")
 ItemId = 101
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -128,9 +113,3 @@ skeleton = NodePath("")
 transform = Transform3D(0.416896, 0, 0, 0, 0.416896, 0, 0, 0, 0.416896, 0, 1.48682, -1.47767)
 mesh = SubResource("ArrayMesh_yrrs2")
 skeleton = NodePath("")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.016
-delta_interval = 0.016
-replication_config = SubResource("SceneReplicationConfig_xxydf")
-visibility_update_mode = 1

@@ -4,8 +4,8 @@ using Godot;
 public partial class Item : RigidBody3D
 {
 	public int playerHolding = 0;
-	[Export] MultiplayerSynchronizer _synchronizer;
 	[Export] public int ItemId;
+	[Export] bool isLogging = false;
 	GameManager gameManager;
 
 	// Sync properties
@@ -13,6 +13,9 @@ public partial class Item : RigidBody3D
 	public Basis syncBasis;
 	public Vector3 syncLinearVelocity;
 	public Vector3 syncAngularVelocity;
+
+	public Vector3 lastPosition;
+	public Basis lastBasis;
 
 
 	public override void _Ready()
@@ -23,8 +26,24 @@ public partial class Item : RigidBody3D
 		if (!IsMultiplayerAuthority())
 		{
 			CustomIntegrator = true;
+			RpcId(1, nameof(GetSyncProperties));
 			return;
 		};
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void GetSyncProperties()
+	{
+		Rpc(nameof(SyncItem), GlobalPosition, GlobalBasis, LinearVelocity, AngularVelocity);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+	public void SyncItem(Vector3 position, Basis basis, Vector3 linearVelocity, Vector3 angularVelocity)
+	{
+		syncPosition = position;
+		syncBasis = basis;
+		syncLinearVelocity = linearVelocity;
+		syncAngularVelocity = angularVelocity;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -34,21 +53,33 @@ public partial class Item : RigidBody3D
 			return;
 		};
 
-		if (LinearVelocity.Length() < 0.05f && AngularVelocity.Length() < 0.05f)
+		Quaternion q1 = GlobalBasis.GetRotationQuaternion();
+		Quaternion q2 = lastBasis.GetRotationQuaternion();
+
+		// Quaternion that transforms q1 into q2
+		Quaternion qt = q2 * q1.Inverse();
+
+		// Angle from quatertion
+		float angle = 2 * Mathf.Acos(qt.W);
+
+		// There are two distinct quaternions for any orientation
+		// Ensure we use the representation with the smallest angle
+		if (angle > Mathf.Pi)
 		{
-			_synchronizer.ReplicationInterval = 1f;
-			_synchronizer.DeltaInterval = 1f;
-		}
-		else
-		{
-			_synchronizer.ReplicationInterval = 0.016f;
-			_synchronizer.DeltaInterval = 0.016f;
+			angle = Mathf.Tau - angle;
 		}
 
-		syncLinearVelocity = LinearVelocity;
-		syncAngularVelocity = AngularVelocity;
-		syncPosition = GlobalPosition;
-		syncBasis = GlobalBasis;
+		if (isLogging)
+		{
+			GD.Print($"{LinearVelocity.Length()} : {angle} : {(lastPosition - GlobalPosition).Length()}");
+		}
+
+		if (LinearVelocity.Length() > 0.1f || AngularVelocity.Length() > 0.1f || angle > 0.1f || (lastPosition - GlobalPosition).Length() > 0.01f)
+		{
+			lastBasis = GlobalBasis;
+			lastPosition = GlobalPosition;
+			Rpc(nameof(SyncItem), GlobalPosition, GlobalBasis, LinearVelocity, AngularVelocity);
+		}
 	}
 	public override void _IntegrateForces(PhysicsDirectBodyState3D state)
 	{

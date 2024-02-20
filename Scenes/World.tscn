@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=26 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -21,7 +21,6 @@
 [ext_resource type="PackedScene" uid="uid://d1lrao08ldrp" path="res://Items/VehicleParts/Intake/StockIntake/StockIntakeDropped.tscn" id="19_8qxit"]
 [ext_resource type="PackedScene" uid="uid://cqmsky4dxvuqh" path="res://Items/VehicleParts/Starter/StockStarter/StockStarterDropped.tscn" id="20_sy6bp"]
 [ext_resource type="PackedScene" uid="uid://cxajf8p8axryv" path="res://Items/VehicleParts/Tire/StockTire/StockTireDropped.tscn" id="21_rh7hh"]
-[ext_resource type="PackedScene" uid="uid://i7fsio0ejwv1" path="res://Items/VehicleParts/Engine/EngineI3/engineSmooth.blend" id="22_sbi4h"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -305,7 +304,7 @@ size = Vector3(5.81396, 0.580909, 2.63043)
 [node name="Items" type="Node3D" parent="."]
 
 [node name="Item" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1485, 2.64758, -6.1015)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.98241, 1.8272, 1.06013)
 
 [node name="Item2" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1499, 2.99281, -6.09811)
@@ -696,17 +695,14 @@ transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 10.8875, 1.3221, 7.0
 [node name="ToolBoxDropped" parent="." instance=ExtResource("10_s3uay")]
 transform = Transform3D(0.202992, 0, -0.97918, 0, 1, 0, 0.97918, 0, 0.202992, 18.0998, 0.947184, -7.21793)
 
-[node name="ToolBoxDropped2" parent="." node_paths=PackedStringArray("_synchronizer") instance=ExtResource("10_s3uay")]
+[node name="ToolBoxDropped2" parent="." instance=ExtResource("10_s3uay")]
 transform = Transform3D(-0.388995, 0, -0.92124, 0, 1, 0, 0.92124, 0, -0.388995, 18.5793, 0.947184, -7.21793)
-_synchronizer = NodePath("../ToolBoxDropped/MultiplayerSynchronizer")
 
-[node name="ToolBoxDropped3" parent="." node_paths=PackedStringArray("_synchronizer") instance=ExtResource("10_s3uay")]
+[node name="ToolBoxDropped3" parent="." instance=ExtResource("10_s3uay")]
 transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 18.3453, 1.27677, -7.21793)
-_synchronizer = NodePath("../ToolBoxDropped/MultiplayerSynchronizer")
 
-[node name="ToolBoxDropped4" parent="." node_paths=PackedStringArray("_synchronizer") instance=ExtResource("10_s3uay")]
+[node name="ToolBoxDropped4" parent="." instance=ExtResource("10_s3uay")]
 transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 12.397, 1.27677, 0.7609)
-_synchronizer = NodePath("../ToolBoxDropped/MultiplayerSynchronizer")
 
 [node name="Engine" parent="." instance=ExtResource("9_wu0kr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2454, 1.07358, 0.0958824)
@@ -827,9 +823,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5563, 1.26041, -4.52446)
 
 [node name="StockTireDropped4" parent="." instance=ExtResource("21_rh7hh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.1589, 1.40439, -4.81572)
-
-[node name="engineSmooth" parent="." instance=ExtResource("22_sbi4h")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 21.872, 1.84445, 2.25628)
 
 [editable path="Items/Item31"]
 [editable path="Aito2"]

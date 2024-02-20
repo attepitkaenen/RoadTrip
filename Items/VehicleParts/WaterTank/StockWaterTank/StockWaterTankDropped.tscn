@@ -1,23 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://dumbu12ex0tq0"]
+[gd_scene load_steps=6 format=3 uid="uid://dumbu12ex0tq0"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/WaterTank/WaterTankDropped.cs" id="1_5kels"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_s8c8n"]
 size = Vector3(0.2, 0.4, 0.2)
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jiwei"]
-properties/0/path = NodePath(".:syncPosition")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:syncBasis")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:syncLinearVelocity")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-properties/3/path = NodePath(".:syncAngularVelocity")
-properties/3/spawn = true
-properties/3/replication_mode = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_471jw"]
 albedo_color = Color(0.572549, 0.576471, 0.376471, 1)
@@ -31,22 +17,15 @@ top_radius = 0.05
 bottom_radius = 0.05
 height = 0.2
 
-[node name="StockWaterTankDropped" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
+[node name="StockWaterTankDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 15
 script = ExtResource("1_5kels")
 _condition = 100.0
-_synchronizer = NodePath("MultiplayerSynchronizer")
 ItemId = 106
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_s8c8n")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.016
-delta_interval = 0.016
-replication_config = SubResource("SceneReplicationConfig_jiwei")
-visibility_update_mode = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_kxbho")
