@@ -50,7 +50,7 @@ public partial class Vehicle : VehicleBody3D
 			EngineForce = 0;
 		}
 
-		if (LinearVelocity.Length() < 0.1f && !_driverSeat.occupied)
+		if (LinearVelocity.Length() < 0.1f && !_driverSeat.occupied && false) // REMOVE FALSE WHEN DONE
 		{
 			_synchronizer.ReplicationInterval = 1f;
 			_synchronizer.DeltaInterval = 1f;
