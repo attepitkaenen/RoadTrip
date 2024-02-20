@@ -9,6 +9,8 @@ size = Vector3(0.2, 0.2, 0.2)
 script = ExtResource("1_8w0o1")
 multiplayerSpawner = NodePath("MultiplayerSpawner")
 
+[node name="Timer" type="Timer" parent="."]
+
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
 
@@ -24,7 +26,7 @@ shape = SubResource("BoxShape3D_23afp")
 [node name="Radiator" type="Node3D" parent="."]
 
 [node name="Area3D" type="Area3D" parent="Radiator"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0024308, 0, 0.244297)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0024308, -0.086257, 0.281053)
 collision_layer = 8
 collision_mask = 8
 

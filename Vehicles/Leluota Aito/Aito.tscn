@@ -53,7 +53,7 @@ size = Vector3(0.525619, 0.135727, 0.151279)
 size = Vector3(0.169014, 0.769833, 0.178667)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_bcaqk"]
-size = Vector3(1.74411, 0.834335, 0.151279)
+size = Vector3(1.74411, 0.834335, 0.0826806)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_snguo"]
 size = Vector3(1.74411, 0.644009, 0.116533)
@@ -68,7 +68,7 @@ size = Vector3(0.234998, 0.352081, 0.605466)
 size = Vector3(0.179956, 0.360035, 0.66223)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ta441"]
-size = Vector3(0.179956, 0.135584, 1.01154)
+size = Vector3(0.179956, 0.079999, 1.01154)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.102235, 1.44803)
@@ -91,13 +91,13 @@ replication_config = SubResource("SceneReplicationConfig_4inyu")
 visibility_update_mode = 1
 
 [node name="EngineBay" parent="." instance=ExtResource("5_5blaa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.434783, 1.56482)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.510382, 1.63163)
 
 [node name="Dashboard3" parent="." instance=ExtResource("3_65ber")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.634657, 1.21247)
 
 [node name="aito" parent="." instance=ExtResource("3_0l07t")]
-transform = Transform3D(-1.18, 0, -1.78175e-07, 0, 1.18, 0, 1.78175e-07, 0, -1.18, 0, 0.510493, 0.334204)
+transform = Transform3D(-1.18, 0, -1.78175e-07, 0, 1.18, 0, 1.78175e-07, 0, -1.18, 0, 0.51908, 0.334204)
 
 [node name="CenterOfMass" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201208, 0.245741)
@@ -233,7 +233,7 @@ transform = Transform3D(1, 0, 0, 0, 0.98178, -0.190021, 0, 0.190021, 0.98178, -0
 shape = SubResource("BoxShape3D_3263a")
 
 [node name="Dashboard" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.957259, -0.289232, 0, 0.289232, 0.957259, 0.00675964, 0.423006, 1.2948)
+transform = Transform3D(1, 0, 0, 0, 0.957259, -0.289232, 0, 0.289232, 0.957259, 0.00675964, 0.422005, 1.29811)
 shape = SubResource("BoxShape3D_bcaqk")
 
 [node name="Dashboard2" type="CollisionShape3D" parent="."]
@@ -261,7 +261,7 @@ transform = Transform3D(1, 0, 0, 0, 0.961516, -0.274748, 0, 0.274748, 0.961516, 
 shape = SubResource("BoxShape3D_khang")
 
 [node name="FrontLeft2" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.988657, 0.0732126, 0.131138, 0, 0.873143, -0.487463, -0.150191, 0.481934, 0.863239, 0.692148, 1.05603, 0.943935)
+transform = Transform3D(0.988657, 0.0732126, 0.131138, 0, 0.873143, -0.487463, -0.150191, 0.481934, 0.863239, 0.694183, 1.0803, 0.957329)
 shape = SubResource("BoxShape3D_ta441")
 
 [node name="FrontRight2" type="CollisionShape3D" parent="."]

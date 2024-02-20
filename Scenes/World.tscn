@@ -722,35 +722,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.96, 1.54219, -4.77876)
 [node name="Aito2" parent="." instance=ExtResource("4_ynoyo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.1684, 1.41643, -4.72592)
 
-[node name="EngineBay" parent="Aito2" index="1"]
-_engineId = 100
-_engineCondition = 100.0
-_radiatorId = 102
-_fuelInjectorId = 104
-_batteryId = 103
-_alternatorId = 105
-_intakeId = 107
-_intakeCondition = 100.0
-_waterTankId = 106
-_starterId = 108
-_starterCondition = 100.0
-
-[node name="WheelFL" parent="Aito2" index="6"]
-_tireId = 109
-_tireCondition = 100.0
-
-[node name="WheelFR" parent="Aito2" index="7"]
-_tireId = 109
-_tireCondition = 100.0
-
-[node name="WheelBL" parent="Aito2" index="8"]
-_tireId = 109
-_tireCondition = 100.0
-
-[node name="WheelBR" parent="Aito2" index="9"]
-_tireId = 109
-_tireCondition = 100.0
-
 [node name="Kivik" parent="." instance=ExtResource("13_pb255")]
 transform = Transform3D(0.0104543, 0, -0.999945, 0, 1, 0, 0.999945, 0, 0.0104543, 15.8073, 1.73935, 1.72144)
 

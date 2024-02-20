@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ds7uy52rlletb"]
+[gd_scene load_steps=6 format=3 uid="uid://ds7uy52rlletb"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/Engine/Engine.cs" id="1_a1ftg"]
 [ext_resource type="Resource" uid="uid://somdkvffi2fa" path="res://Items/VehicleParts/Engine/EngineI3/EngineI3.tres" id="2_tdggh"]
@@ -9,15 +9,6 @@ size = Vector3(0.2, 0.701367, 0.45)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_m7i0c"]
 size = Vector3(0.275952, 0.31084, 0.525525)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_yusfr"]
-size = Vector3(0.198035, 0.325351, 0.0605804)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_j2ljw"]
-size = Vector3(0.198035, 0.216386, 0.0605804)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_rvrne"]
-size = Vector3(0.198035, 0.239541, 0.0605804)
 
 [node name="EngineI3" type="RigidBody3D"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
@@ -34,22 +25,6 @@ shape = SubResource("BoxShape3D_md8aq")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00118407, -0.229053, 0.000787355)
 shape = SubResource("BoxShape3D_m7i0c")
-
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.131536, -0.154613, 0.0047104)
-shape = SubResource("BoxShape3D_yusfr")
-
-[node name="CollisionShape3D6" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.889513, 0.454134, 0.0502924, -0.383454, 0.801825, -0.458301, -0.248456, 0.38838, 0.887373, 0.0842028, -0.38493, -0.02746)
-shape = SubResource("BoxShape3D_j2ljw")
-
-[node name="CollisionShape3D4" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, -2.76871e-08, 9.88673e-09, 2.76871e-08, 0.773818, -0.633408, 9.88673e-09, 0.633408, 0.773818, 0.131536, -0.112563, 0.0804064)
-shape = SubResource("BoxShape3D_rvrne")
-
-[node name="CollisionShape3D5" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 2.82063e-08, 1.03184e-08, -2.82063e-08, 0.763942, 0.645284, 1.03184e-08, -0.645284, 0.763942, 0.131536, -0.112563, -0.0753867)
-shape = SubResource("BoxShape3D_rvrne")
 
 [node name="engine" parent="." instance=ExtResource("3_hq78h")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
