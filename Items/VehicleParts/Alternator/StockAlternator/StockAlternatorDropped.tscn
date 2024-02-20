@@ -1,39 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://bbdseej3vgkp2"]
+[gd_scene load_steps=4 format=3 uid="uid://bbdseej3vgkp2"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/Alternator/AlternatorDropped.cs" id="1_khdw7"]
 [ext_resource type="PackedScene" uid="uid://ckqu8bqnxgpp0" path="res://Items/VehicleParts/Alternator/StockAlternator/alternator.blend" id="2_sm878"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jiwei"]
-properties/0/path = NodePath(".:syncPosition")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:syncBasis")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:syncLinearVelocity")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-properties/3/path = NodePath(".:syncAngularVelocity")
-properties/3/spawn = true
-properties/3/replication_mode = 1
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_wemex"]
 height = 0.273144
 radius = 0.1
 
-[node name="StockAlternatorDropped" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
+[node name="StockAlternatorDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 15
 script = ExtResource("1_khdw7")
 _condition = 100.0
-_synchronizer = NodePath("MultiplayerSynchronizer")
 ItemId = 105
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.016
-delta_interval = 0.016
-replication_config = SubResource("SceneReplicationConfig_jiwei")
-visibility_update_mode = 1
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
