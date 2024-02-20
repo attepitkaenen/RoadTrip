@@ -1,24 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://ee5filigiwj7"]
+[gd_scene load_steps=9 format=3 uid="uid://ee5filigiwj7"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/Engine/EngineDropped.cs" id="1_hb4bc"]
 [ext_resource type="PackedScene" uid="uid://bm6h1pyti3rlk" path="res://Items/VehicleParts/Engine/EngineI3/engine.blend" id="2_p2all"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7eo7n"]
 rough = true
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xxydf"]
-properties/0/path = NodePath(".:syncPosition")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:syncBasis")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:syncLinearVelocity")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-properties/3/path = NodePath(".:syncAngularVelocity")
-properties/3/spawn = true
-properties/3/replication_mode = 1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ncnkn"]
 size = Vector3(0.2, 0.701367, 0.45)
@@ -35,21 +21,14 @@ size = Vector3(0.198035, 0.216386, 0.0605804)
 [sub_resource type="BoxShape3D" id="BoxShape3D_ren2b"]
 size = Vector3(0.198035, 0.239541, 0.0605804)
 
-[node name="Engine" type="RigidBody3D" node_paths=PackedStringArray("_synchronizer")]
+[node name="Engine" type="RigidBody3D"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 collision_layer = 8
 collision_mask = 15
 physics_material_override = SubResource("PhysicsMaterial_7eo7n")
 script = ExtResource("1_hb4bc")
 _condition = 100.0
-_synchronizer = NodePath("MultiplayerSynchronizer")
 ItemId = 100
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.016
-delta_interval = 0.016
-replication_config = SubResource("SceneReplicationConfig_xxydf")
-visibility_update_mode = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.175684, 0)
