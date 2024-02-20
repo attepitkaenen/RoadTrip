@@ -716,9 +716,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8555, 1.07358, 1.09098)
 [node name="Engine4" parent="." instance=ExtResource("11_bvh0f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.3552, 1.07358, 1.0662)
 
-[node name="Aito" parent="." instance=ExtResource("4_ynoyo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.96, 1.54219, -4.77876)
-
 [node name="Aito2" parent="." instance=ExtResource("4_ynoyo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.1684, 1.41643, -4.72592)
 
@@ -746,19 +743,19 @@ _waterTankCondition = 100.0
 _starterId = 108
 _starterCondition = 100.0
 
-[node name="WheelFL" parent="Kivik2" index="6"]
+[node name="WheelFL" parent="Kivik2" index="7"]
 _tireId = 109
 _tireCondition = 100.0
 
-[node name="WheelFR" parent="Kivik2" index="7"]
+[node name="WheelFR" parent="Kivik2" index="8"]
 _tireId = 109
 _tireCondition = 100.0
 
-[node name="WheelBL" parent="Kivik2" index="8"]
+[node name="WheelBL" parent="Kivik2" index="9"]
 _tireId = 109
 _tireCondition = 100.0
 
-[node name="WheelBR" parent="Kivik2" index="9"]
+[node name="WheelBR" parent="Kivik2" index="10"]
 _tireId = 109
 _tireCondition = 100.0
 

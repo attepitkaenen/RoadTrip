@@ -48,7 +48,7 @@ public partial class Player : CharacterBody3D
 	private ItemResource itemResource;
 	private int _heldItemId;
 	private HeldItem heldItem;
-	private float Strength = 40f;
+	private float Strength = 20f;
 	private int Health = 10;
 
 	Seat seat;
@@ -463,24 +463,25 @@ public partial class Player : CharacterBody3D
 		{
 			DropPickedItem();
 		}
-		else if (PickedItem is Bone && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 1)
+		else if (PickedItem is Bone || PickedItem is Door && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 0.9f)
 		{
 			DropPickedItem();
 		}
+
 
 		// Move item
 		if (PickedItem is not null)
 		{
 			staticBody.Position = hand.Position;
-			PickedItem.Rpc("Move", hand.GlobalPosition, staticBody.GlobalBasis, Strength, int.Parse(Name));
+			PickedItem.Rpc("Move", hand.GlobalPosition, staticBody.GlobalBasis, int.Parse(Name));
 		}
 
 		// Move item closer and further
-		if (Input.IsActionJustPressed("scrollDown") && hand.Position.Z < -1)
+		if (Input.IsActionJustPressed("scrollDown") && hand.Position.Z < -0.5f)
 		{
 			hand.Position = new Vector3(hand.Position.X, hand.Position.Y, hand.Position.Z + 0.1f);
 		}
-		else if (Input.IsActionJustPressed("scrollUp") && hand.Position.Z > -3)
+		else if (Input.IsActionJustPressed("scrollUp") && hand.Position.Z > -2)
 		{
 			hand.Position = new Vector3(hand.Position.X, hand.Position.Y, hand.Position.Z - 0.1f);
 		}

@@ -1,11 +1,18 @@
-[gd_scene load_steps=23 format=3 uid="uid://cpmtrckjvnc0n"]
+[gd_scene load_steps=26 format=3 uid="uid://cpmtrckjvnc0n"]
 
 [ext_resource type="Script" path="res://Vehicles/Sonta Kivik/Kivik.cs" id="1_r1vac"]
 [ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay/EngineBay.tscn" id="2_0t6h5"]
 [ext_resource type="PackedScene" uid="uid://b8caqr8dvhr4v" path="res://Vehicles/Sonta Kivik/kivik.blend" id="2_4774b"]
 [ext_resource type="PackedScene" uid="uid://cluf4svnj38ms" path="res://Items/VehicleParts/Dashboard/Dashboard.tscn" id="3_sp7ok"]
+[ext_resource type="Script" path="res://Items/Door/Door.cs" id="4_dtx2d"]
 [ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="4_fe3k4"]
 [ext_resource type="Script" path="res://Items/VehicleParts/Tire/TireMount.cs" id="5_ya6wf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cbtrr"]
+size = Vector3(0.1, 0.640147, 1.30808)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1l24k"]
+size = Vector3(0.1, 0.640147, 1.30808)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]
 properties/0/path = NodePath(".:syncRotation")
@@ -92,6 +99,30 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.434783, 1.85352)
 
 [node name="Dashboard3" parent="." instance=ExtResource("3_sp7ok")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.637094, 1.20399)
+
+[node name="Doors" type="Node3D" parent="."]
+
+[node name="FrontLeft" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.823348, 0.589417, 0.572769)
+
+[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors/FrontLeft"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.552598)
+angular_limit/enable = true
+angular_limit/upper = 0.0
+angular_limit/lower = -1.39626
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Doors/FrontLeft"]
+collision_layer = 16
+collision_mask = 11
+script = ExtResource("4_dtx2d")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/FrontLeft/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.118342, -0.190292)
+shape = SubResource("BoxShape3D_cbtrr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Doors/FrontLeft/RigidBody3D/CollisionShape3D"]
+mesh = SubResource("BoxMesh_1l24k")
+skeleton = NodePath("../..")
 
 [node name="kivik" parent="." instance=ExtResource("2_4774b")]
 transform = Transform3D(-1.18, 0, -1.03159e-07, 0, 1.18, 0, 1.03159e-07, 0, -1.18, 0, 0.512062, 0.333533)

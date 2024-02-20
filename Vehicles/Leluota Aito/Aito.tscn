@@ -1,10 +1,11 @@
-[gd_scene load_steps=23 format=3 uid="uid://7eis7so5p5lh"]
+[gd_scene load_steps=26 format=3 uid="uid://7eis7so5p5lh"]
 
 [ext_resource type="Script" path="res://Vehicles/Leluota Aito/Aito.cs" id="1_lai86"]
 [ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Leluota Aito/aito.blend" id="3_0l07t"]
 [ext_resource type="PackedScene" uid="uid://cluf4svnj38ms" path="res://Items/VehicleParts/Dashboard/Dashboard.tscn" id="3_65ber"]
 [ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="4_qspcq"]
 [ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay/EngineBay.tscn" id="5_5blaa"]
+[ext_resource type="Script" path="res://Items/Door/Door.cs" id="5_nt2xv"]
 [ext_resource type="Script" path="res://Items/VehicleParts/Tire/TireMount.cs" id="5_xmpd0"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]
@@ -26,6 +27,12 @@ properties/4/replication_mode = 1
 properties/5/path = NodePath("Speedometer:text")
 properties/5/spawn = true
 properties/5/replication_mode = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hw8uh"]
+size = Vector3(0.1, 0.640147, 0.949158)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0di4n"]
+size = Vector3(0.1, 0.640147, 0.949158)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x5enl"]
 size = Vector3(0.2, 0.2, 0.2)
@@ -108,6 +115,30 @@ modulate = Color(1, 0.619608, 0.121569, 1)
 text = "0"
 font_size = 64
 outline_size = 6
+
+[node name="Doors" type="Node3D" parent="."]
+
+[node name="FrontLeft" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.823348, 0.589417, 0.572769)
+
+[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors/FrontLeft"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.552598)
+angular_limit/enable = true
+angular_limit/upper = 0.0
+angular_limit/lower = -1.39626
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Doors/FrontLeft"]
+collision_layer = 16
+collision_mask = 11
+script = ExtResource("5_nt2xv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/FrontLeft/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.118342, -0.0108337)
+shape = SubResource("BoxShape3D_hw8uh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Doors/FrontLeft/RigidBody3D/CollisionShape3D"]
+mesh = SubResource("BoxMesh_0di4n")
+skeleton = NodePath("../..")
 
 [node name="WheelFL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.1, 1.55)

@@ -19,7 +19,7 @@ height = 0.2
 
 [node name="StockWaterTankDropped" type="RigidBody3D"]
 collision_layer = 8
-collision_mask = 15
+collision_mask = 31
 script = ExtResource("1_5kels")
 _condition = 100.0
 ItemId = 106
