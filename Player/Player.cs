@@ -399,15 +399,19 @@ public partial class Player : CharacterBody3D
 	public void HandleItem()
 	{
 		// Install vehicle part if holding a toolbox
-		if (Input.IsActionJustPressed("equip") && PickedItem is PartDropped part && part.isInstallable && heldItem is Toolbox)
+		if (Input.IsActionJustPressed("rightClick") && PickedItem is PartDropped part && part.isInstallable && heldItem is Toolbox)
 		{
 			PickedItem = null;
 			part.Install();
 			GD.Print("INSTALL PART");
 		}
-		else if (Input.IsActionJustPressed("equip") && interactionCast.GetCollider() is CarPart installedPart && heldItem is Toolbox && interactionCast.IsColliding())
+		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is CarPart installedPart && heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
 		{
 			installedPart.Uninstall();
+		}
+		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is Door door && heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
+		{
+			door.Uninstall();
 		}
 
 		// Equip held item
@@ -451,7 +455,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		// Throw item
-		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null)
+		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null && heldItem is null)
 		{
 			Vector3 throwDirection = (hand.GlobalPosition - camera.GlobalPosition).Normalized();
 			PickedItem.Rpc("Throw", throwDirection, Strength);

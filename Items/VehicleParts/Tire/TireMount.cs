@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class TireMount : VehicleWheel3D
+public partial class TireMount : VehicleWheel3D, IMount
 {
     MultiplayerSynchronizer multiplayerSynchronizer;
     GameManager gameManager;
@@ -44,7 +44,7 @@ public partial class TireMount : VehicleWheel3D
     {
         var part = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as Tire;
         AddChild(part);
-        part.SetTireMount(this);
+        part.SetMount(this);
         part.SetCondition(condition);
         part.itemId = itemId;
         part.Position = partPosition;

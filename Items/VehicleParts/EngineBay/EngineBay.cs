@@ -3,7 +3,7 @@ using System.Reflection.Metadata;
 using Godot;
 using Godot.Collections;
 
-public partial class EngineBay : Node3D
+public partial class EngineBay : Node3D, IMount
 {
     [Export] MultiplayerSpawner multiplayerSpawner;
     MultiplayerSynchronizer multiplayerSynchronizer;
@@ -263,7 +263,7 @@ public partial class EngineBay : Node3D
     {
         var part = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as CarPart;
         AddChild(part);
-        part.SetEngineBay(this);
+        part.SetMount(this);
         part.SetCondition(condition);
         part.itemId = itemId;
         part.Position = partPosition;
