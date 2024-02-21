@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://ckvii0vqxysg8"]
 
 [ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_n7x7w"]
-[ext_resource type="PackedScene" uid="uid://dh2x5pnjd4opj" path="res://Items/VehicleParts/Aito/Door/AitoFLDoor.tscn" id="1_qv73i"]
-[ext_resource type="PackedScene" uid="uid://c80j1g55ibdsn" path="res://Items/VehicleParts/Aito/Door/AitoFLDoorDropped.tscn" id="2_8k7kg"]
+[ext_resource type="PackedScene" uid="uid://dh2x5pnjd4opj" path="res://Items/VehicleParts/Aito/FLDoor/AitoFLDoor.tscn" id="1_qv73i"]
+[ext_resource type="PackedScene" uid="uid://c80j1g55ibdsn" path="res://Items/VehicleParts/Aito/FLDoor/AitoFLDoorDropped.tscn" id="2_8k7kg"]
 
 [resource]
 script = ExtResource("1_n7x7w")
