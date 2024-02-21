@@ -89,11 +89,12 @@ public partial class GameManager : Node
 	public void DropItem(int playerId, int itemId, Vector3 position)
 	{
 		var item = multiplayerSpawner.Spawn(itemId) as Item;
-		item.Visible = false;
 		item.GlobalPosition = position;
-		item.Visible = true;
 
-		if (playerId == -1) return;
+		if (playerId == -1) 
+		{
+			return;
+		}
 		var player = GetNode<Player>($"{playerId}");
 		player.RpcId(playerId, nameof(player.SetPickedItem), item.GetPath());
 	}

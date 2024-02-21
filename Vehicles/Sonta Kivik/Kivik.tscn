@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay/EngineBay.tscn" id="2_0t6h5"]
 [ext_resource type="PackedScene" uid="uid://b8caqr8dvhr4v" path="res://Vehicles/Sonta Kivik/kivik.blend" id="2_4774b"]
 [ext_resource type="PackedScene" uid="uid://cluf4svnj38ms" path="res://Items/VehicleParts/Dashboard/Dashboard.tscn" id="3_sp7ok"]
-[ext_resource type="Script" path="res://Items/Door/Door.cs" id="4_dtx2d"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Door/Door.cs" id="4_dtx2d"]
 [ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="4_fe3k4"]
 [ext_resource type="Script" path="res://Items/VehicleParts/Tire/TireMount.cs" id="5_ya6wf"]
 

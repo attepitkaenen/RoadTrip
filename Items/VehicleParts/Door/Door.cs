@@ -3,17 +3,17 @@ using System;
 
 public partial class Door : Item
 {
+    [Export] private float _condition = 100f;
+    public int itemId;
     HingeJoint3D _hinge;
     Vehicle _vehicle;
     MultiplayerSynchronizer _multiplayerSynchronizer;
     bool _isClosed = true;
+    IMount _mount;
 
-    // 	public Vector3 syncPosition;
+    // Additional sync properties
     public Vector3 syncRotation;
 
-    // public Basis syncBasis;
-    // public Vector3 syncLinearVelocity;
-    // public Vector3 syncAngularVelocity;
 
     public override void _Ready()
     {
@@ -30,7 +30,6 @@ public partial class Door : Item
 
     public override void _PhysicsProcess(double delta)
     {
-        // base._PhysicsProcess(delta);
         if (!IsMultiplayerAuthority()) return;
 
         syncPosition = Position;
@@ -41,7 +40,7 @@ public partial class Door : Item
 
         float angle = RotationDegrees.Y;
 
-        if (playerHolding == 0 && angle > -5)
+        if (playerHolding == 0 && angle > -5 && angle < 5)
         {
             _isClosed = true;
         }
@@ -81,30 +80,50 @@ public partial class Door : Item
         }
     }
 
-    // public override void _IntegrateForces(PhysicsDirectBodyState3D state)
-    // {
-    //     if (IsMultiplayerAuthority()) return;
-    //     GD.Print(syncRotation);
-    //     Position = syncPosition;
-    //     Rotation = syncRotation;
-    // }
-
     public override void _IntegrateForces(PhysicsDirectBodyState3D state)
     {
         if (!IsMultiplayerAuthority())
         {
-            // var newState = state.Transform;
-            // newState.Origin = GlobalPosition.Lerp(syncPosition, 0.9f);
-            // var a = newState.Basis.GetRotationQuaternion().Normalized();
-            // var b = syncBasis.GetRotationQuaternion().Normalized();
-            // var c = a.Slerp(b, 0.5f);
-            // newState.Basis = new Basis(c);
-            // state.Transform = newState;
             Position = syncPosition;
             Rotation = syncRotation;
             state.LinearVelocity = syncLinearVelocity;
             state.AngularVelocity = syncAngularVelocity;
             return;
         }
+    }
+
+    public void SetMount(IMount mount)
+    {
+        _mount = mount;
+    }
+
+    public float GetCondition()
+    {
+        return _condition;
+    }
+
+    public void SetCondition(float condition)
+    {
+        _condition = condition;
+    }
+
+    public void Uninstall()
+    {
+        if (_mount is not null)
+        {
+            _mount.RpcId(1, nameof(_mount.RemoveInstalledPart), itemId, _condition, GlobalPosition);
+            Rpc(nameof(DestroyPart));
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void DestroyPart()
+    {
+        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncPosition");
+        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncBasis");
+        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncRotation");
+        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncLinearVelocity");
+        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncAngularVelocity");
+        QueueFree();
     }
 }
