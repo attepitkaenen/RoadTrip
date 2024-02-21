@@ -467,7 +467,7 @@ public partial class Player : CharacterBody3D
 		{
 			DropPickedItem();
 		}
-		else if (PickedItem is Bone || PickedItem is Door && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 0.9f)
+		else if ((PickedItem is Bone || PickedItem is Door) && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 0.9f)
 		{
 			DropPickedItem();
 		}

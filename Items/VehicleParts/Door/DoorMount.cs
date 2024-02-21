@@ -10,6 +10,7 @@ public partial class DoorMount : Node3D, IMount
     private Area3D _doorArea;
     [Export] private int _doorId;
     [Export] private float _doorCondition;
+    [Export] private bool isHorizontal = false;
 
     public override void _Ready()
     {
@@ -35,6 +36,7 @@ public partial class DoorMount : Node3D, IMount
         AddChild(part);
         part.SetMount(this);
         part.itemId = itemId;
+        part.isHorizontal = isHorizontal;
         part.SetCondition(condition);
         part.Position = partPosition;
         return part;

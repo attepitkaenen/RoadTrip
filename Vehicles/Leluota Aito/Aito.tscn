@@ -133,11 +133,13 @@ shape = SubResource("BoxShape3D_x5enl")
 [node name="Bonnet" type="Node3D" parent="Doors"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.739044, 1.44787)
 script = ExtResource("5_mkllj")
+isHorizontal = true
 
 [node name="HingeJoint3D" type="HingeJoint3D" parent="Doors/Bonnet"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.0369576, -0.0632848)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.025301, -0.0109911)
 angular_limit/enable = true
-angular_limit/upper = 0.0
+angular_limit/upper = 2.0944
+angular_limit/lower = 0.0
 
 [node name="Area3D" type="Area3D" parent="Doors/Bonnet"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0270618, 0.320455)
