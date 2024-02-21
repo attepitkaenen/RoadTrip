@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bgg68cgo3268a"
-path="res://.godot/imported/aitoFLDoor.blend-5a69671160993d695a76da8e5fd069c4.scn"
+uid="uid://c3wmt0vkfdx8h"
+path="res://.godot/imported/aitoBRDoor.blend-feb9116d4100b4b8974dbd89399b4c78.scn"
 
 [deps]
 
-source_file="res://Items/VehicleParts/Aito/Door/aitoFLDoor.blend"
-dest_files=["res://.godot/imported/aitoFLDoor.blend-5a69671160993d695a76da8e5fd069c4.scn"]
+source_file="res://Items/VehicleParts/Aito/BRDoor/aitoBRDoor.blend"
+dest_files=["res://.godot/imported/aitoBRDoor.blend-feb9116d4100b4b8974dbd89399b4c78.scn"]
 
 [params]
 
@@ -22,7 +22,7 @@ meshes/generate_lods=true
 meshes/create_shadow_meshes=true
 meshes/light_baking=1
 meshes/lightmap_texel_size=0.2
-meshes/force_disable_compression=true
+meshes/force_disable_compression=false
 skins/use_named_skins=true
 animation/import=true
 animation/fps=30

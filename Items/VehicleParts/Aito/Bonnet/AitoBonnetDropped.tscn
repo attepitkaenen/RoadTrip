@@ -1,0 +1,64 @@
+[gd_scene load_steps=8 format=3 uid="uid://c2o46mvvi0bgu"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/Door/Door.cs" id="1_mjslx"]
+[ext_resource type="PackedScene" uid="uid://c7jbb51gmtoeo" path="res://Items/VehicleParts/Aito/Bonnet/aitoBonnet.blend" id="2_y8w0r"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kvrny"]
+size = Vector3(0.250336, 0.0639648, 0.498629)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hpwmk"]
+size = Vector3(1.25718, 0.0639648, 0.210888)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xe0k6"]
+size = Vector3(0.29702, 0.0639648, 0.404095)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k6dok"]
+size = Vector3(0.092968, 0.0639648, 0.29331)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gosyf"]
+size = Vector3(0.172949, 0.0639648, 0.29331)
+
+[node name="AitoBonnet" type="RigidBody3D"]
+collision_layer = 16
+collision_mask = 11
+script = ExtResource("1_mjslx")
+ItemId = 112
+
+[node name="aitoBonnet" parent="." instance=ExtResource("2_y8w0r")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -0.230284, -0.935147)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.998994, 0.00914819, -0.0438971, -0.0245523, 0.93077, -0.364781, 0.037521, 0.365492, 0.930058, -0.107737, -0.0580066, 0.245079)
+shape = SubResource("BoxShape3D_kvrny")
+
+[node name="CollisionShape3D9" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.931056, -0.364877, 0, 0.364877, 0.931056, -0.00434631, -0.00152699, 0.0986058)
+shape = SubResource("BoxShape3D_hpwmk")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.955469, -0.0854867, -0.282437, -0.0245523, 0.93077, -0.364781, 0.294068, 0.355471, 0.887223, -0.32492, -0.0649809, 0.250199)
+shape = SubResource("BoxShape3D_xe0k6")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.802576, -0.199205, -0.562307, -0.0245523, 0.93077, -0.364781, 0.596044, 0.30657, 0.742122, -0.466871, -0.0648594, 0.258327)
+shape = SubResource("BoxShape3D_k6dok")
+
+[node name="CollisionShape3D7" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.290917, -0.0585309, -0.954956, -0.409768, 0.894325, -0.179646, 0.864556, 0.443572, 0.236191, -0.479486, -0.0548059, 0.223753)
+shape = SubResource("BoxShape3D_gosyf")
+
+[node name="CollisionShape3D8" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.290676, 0.0578104, 0.955073, 0.409572, 0.894584, -0.178802, -0.86473, 0.443145, 0.236357, 0.479, -0.055, 0.224)
+shape = SubResource("BoxShape3D_gosyf")
+
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.802032, 0.199678, 0.562915, 0.0243722, 0.930737, -0.364877, -0.596784, 0.306362, 0.741614, 0.467, -0.065, 0.258)
+shape = SubResource("BoxShape3D_k6dok")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.955239, 0.0859588, 0.283072, 0.0243722, 0.930737, -0.364877, -0.29483, 0.355444, 0.886981, 0.325, -0.065, 0.25)
+shape = SubResource("BoxShape3D_xe0k6")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.998998, -0.00896573, 0.0438587, 0.0243722, 0.930737, -0.364877, -0.0375496, 0.36558, 0.930022, 0.108, -0.058, 0.245)
+shape = SubResource("BoxShape3D_kvrny")

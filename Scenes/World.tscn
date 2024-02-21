@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=30 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -21,7 +21,10 @@
 [ext_resource type="PackedScene" uid="uid://d1lrao08ldrp" path="res://Items/VehicleParts/Intake/StockIntake/StockIntakeDropped.tscn" id="19_8qxit"]
 [ext_resource type="PackedScene" uid="uid://cqmsky4dxvuqh" path="res://Items/VehicleParts/Starter/StockStarter/StockStarterDropped.tscn" id="20_sy6bp"]
 [ext_resource type="PackedScene" uid="uid://cxajf8p8axryv" path="res://Items/VehicleParts/Tire/StockTire/StockTireDropped.tscn" id="21_rh7hh"]
-[ext_resource type="PackedScene" uid="uid://c80j1g55ibdsn" path="res://Items/VehicleParts/Aito/Door/AitoFLDoorDropped.tscn" id="22_ki834"]
+[ext_resource type="PackedScene" uid="uid://c80j1g55ibdsn" path="res://Items/VehicleParts/Aito/FLDoor/AitoFLDoorDropped.tscn" id="22_ki834"]
+[ext_resource type="PackedScene" uid="uid://c33tfbwblv3kb" path="res://Items/VehicleParts/Aito/FRDoor/AitoFRDoorDropped.tscn" id="23_pv31n"]
+[ext_resource type="PackedScene" uid="uid://bmog00v42t8ge" path="res://Items/VehicleParts/Aito/BRDoor/AitoBRDoorDropped.tscn" id="24_u6aox"]
+[ext_resource type="PackedScene" uid="uid://qiiml1cl4jf8" path="res://Items/VehicleParts/Aito/BLDoor/AitoBLDoorDropped.tscn" id="25_icb03"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -795,6 +798,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.1589, 1.40439, -4.81572)
 
 [node name="StockAlternatorDropped2" parent="." instance=ExtResource("22_ki834")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.6899, 1.41631, -4.51765)
+
+[node name="StockAlternatorDropped3" parent="." instance=ExtResource("23_pv31n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 1, -4)
+
+[node name="StockAlternatorDropped4" parent="." instance=ExtResource("24_u6aox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 1, -3)
+
+[node name="StockAlternatorDropped5" parent="." instance=ExtResource("25_icb03")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3648, 1, -3)
 
 [editable path="Items/Item31"]
 [editable path="Kivik2"]

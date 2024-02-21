@@ -1,0 +1,84 @@
+[gd_scene load_steps=13 format=3 uid="uid://bmog00v42t8ge"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/Door/DoorDropped.cs" id="1_1lsr8"]
+[ext_resource type="PackedScene" uid="uid://c3wmt0vkfdx8h" path="res://Items/VehicleParts/Aito/BRDoor/aitoBRDoor.blend" id="2_0w6it"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lxwad"]
+size = Vector3(0.1, 0.720635, 0.681641)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y5ocd"]
+size = Vector3(0.0880859, 0.375103, 0.549072)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b0om7"]
+size = Vector3(0.1, 0.438631, 0.39246)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xu6cn"]
+size = Vector3(0.1, 0.438631, 0.151796)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3v2pv"]
+size = Vector3(0.1, 0.725605, 0.0790442)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8fcqs"]
+size = Vector3(0.1, 0.493136, 0.0790442)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a4tdy"]
+size = Vector3(0.1, 0.480851, 0.09943)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iixxb"]
+size = Vector3(0.1, 0.458687, 0.0924396)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vklx0"]
+size = Vector3(0.1, 0.602486, 0.0786428)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vrswo"]
+size = Vector3(0.1, 0.406834, 0.0786428)
+
+[node name="AitoBRDoorDropped" type="RigidBody3D"]
+collision_layer = 8
+collision_mask = 31
+script = ExtResource("1_1lsr8")
+_condition = 100.0
+ItemId = 112
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.337097, -0.192466)
+shape = SubResource("BoxShape3D_lxwad")
+
+[node name="CollisionShape3D9" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.995197, 0.0934521, -0.029159, -0.0978955, 0.950025, -0.296427, -2.22045e-16, 0.297858, 0.95461, 0.00816496, 0.600896, -0.667941)
+shape = SubResource("BoxShape3D_y5ocd")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.999994, 0.00251233, 0.00219111, -0.00333358, 0.753639, 0.657279, 2.35745e-09, -0.657283, 0.753644, -0.000407466, 0.27352, -0.529279)
+shape = SubResource("BoxShape3D_b0om7")
+
+[node name="CollisionShape3D8" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.999994, 0.00251233, 0.00219111, -0.00333358, 0.753639, 0.657279, 2.35745e-09, -0.657283, 0.753644, -0.000671126, 0.482319, -0.847055)
+shape = SubResource("BoxShape3D_xu6cn")
+
+[node name="CollisionShape3D7" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.99368, 0.11225, 0, -0.11225, 0.99368, 0, 0.346997, 0.14233)
+shape = SubResource("BoxShape3D_3v2pv")
+
+[node name="CollisionShape3D11" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.974597, 0.222549, 0.02514, -0.223965, 0.968438, 0.109398, 0, -0.11225, 0.99368, 0.0577448, 0.920858, 0.0784275)
+shape = SubResource("BoxShape3D_8fcqs")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.976646, 0.209077, -0.0494893, -0.214855, 0.950385, -0.224959, 0, 0.230338, 0.973111, 0.0554639, 0.847266, -0.925238)
+shape = SubResource("BoxShape3D_a4tdy")
+
+[node name="CollisionShape3D10" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.976646, 0.209077, -0.0494893, -0.170795, 0.895238, 0.411555, 0.130352, -0.393491, 0.910041, 0.0540461, 0.836762, -0.790869)
+shape = SubResource("BoxShape3D_iixxb")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.996444, -0.0749674, -0.0384404, 0.0269674, -0.148448, 0.988553, -0.0798156, -0.986075, -0.145898, 0.128092, 1.11423, -0.603303)
+shape = SubResource("BoxShape3D_vklx0")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.994811, 0.0892917, -0.0487469, 0.0432039, 0.0629917, 0.997079, 0.0921014, -0.994012, 0.058807, 0.132566, 1.15168, -0.114921)
+shape = SubResource("BoxShape3D_vrswo")
+
+[node name="aitoBRDoor" parent="." instance=ExtResource("2_0w6it")]
+transform = Transform3D(-1.18, 0, -1.03159e-07, 0, 1.18, 0, 1.03159e-07, 0, -1.18, 0.826, 0.4, 0.309)
