@@ -9,29 +9,24 @@ public partial class Bone : PhysicalBone3D
 
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void Move(Vector3 handPosition, Basis handBasis, float strength, int player)
+	public void Move(Vector3 handPosition, Basis handBasis, int playerId)
 	{
-		if (player == 0)
+		if (playerHolding == 0)
 		{
-			playerHolding = 0;
+			playerHolding = playerId;
 		}
-		else if (playerHolding == 0)
-		{
-			playerHolding = player;
-		}
-		else if (playerHolding == player)
+		else if (playerHolding == playerId)
 		{
 			Vector3 moveForce = (handPosition - GlobalPosition) * 20;
 
 			LinearVelocity = moveForce;
 
-			Vector3 angularForce = GetAngularVelocity(Basis, handBasis) * strength;
+			Vector3 angularForce = GetAngularVelocity(Basis, handBasis) * 40;
 			if (angularForce.Length() < 100)
 			{
 				AngularVelocity = angularForce;
 			}
 		}
-		return;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]

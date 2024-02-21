@@ -3,6 +3,7 @@ using System;
 
 public partial class Door : Item
 {
+    public bool isHorizontal = false;
     [Export] private float _condition = 100f;
     public int itemId;
     HingeJoint3D _hinge;
@@ -38,18 +39,18 @@ public partial class Door : Item
         syncLinearVelocity = LinearVelocity;
         syncAngularVelocity = AngularVelocity;
 
-        float angle = RotationDegrees.Y;
-
-        if (playerHolding == 0 && angle > -5 && angle < 5)
+        float angle;
+        if (isHorizontal)
         {
-            _isClosed = true;
+            angle = RotationDegrees.X;
         }
         else
         {
-            _isClosed = false;
+            angle = RotationDegrees.Y;
         }
 
-        if (_isClosed)
+
+        if (playerHolding == 0 && angle > -5 && angle < 5)
         {
             Position = Vector3.Zero;
             Rotation = Vector3.Zero;
