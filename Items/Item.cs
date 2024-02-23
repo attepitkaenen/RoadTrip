@@ -120,7 +120,7 @@ public partial class Item : RigidBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void Move(Vector3 handPosition, Basis handBasis, float strength, int playerId)
+	public virtual void Move(Vector3 handPosition, Basis handBasis, int playerId)
 	{
 		if (playerHolding == 0)
 		{
@@ -132,7 +132,7 @@ public partial class Item : RigidBody3D
 
 			LinearVelocity = moveForce;
 
-			Vector3 angularForce = GetAngularVelocity(Basis, handBasis) * strength;
+			Vector3 angularForce = GetAngularVelocity(Basis, handBasis) * 40;
 			if (angularForce.Length() < 100)
 			{
 				AngularVelocity = angularForce;

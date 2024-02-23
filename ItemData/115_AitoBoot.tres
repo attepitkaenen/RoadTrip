@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://bok1mkefj3xl2"]
+
+[ext_resource type="PackedScene" uid="uid://omophan053xb" path="res://Items/VehicleParts/Aito/Boot/AitoBoot.tscn" id="1_68bh8"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_81vpi"]
+[ext_resource type="PackedScene" uid="uid://ddq0gd58ycb7m" path="res://Items/VehicleParts/Aito/Boot/AitoBootDropped.tscn" id="2_vvv7d"]
+
+[resource]
+script = ExtResource("1_81vpi")
+Equippable = false
+ItemName = "AitoBoot"
+ItemId = 115
+Description = ""
+ItemOnFloor = ExtResource("2_vvv7d")
+ItemInHand = ExtResource("1_68bh8")
