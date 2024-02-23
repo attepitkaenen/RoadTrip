@@ -14,7 +14,7 @@ size = Vector3(0.2, 0.2, 0.2)
 
 [node name="Item" type="RigidBody3D"]
 collision_layer = 8
-collision_mask = 15
+collision_mask = 31
 physics_material_override = SubResource("PhysicsMaterial_7eo7n")
 script = ExtResource("1_7ofr0")
 

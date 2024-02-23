@@ -48,7 +48,7 @@ public partial class Player : CharacterBody3D
 	private ItemResource itemResource;
 	private int _heldItemId;
 	private HeldItem heldItem;
-	private float Strength = 40f;
+	private float Strength = 20f;
 	private int Health = 10;
 
 	Seat seat;
@@ -399,15 +399,19 @@ public partial class Player : CharacterBody3D
 	public void HandleItem()
 	{
 		// Install vehicle part if holding a toolbox
-		if (Input.IsActionJustPressed("equip") && PickedItem is PartDropped part && part.isInstallable && heldItem is Toolbox)
+		if (Input.IsActionJustPressed("rightClick") && PickedItem is PartDropped part && part.isInstallable && heldItem is Toolbox)
 		{
 			PickedItem = null;
 			part.Install();
 			GD.Print("INSTALL PART");
 		}
-		else if (Input.IsActionJustPressed("equip") && interactionCast.GetCollider() is CarPart installedPart && heldItem is Toolbox && interactionCast.IsColliding())
+		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is CarPart installedPart && heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
 		{
 			installedPart.Uninstall();
+		}
+		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is Door door && heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
+		{
+			door.Uninstall();
 		}
 
 		// Equip held item
@@ -451,7 +455,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		// Throw item
-		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null)
+		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null && heldItem is null)
 		{
 			Vector3 throwDirection = (hand.GlobalPosition - camera.GlobalPosition).Normalized();
 			PickedItem.Rpc("Throw", throwDirection, Strength);
@@ -463,24 +467,25 @@ public partial class Player : CharacterBody3D
 		{
 			DropPickedItem();
 		}
-		else if (PickedItem is Bone && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 1)
+		else if ((PickedItem is Bone || PickedItem is Door) && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 0.9f)
 		{
 			DropPickedItem();
 		}
+
 
 		// Move item
 		if (PickedItem is not null)
 		{
 			staticBody.Position = hand.Position;
-			PickedItem.Rpc("Move", hand.GlobalPosition, staticBody.GlobalBasis, Strength, int.Parse(Name));
+			PickedItem.Rpc("Move", hand.GlobalPosition, staticBody.GlobalBasis, int.Parse(Name));
 		}
 
 		// Move item closer and further
-		if (Input.IsActionJustPressed("scrollDown") && hand.Position.Z < -1)
+		if (Input.IsActionJustPressed("scrollDown") && hand.Position.Z < -0.5f)
 		{
 			hand.Position = new Vector3(hand.Position.X, hand.Position.Y, hand.Position.Z + 0.1f);
 		}
-		else if (Input.IsActionJustPressed("scrollUp") && hand.Position.Z > -3)
+		else if (Input.IsActionJustPressed("scrollUp") && hand.Position.Z > -2)
 		{
 			hand.Position = new Vector3(hand.Position.X, hand.Position.Y, hand.Position.Z - 0.1f);
 		}

@@ -1,6 +1,5 @@
 using Godot;
 using Godot.Collections;
-using System;
 using System.IO;
 using System.Linq;
 
@@ -92,15 +91,17 @@ public partial class GameManager : Node
 		var item = multiplayerSpawner.Spawn(itemId) as Item;
 		item.GlobalPosition = position;
 
-		if (playerId == -1) return;
+		if (playerId == -1) 
+		{
+			return;
+		}
 		var player = GetNode<Player>($"{playerId}");
 		player.RpcId(playerId, nameof(player.SetPickedItem), item.GetPath());
 	}
 
 	Node SpawnItem(int itemId)
 	{
-		Node item;
-		item = GetItemResource(itemId).ItemOnFloor.Instantiate();
+		var item = GetItemResource(itemId).ItemOnFloor.Instantiate();
 		return item;
 	}
 

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://bhuetjihjii35"]
+
+[ext_resource type="PackedScene" uid="uid://bj76hi7131vin" path="res://Items/VehicleParts/Aito/BRDoor/AitoBRDoor.tscn" id="1_a1rdc"]
+[ext_resource type="PackedScene" uid="uid://bmog00v42t8ge" path="res://Items/VehicleParts/Aito/BRDoor/AitoBRDoorDropped.tscn" id="2_a2lvu"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="3_0if8a"]
+
+[resource]
+script = ExtResource("3_0if8a")
+Equippable = false
+ItemName = "AitoBRDoor"
+ItemId = 112
+Description = ""
+ItemOnFloor = ExtResource("2_a2lvu")
+ItemInHand = ExtResource("1_a1rdc")

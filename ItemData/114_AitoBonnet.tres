@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://bp43ycckkc7ka"]
+
+[ext_resource type="PackedScene" uid="uid://bvk88bmr3a7iw" path="res://Items/VehicleParts/Aito/Bonnet/AitoBonnet.tscn" id="1_j10g0"]
+[ext_resource type="PackedScene" uid="uid://c2o46mvvi0bgu" path="res://Items/VehicleParts/Aito/Bonnet/AitoBonnetDropped.tscn" id="2_drdkn"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="3_m5xdg"]
+
+[resource]
+script = ExtResource("3_m5xdg")
+Equippable = false
+ItemName = "AitoBonnet"
+ItemId = 114
+Description = ""
+ItemOnFloor = ExtResource("2_drdkn")
+ItemInHand = ExtResource("1_j10g0")

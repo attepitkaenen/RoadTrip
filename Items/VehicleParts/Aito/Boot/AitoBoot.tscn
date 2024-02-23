@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=3 uid="uid://omophan053xb"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/Door/Door.cs" id="1_njkc3"]
+[ext_resource type="PackedScene" uid="uid://vul6k0n882n5" path="res://Items/VehicleParts/Aito/Boot/aitoBoot.blend" id="2_0xirq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6r01e"]
+size = Vector3(1.18774, 0.436279, 0.0896912)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2hjdp"]
+size = Vector3(0.642212, 0.333344, 0.0776825)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qkkdk"]
+size = Vector3(1.28347, 0.18441, 0.0782166)
+
+[node name="AitoBoot" type="RigidBody3D"]
+collision_layer = 16
+collision_mask = 11
+script = ExtResource("1_njkc3")
+ItemId = 115
+
+[node name="aitoBoot" parent="." instance=ExtResource("2_0xirq")]
+transform = Transform3D(-1.18, 0, -1.03159e-07, 0, 1.18, 0, 1.03159e-07, 0, -1.18, 0, -0.756089, 1.30977)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.858289, -0.513167, 0, 0.513167, 0.858289, 0.00256348, -0.202893, -0.0907145)
+shape = SubResource("BoxShape3D_6r01e")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.987954, -0.154745, 0, 0.154745, 0.987954, 0.00579834, -0.532941, -0.245076)
+shape = SubResource("BoxShape3D_2hjdp")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.987954, -0.154745, 0, 0.154745, 0.987954, 0.0024395, -0.460992, -0.199741)
+shape = SubResource("BoxShape3D_qkkdk")

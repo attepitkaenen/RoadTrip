@@ -93,6 +93,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.434783, 1.85352)
 [node name="Dashboard3" parent="." instance=ExtResource("3_sp7ok")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.637094, 1.20399)
 
+[node name="Doors" type="Node3D" parent="."]
+
 [node name="kivik" parent="." instance=ExtResource("2_4774b")]
 transform = Transform3D(-1.18, 0, -1.03159e-07, 0, 1.18, 0, 1.03159e-07, 0, -1.18, 0, 0.512062, 0.333533)
 
