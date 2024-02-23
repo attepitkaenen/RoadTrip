@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=33 format=3 uid="uid://bpbhecm6eyko4"]
 
 [ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
@@ -23,7 +23,11 @@
 [ext_resource type="PackedScene" uid="uid://c33tfbwblv3kb" path="res://Items/VehicleParts/Aito/FRDoor/AitoFRDoorDropped.tscn" id="23_pv31n"]
 [ext_resource type="PackedScene" uid="uid://bmog00v42t8ge" path="res://Items/VehicleParts/Aito/BRDoor/AitoBRDoorDropped.tscn" id="24_u6aox"]
 [ext_resource type="PackedScene" uid="uid://qiiml1cl4jf8" path="res://Items/VehicleParts/Aito/BLDoor/AitoBLDoorDropped.tscn" id="25_icb03"]
+[ext_resource type="PackedScene" uid="uid://hml2k2vo7wnn" path="res://Objects/Shelf/Shelf.tscn" id="25_u4b10"]
+[ext_resource type="PackedScene" uid="uid://ddq0gd58ycb7m" path="res://Items/VehicleParts/Aito/Boot/AitoBootDropped.tscn" id="26_np50x"]
 [ext_resource type="PackedScene" uid="uid://c2o46mvvi0bgu" path="res://Items/VehicleParts/Aito/Bonnet/AitoBonnetDropped.tscn" id="26_r2dta"]
+[ext_resource type="PackedScene" uid="uid://d0oh83p5unnoa" path="res://Vehicles/Leluota Aito/AitoBuilt.tscn" id="27_8bfc7"]
+[ext_resource type="PackedScene" uid="uid://cmscsj4q6x3ik" path="res://Items/VehicleParts/Aito/Windshield/AitoWindshieldDropped.tscn" id="28_c13gu"]
 
 [sub_resource type="Sky" id="Sky_8c0fj"]
 sky_material = ExtResource("4_j0ilt")
@@ -696,131 +700,81 @@ material = SubResource("StandardMaterial3D_722k7")
 transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 10.8875, 1.3221, 7.05007)
 
 [node name="ToolBoxDropped" parent="." instance=ExtResource("10_s3uay")]
-transform = Transform3D(0.202992, 0, -0.97918, 0, 1, 0, 0.97918, 0, 0.202992, 18.0998, 0.947184, -7.21793)
+transform = Transform3D(0.202992, 0, -0.97918, 0, 1, 0, 0.97918, 0, 0.202992, 12.1092, 3.22377, -6.5532)
 
 [node name="ToolBoxDropped2" parent="." instance=ExtResource("10_s3uay")]
-transform = Transform3D(-0.388995, 0, -0.92124, 0, 1, 0, 0.92124, 0, -0.388995, 18.5793, 0.947184, -7.21793)
+transform = Transform3D(-0.388995, 0, -0.92124, 0, 1, 0, 0.92124, 0, -0.388995, 12.5887, 3.22377, -6.5532)
 
 [node name="ToolBoxDropped3" parent="." instance=ExtResource("10_s3uay")]
-transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 18.3453, 1.27677, -7.21793)
+transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 12.3547, 3.55335, -6.12092)
 
 [node name="ToolBoxDropped4" parent="." instance=ExtResource("10_s3uay")]
-transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 12.397, 1.27677, -2.36853)
+transform = Transform3D(-0.999974, 0, -0.00706863, 0, 1, 0, 0.00706863, 0, -0.999974, 11.6335, 3.23518, -6.45677)
 
 [node name="Engine" parent="." instance=ExtResource("9_wu0kr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2454, 1.4173, -4.8735)
+transform = Transform3D(0.143026, -0.989719, 0, 0.989719, 0.143026, 0, 0, 0, 1, 11.6714, 2.27038, -7.05576)
 
 [node name="Aito2" parent="." instance=ExtResource("4_ynoyo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.1684, 1.41643, -4.72592)
 
 [node name="StockRadiatorDropped" parent="." instance=ExtResource("14_jwm4e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2563, 1.21076, -2.84503)
+transform = Transform3D(-0.0231191, 0.156581, -0.987395, 0.989275, 0.146066, 0, 0.144225, -0.976804, -0.158279, 11.485, 2.15801, -6.47618)
 
 [node name="StockBatteryDropped" parent="." instance=ExtResource("15_3gwkl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8504, 1.27957, -2.28698)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0865, 2.26849, -6.4914)
 
 [node name="StockFuelInjectorDropped" parent="." instance=ExtResource("16_fhtvx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2, -5.36686)
+transform = Transform3D(-0.0441539, -0.943631, 0.328042, 0.998907, -0.0467403, 0, 0.0153328, 0.327684, 0.944663, 12.7595, 2.22928, -6.58581)
 
 [node name="StockAlternatorDropped" parent="." instance=ExtResource("17_u3glf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8314, 2, -4.56046)
+transform = Transform3D(1, 0, 0, 0, -0.00534071, -0.999986, 0, 0.999986, -0.00534071, 12.3952, 2.21932, -7.30439)
 
 [node name="StockWaterTankDropped" parent="." instance=ExtResource("18_24wwe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, -3.71831)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5624, 1.34771, -6.69416)
 
 [node name="StockFuelInjectorDropped2" parent="." instance=ExtResource("19_8qxit")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.4193, 1.17989, -3.68779)
+transform = Transform3D(0.628058, 0, -0.778166, 0, 1, 0, 0.778166, 0, 0.628058, 13.4362, 2.22807, -6.88639)
 
 [node name="StockStarterDropped" parent="." instance=ExtResource("20_sy6bp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5244, 1, -5.01867)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.0971, 2.27189, -6.87712)
 
 [node name="StockTireDropped" parent="." instance=ExtResource("21_rh7hh")]
-transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 18.0827, 1.22189, -5.894)
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 13.4558, 1.46146, -6.72228)
 
 [node name="StockTireDropped2" parent="." instance=ExtResource("21_rh7hh")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 17.9793, 1.42951, -3.74229)
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 13.4461, 1.17937, -6.77154)
 
 [node name="StockTireDropped3" parent="." instance=ExtResource("21_rh7hh")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 14.1292, 1.26041, -6.17485)
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 14.1292, 1.18052, -7.05003)
 
 [node name="StockTireDropped4" parent="." instance=ExtResource("21_rh7hh")]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 14.1589, 1.40439, -3.81572)
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 14.1589, 1.41584, -6.97545)
 
 [node name="StockAlternatorDropped2" parent="." instance=ExtResource("22_ki834")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.6899, 1.41631, -3.21444)
+transform = Transform3D(0.962791, -0.270248, 0, 0.270248, 0.962791, 0, 0, 0, 1, 11.5053, 1.08401, -1.99296)
 
 [node name="StockAlternatorDropped3" parent="." instance=ExtResource("23_pv31n")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7676, 1, -3.65953)
+transform = Transform3D(0.931361, -0.364097, 0, 0.364097, 0.931361, 0, 0, 0, 1, 11.3546, 1, -2.76575)
 
 [node name="StockAlternatorDropped4" parent="." instance=ExtResource("24_u6aox")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7048, 1, -4.97134)
+transform = Transform3D(0.951132, -0.308785, 0, 0.308785, 0.951132, 0, 0, 0, 1, 11.2744, 1, -4.07568)
 
 [node name="StockAlternatorDropped5" parent="." instance=ExtResource("25_icb03")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3648, 1, -5.08242)
+transform = Transform3D(0.930692, -0.365803, 0, 0.365803, 0.930692, 0, 0, 0, 1, 11.7573, 1, -5.08242)
 
 [node name="AitoBonnet" parent="." instance=ExtResource("26_r2dta")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.58533, -2.26883)
+transform = Transform3D(0.0426081, 0, 0.999092, 0, 1, 0, -0.999092, 0, 0.0426081, 11.7168, 1.58533, -3.41254)
 
-[node name="Aito" parent="." instance=ExtResource("4_ynoyo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.7468, 1.53122, -4.07466)
+[node name="Shelf" parent="." instance=ExtResource("25_u4b10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.8762, 0.718349, -6.93881)
 
-[node name="EngineBay" parent="Aito" index="1"]
-_engineId = 100
-_engineCondition = 100.0
-_radiatorId = 102
-_radiatorCondition = 100.0
-_fuelInjectorId = 104
-_fuelInjectorCondition = 100.0
-_batteryId = 103
-_batteryCondition = 100.0
-_alternatorId = 105
-_alternatorCondition = 100.0
-_intakeId = 107
-_intakeCondition = 100.0
-_waterTankId = 106
-_waterTankCondition = 100.0
-_starterId = 108
-_starterCondition = 100.0
+[node name="AitoBootDropped" parent="." instance=ExtResource("26_np50x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.1008, 2.06447, -4.79082)
 
-[node name="FrontLeft" parent="Aito/Doors" index="0"]
-_doorId = 110
-_doorCondition = 100.0
+[node name="Aito" parent="." instance=ExtResource("27_8bfc7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.2928, 1.33747, -5.12311)
 
-[node name="Bonnet" parent="Aito/Doors" index="1"]
-_doorId = 114
-_doorCondition = 100.0
-
-[node name="FrontRight" parent="Aito/Doors" index="2"]
-_doorId = 111
-_doorCondition = 100.0
-
-[node name="BackRight" parent="Aito/Doors" index="3"]
-_doorId = 112
-_doorCondition = 100.0
-
-[node name="BackLeft" parent="Aito/Doors" index="4"]
-_doorId = 113
-_doorCondition = 100.0
-
-[node name="WheelFL" parent="Aito" index="7"]
-wheel_friction_slip = 2.0
-_tireId = 109
-_tireCondition = 100.0
-
-[node name="WheelFR" parent="Aito" index="8"]
-wheel_friction_slip = 2.0
-_tireId = 109
-_tireCondition = 100.0
-
-[node name="WheelBL" parent="Aito" index="9"]
-wheel_friction_slip = 1.8
-_tireId = 109
-_tireCondition = 100.0
-
-[node name="WheelBR" parent="Aito" index="10"]
-wheel_friction_slip = 1.8
-_tireId = 109
-_tireCondition = 100.0
+[node name="AitoWindshieldDropped" parent="." instance=ExtResource("28_c13gu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1765, 1.71835, -3.03579)
 
 [editable path="Items/Item31"]
-[editable path="Aito"]

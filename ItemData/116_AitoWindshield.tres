@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://dx7uqtesn1cc4"]
+
+[ext_resource type="PackedScene" uid="uid://bbjlcv6lc8ce1" path="res://Items/VehicleParts/Aito/Windshield/AitoWindshield.tscn" id="1_g5nd2"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="1_iipjx"]
+[ext_resource type="PackedScene" uid="uid://cmscsj4q6x3ik" path="res://Items/VehicleParts/Aito/Windshield/AitoWindshieldDropped.tscn" id="2_opor5"]
+
+[resource]
+script = ExtResource("1_iipjx")
+Equippable = false
+ItemName = "AitoWindshield"
+ItemId = 116
+Description = ""
+ItemOnFloor = ExtResource("2_opor5")
+ItemInHand = ExtResource("1_g5nd2")
