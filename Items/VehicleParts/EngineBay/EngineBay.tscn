@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://qtf1m1jdet0q"]
+[gd_scene load_steps=4 format=3 uid="uid://qtf1m1jdet0q"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/EngineBay/EngineBay.cs" id="1_8w0o1"]
+[ext_resource type="Script" path="res://Items/VehicleParts/EngineBay/PartMount.cs" id="2_724p5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_23afp"]
 size = Vector3(0.2, 0.2, 0.2)
@@ -14,81 +15,82 @@ multiplayerSpawner = NodePath("MultiplayerSpawner")
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
 
-[node name="Engine" type="Node3D" parent="."]
+[node name="EngineMount" type="Node3D" parent="."]
+script = ExtResource("2_724p5")
 
-[node name="Area3D" type="Area3D" parent="Engine"]
+[node name="Area3D" type="Area3D" parent="EngineMount"]
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Engine/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EngineMount/Area3D"]
 shape = SubResource("BoxShape3D_23afp")
 
-[node name="Radiator" type="Node3D" parent="."]
+[node name="RadiatorMount" type="Node3D" parent="."]
 
-[node name="Area3D" type="Area3D" parent="Radiator"]
+[node name="Area3D" type="Area3D" parent="RadiatorMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0024308, -0.086257, 0.281053)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Radiator/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RadiatorMount/Area3D"]
 shape = SubResource("BoxShape3D_23afp")
 
-[node name="Battery" type="Node3D" parent="."]
+[node name="BatteryMount" type="Node3D" parent="."]
 
-[node name="Area3D" type="Area3D" parent="Battery"]
+[node name="Area3D" type="Area3D" parent="BatteryMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Battery/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BatteryMount/Area3D"]
 shape = SubResource("BoxShape3D_23afp")
 
-[node name="FuelInjector" type="Node3D" parent="."]
+[node name="FuelInjectorMount" type="Node3D" parent="."]
 
-[node name="Area3D" type="Area3D" parent="FuelInjector"]
+[node name="Area3D" type="Area3D" parent="FuelInjectorMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00208324, -0.136577)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="FuelInjector/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FuelInjectorMount/Area3D"]
 shape = SubResource("BoxShape3D_23afp")
 
-[node name="Alternator" type="Node3D" parent="."]
+[node name="AlternatorMount" type="Node3D" parent="."]
 
-[node name="Area3D" type="Area3D" parent="Alternator"]
+[node name="Area3D" type="Area3D" parent="AlternatorMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.165626, -0.40149, 0.238464)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Alternator/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AlternatorMount/Area3D"]
 shape = SubResource("BoxShape3D_23afp")
 
-[node name="Intake" type="Node3D" parent="."]
+[node name="IntakeMount" type="Node3D" parent="."]
 
-[node name="Area3D" type="Area3D" parent="Intake"]
+[node name="Area3D" type="Area3D" parent="IntakeMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.205102, 0)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Intake/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="IntakeMount/Area3D"]
 shape = SubResource("BoxShape3D_23afp")
 
-[node name="WaterTank" type="Node3D" parent="."]
+[node name="WaterTankMount" type="Node3D" parent="."]
 
-[node name="Area3D" type="Area3D" parent="WaterTank"]
+[node name="Area3D" type="Area3D" parent="WaterTankMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.540001, 0, -0.103851)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WaterTank/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WaterTankMount/Area3D"]
 shape = SubResource("BoxShape3D_23afp")
 
-[node name="Starter" type="Node3D" parent="."]
+[node name="StarterMount" type="Node3D" parent="."]
 
-[node name="Area3D" type="Area3D" parent="Starter"]
+[node name="Area3D" type="Area3D" parent="StarterMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.142067, -0.416611, -0.187007)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Starter/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StarterMount/Area3D"]
 shape = SubResource("BoxShape3D_23afp")

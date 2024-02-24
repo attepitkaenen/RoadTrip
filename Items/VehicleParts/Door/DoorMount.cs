@@ -47,7 +47,7 @@ public partial class DoorMount : Node3D, IMount
     public void RemoveInstalledPart(int itemId, float condition, Vector3 position)
     {
         _doorId = 0;
-        gameManager.RpcId(1, nameof(gameManager.SpawnVehiclePart), itemId, condition, position);
+        gameManager.RpcId(1, nameof(gameManager.SpawnPart), itemId, condition, position, GlobalRotation);
     }
 
     private void PartEntered(Node3D body)
@@ -56,7 +56,7 @@ public partial class DoorMount : Node3D, IMount
         if (body is DoorDropped door)
         {
             door.InstallPart += InstallDoor;
-            door.isInstallable = true;
+            door.canBeInstalled = true;
         }
     }
 
@@ -65,7 +65,7 @@ public partial class DoorMount : Node3D, IMount
         if (body is DoorDropped door)
         {
             door.InstallPart -= InstallDoor;
-            door.isInstallable = false;
+            door.canBeInstalled = false;
         }
     }
 

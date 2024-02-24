@@ -1,6 +1,6 @@
 using Godot;
 using System;
 
-public partial class WindshieldDropped : PartDropped
+public partial class WindshieldDropped : Installable
 {
 }

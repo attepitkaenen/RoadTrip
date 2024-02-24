@@ -4,19 +4,15 @@ using System;
 public partial class CarPart : Node3D
 {
     [Export] private float _condition = 100f;
-    public int itemId;
+    private int _itemId;
     IMount _mount;
 
     public override void _Ready()
     {
         var parent = GetParent();
-        if (parent is EngineBay engineBay)
+        if (parent is IMount mount)
         {
-            _mount = engineBay;
-        }
-        else if (parent is TireMount tireMount)
-        {
-            _mount = tireMount;
+            _mount = mount;
         }
     }
 
@@ -35,6 +31,16 @@ public partial class CarPart : Node3D
         _condition = condition;
     }
 
+    public int GetId()
+    {
+        return _itemId;
+    }
+
+    public void SetId(int itemId)
+    {
+        _itemId = itemId;
+    }
+
     public void SetMount(IMount mount)
     {
         _mount = mount;
@@ -44,7 +50,7 @@ public partial class CarPart : Node3D
     {
         if (_mount is not null)
         {
-            _mount.RpcId(1, nameof(_mount.RemoveInstalledPart), itemId, _condition, GlobalPosition);
+            _mount.Rpc(nameof(_mount.RemoveInstalledPart), _itemId, _condition, GlobalPosition);
             Rpc(nameof(DestroyPart));
         }
     }
