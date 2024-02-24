@@ -16,19 +16,23 @@ size = Vector3(1.28347, 0.18441, 0.0782166)
 collision_layer = 16
 collision_mask = 11
 script = ExtResource("1_njkc3")
+isHorizontal = true
 ItemId = 115
 
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 0, 0)
+
 [node name="aitoBoot" parent="." instance=ExtResource("2_0xirq")]
-transform = Transform3D(-1.18, 0, -1.03159e-07, 0, 1.18, 0, 1.03159e-07, 0, -1.18, 0, -0.756089, 1.30977)
+transform = Transform3D(1.18, 0, 2.81334e-07, -2.43642e-07, 0.59, 1.02191, -1.40667e-07, -1.02191, 0.59, -1.14504e-07, -1.51234, -9.26852e-05)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.858289, -0.513167, 0, 0.513167, 0.858289, 0.00256348, -0.202893, -0.0907145)
+transform = Transform3D(-1, -4.48625e-08, -7.5034e-08, 7.57103e-08, -0.0152712, -0.999884, 4.37114e-08, -0.999884, 0.0152712, -0.00256347, -0.0228854, 0.221068)
 shape = SubResource("BoxShape3D_6r01e")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.987954, -0.154745, 0, 0.154745, 0.987954, 0.00579834, -0.532941, -0.245076)
+transform = Transform3D(-1, -1.35282e-08, -8.63697e-08, 7.57103e-08, 0.359964, -0.932966, 4.37114e-08, -0.932966, -0.359964, -0.00579832, -0.0542284, 0.584078)
 shape = SubResource("BoxShape3D_2hjdp")
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.987954, -0.154745, 0, 0.154745, 0.987954, 0.0024395, -0.460992, -0.199741)
+transform = Transform3D(-1, -1.35282e-08, -8.63697e-08, 7.57103e-08, 0.359964, -0.932966, 4.37114e-08, -0.932966, -0.359964, -0.00243948, -0.0575152, 0.499101)
 shape = SubResource("BoxShape3D_qkkdk")

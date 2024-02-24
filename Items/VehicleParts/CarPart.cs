@@ -1,16 +1,16 @@
 using Godot;
 using System;
 
-public partial class CarPart : Node3D
+public partial class CarPart : Node3D, IMounted
 {
     [Export] private float _condition = 100f;
     private int _itemId;
-    IMount _mount;
+    PartMount _mount;
 
     public override void _Ready()
     {
         var parent = GetParent();
-        if (parent is IMount mount)
+        if (parent is PartMount mount)
         {
             _mount = mount;
         }
@@ -41,9 +41,15 @@ public partial class CarPart : Node3D
         _itemId = itemId;
     }
 
-    public void SetMount(IMount mount)
+    public void SetMount(PartMount mount)
     {
         _mount = mount;
+    }
+
+    public void SetPositionAndRotation(Vector3 position, Vector3 rotation)
+    {
+        Position = position;
+        Rotation = rotation;
     }
 
     public void Uninstall()

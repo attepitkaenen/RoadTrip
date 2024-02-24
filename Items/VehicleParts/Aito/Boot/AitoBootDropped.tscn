@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://ddq0gd58ycb7m"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Door/DoorDropped.cs" id="1_8oaqu"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Door/HatchDropped.cs" id="1_ydjgm"]
 [ext_resource type="PackedScene" uid="uid://vul6k0n882n5" path="res://Items/VehicleParts/Aito/Boot/aitoBoot.blend" id="2_fg585"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6n5yw"]
@@ -15,7 +15,7 @@ size = Vector3(1.28347, 0.18441, 0.0782166)
 [node name="AitoBootDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_8oaqu")
+script = ExtResource("1_ydjgm")
 _condition = 100.0
 ItemId = 115
 

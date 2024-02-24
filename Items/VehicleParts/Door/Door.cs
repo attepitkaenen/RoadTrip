@@ -1,16 +1,17 @@
 using Godot;
 using System;
 
-public partial class Door : Item
+public partial class Door : Item, IMounted
 {
-    public bool isHorizontal = false;
+    [Export] public bool isHorizontal = false;
     [Export] private float _condition = 100f;
-    public int itemId;
+    Vector3 restRotation;
+    int _itemId;
     HingeJoint3D _hinge;
     Vehicle _vehicle;
     MultiplayerSynchronizer _multiplayerSynchronizer;
     bool _isClosed = true;
-    IMount _mount;
+    PartMount _mount;
 
     // Additional sync properties
     public Vector3 syncRotation;
@@ -32,7 +33,7 @@ public partial class Door : Item
     public override void _PhysicsProcess(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
-
+        GD.Print(RotationDegrees);
         syncPosition = Position;
         syncRotation = Rotation;
         syncBasis = Basis;
@@ -48,7 +49,6 @@ public partial class Door : Item
         {
             angle = RotationDegrees.Y;
         }
-
 
         if (playerHolding == 0 && angle > -5 && angle < 5)
         {
@@ -93,9 +93,9 @@ public partial class Door : Item
         }
     }
 
-    public void SetMount(IMount mount)
+    public void Damage(float amount)
     {
-        _mount = mount;
+        _condition -= amount;
     }
 
     public float GetCondition()
@@ -108,11 +108,33 @@ public partial class Door : Item
         _condition = condition;
     }
 
+    public int GetId()
+    {
+        return _itemId;
+    }
+
+    public void SetId(int itemId)
+    {
+        _itemId = itemId;
+    }
+
+    public void SetMount(PartMount mount)
+    {
+        _mount = mount;
+    }
+
+    public void SetPositionAndRotation(Vector3 position, Vector3 rotation)
+    {
+        restRotation = rotation;
+        GlobalRotation = rotation;
+    }
+
+
     public void Uninstall()
     {
         if (_mount is not null)
         {
-            _mount.RpcId(1, nameof(_mount.RemoveInstalledPart), itemId, _condition, GlobalPosition);
+            _mount.RpcId(1, nameof(_mount.RemoveInstalledPart), _itemId, _condition, GlobalPosition, GlobalRotation);
             Rpc(nameof(DestroyPart));
         }
     }
