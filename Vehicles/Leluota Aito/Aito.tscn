@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://7eis7so5p5lh"]
+[gd_scene load_steps=26 format=3 uid="uid://7eis7so5p5lh"]
 
 [ext_resource type="Script" path="res://Vehicles/Leluota Aito/Aito.cs" id="1_lai86"]
 [ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Leluota Aito/aito.blend" id="3_0l07t"]
@@ -30,6 +30,9 @@ properties/5/replication_mode = 1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x5enl"]
 size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y5j3k"]
+size = Vector3(0.2, 0.555078, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_27p1i"]
 size = Vector3(0.2, 0.2, 0.2)
@@ -77,7 +80,7 @@ size = Vector3(0.179956, 0.079999, 1.01154)
 [sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.102235, 1.64003)
 
-[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "_speedometer", "engineBay")]
+[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "engineBay")]
 collision_layer = 4
 collision_mask = 6
 mass = 900.0
@@ -85,7 +88,6 @@ center_of_mass_mode = 1
 center_of_mass = Vector3(0, 0.201208, 0.245741)
 script = ExtResource("1_lai86")
 _synchronizer = NodePath("MultiplayerSynchronizer")
-_speedometer = NodePath("")
 engineBay = NodePath("EngineBay")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -128,9 +130,9 @@ collision_mask = 8
 shape = SubResource("BoxShape3D_x5enl")
 
 [node name="BonnetMount" type="Node3D" parent="Doors and Panels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.739044, 1.44787)
+transform = Transform3D(1, 0, 0, 0, 0.945519, -0.325568, 0, 0.325568, 0.945519, 0, 0.792412, 1.42843)
 script = ExtResource("8_jrpr4")
-partType = 9
+partType = 10
 
 [node name="HingeJoint3D" type="HingeJoint3D" parent="Doors and Panels/BonnetMount"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.025301, -0.0109911)
@@ -147,23 +149,22 @@ collision_mask = 8
 shape = SubResource("BoxShape3D_x5enl")
 
 [node name="BootMount" type="Node3D" parent="Doors and Panels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.27859, -0.991264)
+transform = Transform3D(-1, 1.30766e-07, 7.54979e-08, 0, 0.5, -0.866025, -1.50996e-07, -0.866025, -0.5, 0, 1.27859, -0.991264)
 script = ExtResource("8_jrpr4")
-partType = 9
+partType = 10
 
 [node name="HingeJoint3D" type="HingeJoint3D" parent="Doors and Panels/BootMount"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 angular_limit/enable = true
-angular_limit/upper = 0.0
-angular_limit/lower = -2.96706
+angular_limit/upper = 2.96706
+angular_limit/lower = 0.0
 
 [node name="Area3D" type="Area3D" parent="Doors and Panels/BootMount"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0270618, -0.264247)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.58911e-08, 0.120191, 0.399669)
 collision_layer = 8
 collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Doors and Panels/BootMount/Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1337e-09, -0.321952, -0.0587225)
 shape = SubResource("BoxShape3D_x5enl")
 
 [node name="FrontRightMount" type="Node3D" parent="Doors and Panels"]
@@ -226,15 +227,16 @@ shape = SubResource("BoxShape3D_x5enl")
 [node name="WindshieldMount" type="Node3D" parent="Doors and Panels"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01771, 1.04033)
 script = ExtResource("8_jrpr4")
-partType = 9
+partType = 8
 
 [node name="Area3D" type="Area3D" parent="Doors and Panels/WindshieldMount"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.161857, 0.11211)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0669816, 0.0287597)
 collision_layer = 8
 collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Doors and Panels/WindshieldMount/Area3D"]
-shape = SubResource("BoxShape3D_x5enl")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.177539, 0)
+shape = SubResource("BoxShape3D_y5j3k")
 
 [node name="WheelFL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.1, 1.55)

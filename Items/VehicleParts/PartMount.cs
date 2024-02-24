@@ -2,7 +2,7 @@ using System;
 using Godot;
 
 
-public partial class PartMount : Node3D, IMount
+public partial class PartMount : Node3D
 {
     GameManager gameManager;
     [Export] MultiplayerSynchronizer multiplayerSynchronizer;
@@ -12,7 +12,7 @@ public partial class PartMount : Node3D, IMount
     [Signal] public delegate void PartChangedEventHandler(int itemId, float condition, string partType);
 
     [ExportGroup("Installable part properties")]
-    CarPart _carPart;
+    IMounted _part;
     private Area3D _partArea;
     [Export] private int _partId;
     [Export] private float _partCondition;
@@ -30,6 +30,7 @@ public partial class PartMount : Node3D, IMount
         WaterTankDropped,
         WindshieldDropped,
         DoorDropped,
+        HatchDropped,
         TireDropped
     }
 
@@ -63,9 +64,9 @@ public partial class PartMount : Node3D, IMount
         return GetPath() + ":_partCondition";
     }
 
-    public CarPart GetPart()
+    public dynamic GetPart()
     {
-        return _carPart;
+        return _part;
     }
 
     // Make part eligible to be installed
@@ -91,29 +92,26 @@ public partial class PartMount : Node3D, IMount
         if (type == partType.ToString())
         {
             var part = body as Installable;
-            if (part.canBeInstalled == false)
-            {
-                part.InstallPart += InstallPart;
-                part.canBeInstalled = true;
-            }
+
+            part.InstallPart -= InstallPart;
+            part.canBeInstalled = false;
         }
     }
 
     // Spawns installed part and sets its condition and itemId
-    public CarPart SpawnInstalledPart(int itemId, float condition, Vector3 partPosition)
+    public IMounted SpawnInstalledPart(int itemId, float condition, Vector3 partPosition, Vector3 partRotation)
     {
-        var part = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as CarPart;
-        AddChild(part);
+        var part = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as IMounted;
+        AddChild((dynamic)part);
         part.SetMount(this);
         part.SetCondition(condition);
         part.SetId(itemId);
-        part.Position = partPosition;
         return part;
     }
 
     // Handles part removing
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void RemoveInstalledPart(int itemId, float condition, Vector3 position)
+    public void RemoveInstalledPart(int itemId, float condition, Vector3 position, Vector3 rotation)
     {
         if (_partId == 0) return;
         _partId = 0;
@@ -122,7 +120,7 @@ public partial class PartMount : Node3D, IMount
 
         if (IsMultiplayerAuthority())
         {
-            gameManager.RpcId(1, nameof(gameManager.SpawnPart), itemId, condition, position, GlobalRotation);
+            gameManager.RpcId(1, nameof(gameManager.SpawnPart), itemId, condition, position, rotation);
         }
     }
 
@@ -137,13 +135,13 @@ public partial class PartMount : Node3D, IMount
 
     public void HandlePart()
     {
-        if (_partId != 0 && _carPart is null)
+        if (_partId != 0 && _part is null)
         {
-            _carPart = SpawnInstalledPart(_partId, _partCondition, _partArea.Position);
+            _part = SpawnInstalledPart(_partId, _partCondition, Position, GlobalRotation);
         }
-        else if (_partId == 0 && _carPart is not null)
+        else if (_partId == 0 && _part is not null)
         {
-            _carPart = null;
+            _part = null;
         }
     }
 

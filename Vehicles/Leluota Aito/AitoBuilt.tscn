@@ -96,13 +96,13 @@ replication_config = SubResource("SceneReplicationConfig_4inyu")
 visibility_update_mode = 1
 
 [node name="WindshieldMount" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01771, 1.04033)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.959859, 1.70136)
 script = ExtResource("2_7qtxi")
 _windshieldId = 116
 _windshieldCondition = 100.0
 
 [node name="Area3D" type="Area3D" parent="WindshieldMount"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0605595, 0.0431852)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.573657, 0.154331)
 collision_layer = 8
 collision_mask = 8
 
