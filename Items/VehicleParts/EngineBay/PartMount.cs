@@ -5,18 +5,20 @@ using Godot;
 public partial class PartMount : Node3D, IMount
 {
     GameManager gameManager;
+    MultiplayerSynchronizer multiplayerSynchronizer;
 
-    [Signal] public delegate void PartInstalledEventHandler(int itemId, float condition);
+    [Signal] public delegate void PartInstalledEventHandler(int itemId, float condition, string partType);
     [Signal] public delegate void PartUninstalledEventHandler();
+    [Signal] public delegate void PartChangedEventHandler(int itemId, float condition, string partType);
 
     [ExportGroup("Installable part properties")]
     CarPart _carPart;
-    private Area3D _engineArea;
+    private Area3D _partArea;
     [Export] private int _partId;
     [Export] private float _partCondition;
-    [Export] public TypeEnum partType = TypeEnum.EngineDropped;
+    [Export] public PartTypeEnum partType = PartTypeEnum.EngineDropped;
 
-    public enum TypeEnum
+    public enum PartTypeEnum
     {
         EngineDropped,
         AlternatorDropped,
@@ -34,10 +36,13 @@ public partial class PartMount : Node3D, IMount
     public override void _Ready()
     {
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+        multiplayerSynchronizer = GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPartIdPath());
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPartConditionPath());
 
-        _engineArea = GetNode<Area3D>("Area3D");
-        _engineArea.BodyEntered += PartEntered;
-        _engineArea.BodyExited += PartExited;
+        _partArea = GetNode<Area3D>("Area3D");
+        _partArea.BodyEntered += PartEntered;
+        _partArea.BodyExited += PartExited;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -108,7 +113,8 @@ public partial class PartMount : Node3D, IMount
     public void RemoveInstalledPart(int itemId, float condition, Vector3 position)
     {
         _partId = 0;
-        EmitSignal(SignalName.PartUninstalled);
+        _partCondition = 0;
+        EmitSignal(SignalName.PartChanged, 0, 0, partType.ToString());
 
         if (IsMultiplayerAuthority())
         {
@@ -129,7 +135,7 @@ public partial class PartMount : Node3D, IMount
     {
         if (_partId != 0 && _carPart is null)
         {
-            _carPart = SpawnInstalledPart(_partId, _partCondition, _engineArea.Position);
+            _carPart = SpawnInstalledPart(_partId, _partCondition, _partArea.Position);
         }
         else if (_partId == 0 && _carPart is not null)
         {
@@ -140,7 +146,7 @@ public partial class PartMount : Node3D, IMount
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SetPartIdAndCondition(int id, float condition)
     {
-        EmitSignal(SignalName.PartInstalled, id, condition);
+        EmitSignal(SignalName.PartChanged, id, condition, partType.ToString());
         _partCondition = condition;
         _partId = id;
     }
