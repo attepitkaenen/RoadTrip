@@ -5,7 +5,7 @@ using Godot;
 public partial class PartMount : Node3D, IMount
 {
     GameManager gameManager;
-    MultiplayerSynchronizer multiplayerSynchronizer;
+    [Export] MultiplayerSynchronizer multiplayerSynchronizer;
 
     [Signal] public delegate void PartInstalledEventHandler(int itemId, float condition, string partType);
     [Signal] public delegate void PartUninstalledEventHandler();
@@ -36,7 +36,10 @@ public partial class PartMount : Node3D, IMount
     public override void _Ready()
     {
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-        multiplayerSynchronizer = GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+        if (multiplayerSynchronizer is null)
+        {
+            multiplayerSynchronizer = GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+        }
         multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPartIdPath());
         multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPartConditionPath());
 
@@ -112,6 +115,7 @@ public partial class PartMount : Node3D, IMount
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void RemoveInstalledPart(int itemId, float condition, Vector3 position)
     {
+        if (_partId == 0) return;
         _partId = 0;
         _partCondition = 0;
         EmitSignal(SignalName.PartChanged, 0, 0, partType.ToString());

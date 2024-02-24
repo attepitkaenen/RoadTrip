@@ -5,10 +5,6 @@ using Godot.Collections;
 
 public partial class EngineBay : Node3D
 {
-    [Export] MultiplayerSpawner multiplayerSpawner;
-    MultiplayerSynchronizer multiplayerSynchronizer;
-    GameManager gameManager;
-
     private bool _running;
 
     [ExportGroup("Engine properties")]
@@ -62,9 +58,6 @@ public partial class EngineBay : Node3D
 
     public override void _Ready()
     {
-        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-        multiplayerSynchronizer = GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
-
         _engineMount = GetNode<PartMount>("EngineMount");
         _engineMount.PartChanged += PartChanged;
 
@@ -177,7 +170,7 @@ public partial class EngineBay : Node3D
         {
             _engine = _engineMount.GetPart() as Engine;
         }
-        else
+        else if (_engineId == 0)
         {
             _engine = null;
         }
@@ -190,7 +183,7 @@ public partial class EngineBay : Node3D
         {
             _battery = _batteryMount.GetPart() as Battery;
         }
-        else
+        else if (_batteryId == 0)
         {
             _battery = null;
         }
@@ -203,7 +196,7 @@ public partial class EngineBay : Node3D
         {
             _starter = _starterMount.GetPart() as Starter;
         }
-        else
+        else if (_starterId == 0)
         {
             _starter = null;
         }
@@ -216,7 +209,7 @@ public partial class EngineBay : Node3D
         {
             _alternator = _alternatorMount.GetPart() as Alternator;
         }
-        else
+        else if (_alternatorId == 0)
         {
             _alternator = null;
         }
@@ -229,7 +222,7 @@ public partial class EngineBay : Node3D
         {
             _radiator = _radiatorMount.GetPart() as Radiator;
         }
-        else
+        else if (_radiatorId == 0)
         {
             _radiator = null;
         }
@@ -242,7 +235,7 @@ public partial class EngineBay : Node3D
         {
             _fuelInjector = _fuelInjectorMount.GetPart() as FuelInjector;
         }
-        else
+        else if (_fuelInjectorId == 0)
         {
             _fuelInjector = null;
         }
@@ -255,7 +248,7 @@ public partial class EngineBay : Node3D
         {
             _intake = _intakeMount.GetPart() as Intake;
         }
-        else
+        else if (_intakeId == 0)
         {
             _intake = null;
         }
@@ -268,7 +261,7 @@ public partial class EngineBay : Node3D
         {
             _waterTank = _waterTankMount.GetPart() as WaterTank;
         }
-        else
+        else if (_waterTankId == 0)
         {
             _waterTank = null;
         }
