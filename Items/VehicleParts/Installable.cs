@@ -1,16 +1,16 @@
 using Godot;
 using System;
 
-public partial class PartDropped : Item
+public partial class Installable : Item
 {
     [Signal] public delegate void InstallPartEventHandler(int itemId, float condition);
     [Export] private float _condition;
-    public bool isInstallable = false;
+    public bool canBeInstalled = false;
 
     public void Install()
     {
-        GD.Print("Starting " + Name + " install");
-        if (isInstallable)
+        GD.Print("Starting " + Name + " install with Id: " + ItemId + " and condition: " + _condition);
+        if (canBeInstalled)
         {
             EmitSignal(SignalName.InstallPart, ItemId, _condition);
             DestroyItem();

@@ -1,6 +1,6 @@
 using Godot;
 using System;
 
-public partial class IntakeDropped : PartDropped
+public partial class IntakeDropped : Installable
 {
 }

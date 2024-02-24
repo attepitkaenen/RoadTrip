@@ -46,7 +46,7 @@ public partial class TireMount : VehicleWheel3D, IMount
         AddChild(part);
         part.SetMount(this);
         part.SetCondition(condition);
-        part.itemId = itemId;
+        part.SetId(itemId);
         part.Position = partPosition;
         return part;
     }
@@ -59,7 +59,7 @@ public partial class TireMount : VehicleWheel3D, IMount
         {
             _tireId = 0;
         }
-        gameManager.RpcId(1, nameof(gameManager.SpawnVehiclePart), itemId, condition, position);
+        gameManager.RpcId(1, nameof(gameManager.SpawnPart), itemId, condition, position, GlobalRotation);
     }
 
     private void PartEntered(Node3D body)
@@ -68,7 +68,7 @@ public partial class TireMount : VehicleWheel3D, IMount
         if (body is TireDropped tire)
         {
             tire.InstallPart += InstallTire;
-            tire.isInstallable = true;
+            tire.canBeInstalled = true;
         }
     }
 
@@ -77,7 +77,7 @@ public partial class TireMount : VehicleWheel3D, IMount
         if (body is TireDropped tire)
         {
             tire.InstallPart -= InstallTire;
-            tire.isInstallable = false;
+            tire.canBeInstalled = false;
         }
     }
 

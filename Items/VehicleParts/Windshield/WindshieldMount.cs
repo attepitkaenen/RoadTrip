@@ -44,7 +44,7 @@ public partial class WindshieldMount : Node3D, IMount
         if (body is WindshieldDropped windshield)
         {
             windshield.InstallPart -= InstallWindshield;
-            windshield.isInstallable = false;
+            windshield.canBeInstalled = false;
         }
     }
 
@@ -55,7 +55,7 @@ public partial class WindshieldMount : Node3D, IMount
         {
             GD.Print("Windshield entered!");
             windshield.InstallPart += InstallWindshield;
-            windshield.isInstallable = true;
+            windshield.canBeInstalled = true;
         }
     }
 
@@ -66,7 +66,7 @@ public partial class WindshieldMount : Node3D, IMount
         AddChild(part);
         part.SetMount(this);
         part.SetCondition(condition);
-        part.itemId = itemId;
+        part.SetId(itemId);
         part.Position = partPosition;
         return part;
     }
@@ -79,7 +79,7 @@ public partial class WindshieldMount : Node3D, IMount
         {
             _windshieldId = 0;
         }
-        gameManager.RpcId(1, nameof(gameManager.SpawnVehiclePart), itemId, condition, position);
+        gameManager.RpcId(1, nameof(gameManager.SpawnPart), itemId, condition, position, GlobalRotation);
     }
 
     // Windshield
