@@ -16,4 +16,9 @@ public partial class Tire : CarPart
 	{
 		return stats.TireWidth;
 	}
+
+	public float GetFrictionSlip()
+	{
+		return stats.FrictionSlip;
+	}
 }

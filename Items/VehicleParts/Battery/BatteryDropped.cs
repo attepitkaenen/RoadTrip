@@ -1,6 +1,6 @@
 using Godot;
 using System;
 
-public partial class BatteryDropped : PartDropped
+public partial class BatteryDropped : Installable
 {
 }

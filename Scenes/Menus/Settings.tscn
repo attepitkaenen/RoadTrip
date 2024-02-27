@@ -36,6 +36,10 @@ text = "Sensitivity"
 layout_mode = 2
 text = "0.001"
 
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer"]
+layout_mode = 2
+text = "Fullscreen"
+
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 0
 offset_left = 27.0
@@ -45,4 +49,5 @@ offset_bottom = 624.0
 text = "Back
 "
 
+[connection signal="toggled" from="VBoxContainer/CheckButton" to="." method="_on_check_button_toggled"]
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

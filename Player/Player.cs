@@ -94,7 +94,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		menuHandler.OpenMenu(MenuHandler.MenuType.none);
-		GetNode<MeshInstance3D>("character/Armature/Skeleton3D/Head/Head").Hide();
+		GetNode<MeshInstance3D>("character/Armature/Skeleton3D/Head").Hide();
 		nameTag.Visible = false;
 		camera.Current = true;
 		sensitivity = gameManager.Sensitivity;
@@ -399,7 +399,7 @@ public partial class Player : CharacterBody3D
 	public void HandleItem()
 	{
 		// Install vehicle part if holding a toolbox
-		if (Input.IsActionJustPressed("rightClick") && PickedItem is PartDropped part && part.isInstallable && heldItem is Toolbox)
+		if (Input.IsActionJustPressed("rightClick") && PickedItem is Installable part && part.canBeInstalled && heldItem is Toolbox)
 		{
 			PickedItem = null;
 			part.Install();

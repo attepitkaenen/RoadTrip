@@ -1,6 +1,6 @@
 using Godot;
 using System;
 
-public partial class FuelInjectorDropped : PartDropped
+public partial class FuelInjectorDropped : Installable
 {
 }
