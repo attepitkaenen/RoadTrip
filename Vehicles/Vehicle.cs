@@ -6,7 +6,6 @@ using System.Linq;
 public partial class Vehicle : VehicleBody3D
 {
 	[Export] private MultiplayerSynchronizer _synchronizer;
-	[Export] private Label3D _speedometer;
 	[Export] public EngineBay engineBay;
 	[Export] public float breakForce = 50;
 	private Seat _driverSeat;
