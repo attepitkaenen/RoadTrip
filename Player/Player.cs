@@ -94,7 +94,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		menuHandler.OpenMenu(MenuHandler.MenuType.none);
-		GetNode<MeshInstance3D>("character/Armature/Skeleton3D/Head/Head").Hide();
+		GetNode<MeshInstance3D>("character/Armature/Skeleton3D/Head").Hide();
 		nameTag.Visible = false;
 		camera.Current = true;
 		sensitivity = gameManager.Sensitivity;
