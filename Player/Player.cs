@@ -22,6 +22,7 @@ public partial class Player : CharacterBody3D
 	[Export] private Node3D head;
 	[Export] private PackedScene ragdollScene;
 	[Export] private CollisionShape3D collisionShape3D;
+	[Export] private SkeletonIK3D HeadIK;
 
 	[ExportGroup("Debug Nodes")]
 	[Export] private Label stateLabel;
@@ -102,6 +103,7 @@ public partial class Player : CharacterBody3D
 
 	public override void _Ready()
 	{
+		HeadIK.Start();
 		if (GetMultiplayerAuthority() == Id)
 		{
 			menuHandler.OpenMenu(MenuHandler.MenuType.none);
@@ -123,10 +125,12 @@ public partial class Player : CharacterBody3D
 		else if (@event is InputEventMouseMotion)
 		{
 			InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
-			camera.RotateX(-mouseMotion.Relative.Y * sensitivity);
+			var rotationPoint = head.GetNode<Node3D>("RotationPoint");
+			rotationPoint.RotateX(-mouseMotion.Relative.Y * sensitivity);
 
-			Vector3 cameraRotation = camera.Rotation;
-			cameraRotation.X = Mathf.Clamp(cameraRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f)); camera.Rotation = cameraRotation;
+			Vector3 rotationPointRotation = rotationPoint.Rotation;
+			rotationPointRotation.X = Mathf.Clamp(rotationPointRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f)); 
+			rotationPoint.Rotation = rotationPointRotation;
 
 			if (movementState == MovementState.seated)
 			{
