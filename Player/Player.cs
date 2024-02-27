@@ -130,7 +130,7 @@ public partial class Player : CharacterBody3D
 			rotationPoint.RotateX(-mouseMotion.Relative.Y * sensitivity);
 
 			Vector3 rotationPointRotation = rotationPoint.Rotation;
-			rotationPointRotation.X = Mathf.Clamp(rotationPointRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f)); 
+			rotationPointRotation.X = Mathf.Clamp(rotationPointRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f));
 			rotationPoint.Rotation = rotationPointRotation;
 
 			if (movementState == MovementState.seated)
@@ -142,6 +142,13 @@ public partial class Player : CharacterBody3D
 				RotateY(-mouseMotion.Relative.X * sensitivity);
 			}
 		}
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		if (!IsMultiplayerAuthority()) return;
+
+		Rpc(nameof(HandleRpcAnimations), movementState.ToString(), isGrounded, Velocity, GlobalBasis, _heldItemId != 0);
 	}
 
 	public override void _Process(double delta)
@@ -205,8 +212,6 @@ public partial class Player : CharacterBody3D
 		syncPosition = GlobalPosition;
 		syncRotation = GlobalRotation;
 		syncBasis = GlobalBasis;
-
-		Rpc(nameof(HandleRpcAnimations), movementState.ToString(), isGrounded, Velocity, Transform);
 
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
@@ -527,29 +532,32 @@ public partial class Player : CharacterBody3D
 	}
 
 	[Rpc(CallLocal = true)]
-	public void HandleRpcAnimations(string state, bool isGroundedRpc, Vector3 velocity, Transform3D transform)
+	public void HandleRpcAnimations(string state, bool isGroundedRpc, Vector3 velocity, Basis basis, bool isHolding)
 	{
+		animationTree.Set("parameters/HoldingBlend/blend_amount", isHolding);
+		GD.Print(isHolding);
+
 		if (state == "seated")
 		{
-			animationTree.Set("parameters/conditions/sit", true);
-			animationTree.Set("parameters/conditions/walk", false);
-			animationTree.Set("parameters/conditions/jump", false);
+			animationTree.Set("parameters/StateMachine/conditions/walk", false);
+			animationTree.Set("parameters/StateMachine/conditions/jump", false);
+			animationTree.Set("parameters/StateMachine/conditions/sit", true);
 			return;
 		}
 		else if (state == "jumping" || !isGroundedRpc)
 		{
-			animationTree.Set("parameters/conditions/jump", true);
-			animationTree.Set("parameters/conditions/sit", false);
-			animationTree.Set("parameters/conditions/walk", false);
+			animationTree.Set("parameters/StateMachine/conditions/walk", false);
+			animationTree.Set("parameters/StateMachine/conditions/sit", false);
+			animationTree.Set("parameters/StateMachine/conditions/jump", true);
 		}
 		else
 		{
-			velocity *= transform.Basis;
-			animationTree.Set("parameters/conditions/walk", true);
-			animationTree.Set("parameters/Walk/blend_position", new Vector2(-(velocity.Z / (speed * 2)), velocity.X / (speed * 2)));
-			animationTree.Set("parameters/conditions/sit", false);
-			animationTree.Set("parameters/conditions/jump", false);
-
+			velocity *= basis;
+			Vector2 walkingIntensity = new Vector2(-(velocity.Z / (speed * 2)), velocity.X / (speed * 2));
+			animationTree.Set("parameters/StateMachine/conditions/walk", true);
+			animationTree.Set("parameters/StateMachine/walking/blend_position", walkingIntensity);
+			animationTree.Set("parameters/StateMachine/conditions/sit", false);
+			animationTree.Set("parameters/StateMachine/conditions/jump", false);
 		}
 	}
 
