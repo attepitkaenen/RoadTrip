@@ -1,6 +1,6 @@
 using Godot;
 using System;
 
-public partial class RadiatorDropped : PartDropped
+public partial class RadiatorDropped : Installable
 {
 }

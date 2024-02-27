@@ -22,6 +22,8 @@ MultiplayerController="*res://Multiplayer/MultiplayerController.cs"
 
 [display]
 
+window/size/viewport_width=1280
+window/size/viewport_height=720
 window/vsync/vsync_mode=2
 
 [dotnet]

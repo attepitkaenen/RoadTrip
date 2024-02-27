@@ -32,4 +32,17 @@ public partial class Settings : Menu
             menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
         }
     }
+
+    public void _on_check_button_toggled(bool status)
+    {
+        GD.Print("switch toggled to:" + status);
+        if (status)
+        {
+            DisplayServer.WindowSetMode(DisplayServer.WindowMode.ExclusiveFullscreen);
+        }
+        else
+        {
+            DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
+        }
+    }
 }

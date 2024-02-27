@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using Godot;
 
 public partial class Item : RigidBody3D
@@ -17,6 +16,8 @@ public partial class Item : RigidBody3D
 	public Vector3 lastPosition;
 	public Basis lastBasis;
 
+	Timer timer;
+
 
 	public override void _Ready()
 	{
@@ -26,14 +27,18 @@ public partial class Item : RigidBody3D
 		if (!IsMultiplayerAuthority())
 		{
 			CustomIntegrator = true;
-			RpcId(1, nameof(GetSyncProperties));
 			return;
 		};
+		timer = new Timer();
+		AddChild(timer);
+		timer.Timeout += SyncProperties;
+		timer.Start(2);
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void GetSyncProperties()
+	public void SyncProperties()
 	{
+		timer.Start(2);
 		Rpc(nameof(SyncItem), GlobalPosition, GlobalBasis, LinearVelocity, AngularVelocity);
 	}
 

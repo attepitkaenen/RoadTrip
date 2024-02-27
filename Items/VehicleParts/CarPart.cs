@@ -1,22 +1,18 @@
 using Godot;
 using System;
 
-public partial class CarPart : Node3D
+public partial class CarPart : Node3D, IMounted
 {
     [Export] private float _condition = 100f;
-    public int itemId;
-    IMount _mount;
+    private int _itemId;
+    PartMount _mount;
 
     public override void _Ready()
     {
         var parent = GetParent();
-        if (parent is EngineBay engineBay)
+        if (parent is PartMount mount)
         {
-            _mount = engineBay;
-        }
-        else if (parent is TireMount tireMount)
-        {
-            _mount = tireMount;
+            _mount = mount;
         }
     }
 
@@ -35,16 +31,32 @@ public partial class CarPart : Node3D
         _condition = condition;
     }
 
-    public void SetMount(IMount mount)
+    public int GetId()
+    {
+        return _itemId;
+    }
+
+    public void SetId(int itemId)
+    {
+        _itemId = itemId;
+    }
+
+    public void SetMount(PartMount mount)
     {
         _mount = mount;
+    }
+
+    public void SetPositionAndRotation(Vector3 position, Vector3 rotation)
+    {
+        Position = position;
+        Rotation = rotation;
     }
 
     public void Uninstall()
     {
         if (_mount is not null)
         {
-            _mount.RpcId(1, nameof(_mount.RemoveInstalledPart), itemId, _condition, GlobalPosition);
+            _mount.Rpc(nameof(_mount.RemoveInstalledPart), _itemId, _condition, GlobalPosition, GlobalRotation);
             Rpc(nameof(DestroyPart));
         }
     }

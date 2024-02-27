@@ -39,7 +39,7 @@ public partial class PartHandler : Node3D
                         // if (_rayCast.GetCollider() is EngineDropped engine)
                         // {
                         //     engine.InstallPart += InstallPart;
-                        //     engine.isInstallable = true;
+                        //     engine.canBeInstalled = true;
                         // }
                         break;
                     }

@@ -61,10 +61,6 @@ public partial class Vehicle : VehicleBody3D
 			_synchronizer.DeltaInterval = 0.016f;
 		}
 
-		if (_speedometer is not null)
-		{
-			_speedometer.Text = Math.Round(LinearVelocity.Length() * 3.6f, 0).ToString();
-		}
 		syncLinearVelocity = LinearVelocity;
 		syncAngularVelocity = AngularVelocity;
 		syncPosition = GlobalPosition;

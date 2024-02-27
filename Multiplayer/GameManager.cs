@@ -78,11 +78,12 @@ public partial class GameManager : Node
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SpawnVehiclePart(int itemId, float condition, Vector3 position)
+	public void SpawnPart(int itemId, float condition, Vector3 position, Vector3 rotation)
 	{
-		var item = multiplayerSpawner.Spawn(itemId) as PartDropped;
+		var item = multiplayerSpawner.Spawn(itemId) as Installable;
 		item.SetCondition(condition);
 		item.GlobalPosition = position;
+		item.GlobalRotation = rotation;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -91,7 +92,7 @@ public partial class GameManager : Node
 		var item = multiplayerSpawner.Spawn(itemId) as Item;
 		item.GlobalPosition = position;
 
-		if (playerId == -1) 
+		if (playerId == -1)
 		{
 			return;
 		}
