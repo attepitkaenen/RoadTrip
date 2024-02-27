@@ -23,6 +23,7 @@ public partial class Player : CharacterBody3D
 	[Export] private PackedScene ragdollScene;
 	[Export] private CollisionShape3D collisionShape3D;
 	[Export] private SkeletonIK3D HeadIK;
+	[Export] private SkeletonIK3D HandIK;
 
 	[ExportGroup("Debug Nodes")]
 	[Export] private Label stateLabel;
@@ -380,6 +381,7 @@ public partial class Player : CharacterBody3D
 	{
 		if (_heldItemId != 0 && heldItem is null)
 		{
+			HandIK.Start();
 			HeldItem item = gameManager.GetItemResource(_heldItemId).ItemInHand.Instantiate() as HeldItem;
 			item.SetMultiplayerAuthority((int)Id);
 			equip.AddChild(item);
@@ -387,6 +389,7 @@ public partial class Player : CharacterBody3D
 		}
 		else if (heldItem is not null && _heldItemId == 0)
 		{
+			HandIK.Stop();
 			heldItem = null;
 			equip.GetChild(0).QueueFree();
 		}

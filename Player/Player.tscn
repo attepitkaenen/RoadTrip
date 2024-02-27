@@ -2302,7 +2302,7 @@ states/sitting/position = Vector2(562, 172)
 transitions = ["Start", "Walk", SubResource("AnimationNodeStateMachineTransition_hbvp2"), "Walk", "jump", SubResource("AnimationNodeStateMachineTransition_62rrp"), "jump", "Walk", SubResource("AnimationNodeStateMachineTransition_6l770"), "sitting", "Walk", SubResource("AnimationNodeStateMachineTransition_68wjk"), "Walk", "sitting", SubResource("AnimationNodeStateMachineTransition_qpjau"), "jump", "sitting", SubResource("AnimationNodeStateMachineTransition_tlsw5")]
 graph_offset = Vector2(-272, -25)
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "head", "collisionShape3D", "HeadIK", "stateLabel", "speedLabel", "playerList", "debugWindow", "interactionCast", "hand", "equip", "staticBody") groups=["Player"]]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "head", "collisionShape3D", "HeadIK", "HandIK", "stateLabel", "speedLabel", "playerList", "debugWindow", "interactionCast", "hand", "equip", "staticBody") groups=["Player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_mask = 23
 script = ExtResource("1_3rtis")
@@ -2312,7 +2312,8 @@ floatMachine = NodePath("FloatMachine")
 nameTag = NodePath("NameTag")
 head = NodePath("Head")
 collisionShape3D = NodePath("CollisionShape3D")
-HeadIK = NodePath("character/Armature/Skeleton3D/SkeletonIK3D")
+HeadIK = NodePath("character/Armature/Skeleton3D/HeadIK")
+HandIK = NodePath("character/Armature/Skeleton3D/HandIK")
 stateLabel = NodePath("Debug/MovementState")
 speedLabel = NodePath("Debug/Speed")
 playerList = NodePath("Debug/VBoxContainer2/MarginContainer/PlayerList")
@@ -2384,11 +2385,17 @@ bones/40/scale = Vector3(1, 1, 1)
 bones/41/rotation = Quaternion(0.0196732, -0.00881839, 0.621215, 0.783344)
 bones/41/scale = Vector3(1, 1, 1)
 
-[node name="SkeletonIK3D" type="SkeletonIK3D" parent="character/Armature/Skeleton3D" index="2"]
+[node name="HeadIK" type="SkeletonIK3D" parent="character/Armature/Skeleton3D" index="2"]
 process_priority = 1
 root_bone = &"chest"
 tip_bone = &"head"
 target_node = NodePath("../../../../Head/RotationPoint/HeadBoneTarget")
+
+[node name="HandIK" type="SkeletonIK3D" parent="character/Armature/Skeleton3D" index="3"]
+process_priority = 1
+root_bone = &"pec.r"
+tip_bone = &"palm2.r"
+target_node = NodePath("../../../../Head/RotationPoint/Camera3D/HandTarget")
 
 [node name="NameTag" type="Label3D" parent="."]
 transform = Transform3D(-0.3, 0, -4.52987e-08, 0, 0.3, 0, 4.52987e-08, 0, -0.3, 0, -0.0464681, -0.195011)
@@ -2444,7 +2451,10 @@ node_a = NodePath("../StaticBody3D")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
 [node name="Equip" type="Marker3D" parent="Head/RotationPoint/Camera3D"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.366023, -0.306697, -0.602588)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.26213, -0.194147, -0.46837)
+
+[node name="HandTarget" type="Node3D" parent="Head/RotationPoint/Camera3D"]
+transform = Transform3D(0.984137, 0.177411, 8.6036e-08, -0.101088, 0.560757, 0.821786, 0.145794, -0.80875, 0.569796, 0.27116, -0.20316, -0.356817)
 
 [node name="HeadBoneTarget" type="Node3D" parent="Head/RotationPoint"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.0548558, 0)
