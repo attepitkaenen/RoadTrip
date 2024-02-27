@@ -3,13 +3,13 @@
 [ext_resource type="Script" path="res://Items/VehicleParts/Door/HatchDropped.cs" id="1_ydjgm"]
 [ext_resource type="PackedScene" uid="uid://vul6k0n882n5" path="res://Items/VehicleParts/Aito/Boot/aitoBoot.blend" id="2_fg585"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_6n5yw"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_blfr4"]
 size = Vector3(1.18774, 0.436279, 0.0896912)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_rh7mx"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_sx5cx"]
 size = Vector3(0.642212, 0.333344, 0.0776825)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_13mv2"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_1ubav"]
 size = Vector3(1.28347, 0.18441, 0.0782166)
 
 [node name="AitoBootDropped" type="RigidBody3D"]
@@ -20,16 +20,16 @@ _condition = 100.0
 ItemId = 115
 
 [node name="aitoBoot" parent="." instance=ExtResource("2_fg585")]
-transform = Transform3D(-1.18, 0, -1.03159e-07, 0, 1.18, 0, 1.03159e-07, 0, -1.18, 0, -0.756089, 1.30977)
+transform = Transform3D(1.18, 0, 2.81334e-07, -2.43642e-07, 0.59, 1.02191, -1.40667e-07, -1.02191, 0.59, -1.14504e-07, -1.51234, -9.26852e-05)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.858289, -0.513167, 0, 0.513167, 0.858289, 0.00256348, -0.202893, -0.0907145)
-shape = SubResource("BoxShape3D_6n5yw")
+transform = Transform3D(-1, -4.48625e-08, -7.5034e-08, 7.57103e-08, -0.0152712, -0.999884, 4.37114e-08, -0.999884, 0.0152712, -0.00256347, -0.0228854, 0.221068)
+shape = SubResource("BoxShape3D_blfr4")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.987954, -0.154745, 0, 0.154745, 0.987954, 0.00579834, -0.532941, -0.245076)
-shape = SubResource("BoxShape3D_rh7mx")
+transform = Transform3D(-1, -1.35282e-08, -8.63697e-08, 7.57103e-08, 0.359964, -0.932966, 4.37114e-08, -0.932966, -0.359964, -0.00579832, -0.0542284, 0.584078)
+shape = SubResource("BoxShape3D_sx5cx")
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.987954, -0.154745, 0, 0.154745, 0.987954, 0.0024395, -0.460992, -0.199741)
-shape = SubResource("BoxShape3D_13mv2")
+transform = Transform3D(-1, -1.35282e-08, -8.63697e-08, 7.57103e-08, 0.359964, -0.932966, 4.37114e-08, -0.932966, -0.359964, -0.00243948, -0.0575152, 0.499101)
+shape = SubResource("BoxShape3D_1ubav")

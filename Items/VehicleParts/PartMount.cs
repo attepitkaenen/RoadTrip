@@ -73,7 +73,6 @@ public partial class PartMount : Node3D
     private void PartEntered(Node3D body)
     {
         var type = body.GetType().ToString();
-        GD.Print(type);
         if (type == partType.ToString())
         {
             GD.Print("Correct type!");

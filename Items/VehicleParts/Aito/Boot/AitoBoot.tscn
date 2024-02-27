@@ -19,9 +19,6 @@ script = ExtResource("1_njkc3")
 isHorizontal = true
 ItemId = 115
 
-[node name="Node3D" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 0, 0)
-
 [node name="aitoBoot" parent="." instance=ExtResource("2_0xirq")]
 transform = Transform3D(1.18, 0, 2.81334e-07, -2.43642e-07, 0.59, 1.02191, -1.40667e-07, -1.02191, 0.59, -1.14504e-07, -1.51234, -9.26852e-05)
 

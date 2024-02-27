@@ -33,7 +33,6 @@ public partial class Door : Item, IMounted
     public override void _PhysicsProcess(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
-        GD.Print(RotationDegrees);
         syncPosition = Position;
         syncRotation = Rotation;
         syncBasis = Basis;

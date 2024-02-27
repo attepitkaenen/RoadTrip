@@ -249,7 +249,7 @@ script = ExtResource("7_dmeq2")
 
 [node name="TireMount" type="Node3D" parent="WheelFL"]
 script = ExtResource("8_jrpr4")
-partType = 10
+partType = 11
 
 [node name="Area3D" type="Area3D" parent="WheelFL/TireMount"]
 collision_layer = 8
@@ -269,7 +269,7 @@ script = ExtResource("7_dmeq2")
 
 [node name="TireMount" type="Node3D" parent="WheelFR"]
 script = ExtResource("8_jrpr4")
-partType = 10
+partType = 11
 
 [node name="Area3D" type="Area3D" parent="WheelFR/TireMount"]
 collision_layer = 8
@@ -289,7 +289,7 @@ script = ExtResource("7_dmeq2")
 
 [node name="TireMount" type="Node3D" parent="WheelBL"]
 script = ExtResource("8_jrpr4")
-partType = 10
+partType = 11
 
 [node name="Area3D" type="Area3D" parent="WheelBL/TireMount"]
 collision_layer = 8
@@ -309,7 +309,7 @@ script = ExtResource("7_dmeq2")
 
 [node name="TireMount" type="Node3D" parent="WheelBR"]
 script = ExtResource("8_jrpr4")
-partType = 10
+partType = 11
 
 [node name="Area3D" type="Area3D" parent="WheelBR/TireMount"]
 collision_layer = 8
