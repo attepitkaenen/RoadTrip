@@ -5,6 +5,7 @@
 
 [node name="ToolBoxHeld" type="Node3D"]
 script = ExtResource("1_jgyo6")
+holdType = 1
 
 [node name="toolbox" parent="." instance=ExtResource("2_66inn")]
-transform = Transform3D(-1.66103e-08, 0, 0.38, 0, 0.38, 0, -0.38, 0, -1.66103e-08, 0.035, 0, 0)
+transform = Transform3D(-1.66103e-08, -0.38, 0, 0.38, -1.66103e-08, 0, 0, 0, 0.38, 0.278644, -0.0157431, 0.0312115)

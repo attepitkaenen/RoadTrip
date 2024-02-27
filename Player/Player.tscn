@@ -29,9 +29,6 @@ properties/6/replication_mode = 1
 properties/7/path = NodePath("Head/RotationPoint:rotation")
 properties/7/spawn = true
 properties/7/replication_mode = 1
-properties/8/path = NodePath("Head/RotationPoint/Camera3D/Equip:position")
-properties/8/spawn = true
-properties/8/replication_mode = 1
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5ovv6"]
 radius = 0.3
@@ -41,7 +38,7 @@ height = 0.9
 height = 1.5
 radius = 0.2
 
-[sub_resource type="Animation" id="Animation_5eycq"]
+[sub_resource type="Animation" id="Animation_p4rxv"]
 resource_name = "aPose"
 length = 0.0416667
 tracks/0/type = "rotation_3d"
@@ -311,7 +308,7 @@ tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="Animation" id="Animation_igngu"]
+[sub_resource type="Animation" id="Animation_3jhpn"]
 resource_name = "holding"
 length = 0.001
 tracks/0/type = "rotation_3d"
@@ -581,7 +578,7 @@ tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="Animation" id="Animation_00ms0"]
+[sub_resource type="Animation" id="Animation_o4331"]
 resource_name = "idle"
 length = 0.0416667
 tracks/0/type = "rotation_3d"
@@ -851,7 +848,7 @@ tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="Animation" id="Animation_aukd7"]
+[sub_resource type="Animation" id="Animation_hw7bm"]
 resource_name = "jump"
 length = 0.625
 tracks/0/type = "rotation_3d"
@@ -1121,7 +1118,7 @@ tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="Animation" id="Animation_hl2jf"]
+[sub_resource type="Animation" id="Animation_fsgdi"]
 resource_name = "sitting"
 length = 0.001
 tracks/0/type = "rotation_3d"
@@ -1391,7 +1388,7 @@ tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="Animation" id="Animation_4tui0"]
+[sub_resource type="Animation" id="Animation_n7urg"]
 resource_name = "walkingLeft_loop"
 length = 0.833333
 loop_mode = 1
@@ -1662,7 +1659,7 @@ tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = PackedFloat32Array(0, 1, -0.673096, 0.21666, 0.673096, 0.21666)
 
-[sub_resource type="Animation" id="Animation_85r2t"]
+[sub_resource type="Animation" id="Animation_e7sh3"]
 resource_name = "walkingRight_loop"
 length = 0.833333
 loop_mode = 1
@@ -1933,7 +1930,7 @@ tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = PackedFloat32Array(0, 1, -0.673096, 0.21666, 0.673096, 0.21666)
 
-[sub_resource type="Animation" id="Animation_if77e"]
+[sub_resource type="Animation" id="Animation_yccan"]
 resource_name = "walking_loop"
 length = 0.833333
 loop_mode = 1
@@ -2204,16 +2201,16 @@ tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_lk1fe"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lbf46"]
 _data = {
-"aPose": SubResource("Animation_5eycq"),
-"holding": SubResource("Animation_igngu"),
-"idle": SubResource("Animation_00ms0"),
-"jump": SubResource("Animation_aukd7"),
-"sitting": SubResource("Animation_hl2jf"),
-"walking": SubResource("Animation_if77e"),
-"walkingLeft": SubResource("Animation_4tui0"),
-"walkingRight": SubResource("Animation_85r2t")
+"aPose": SubResource("Animation_p4rxv"),
+"holding": SubResource("Animation_3jhpn"),
+"idle": SubResource("Animation_o4331"),
+"jump": SubResource("Animation_hw7bm"),
+"sitting": SubResource("Animation_fsgdi"),
+"walking": SubResource("Animation_yccan"),
+"walkingLeft": SubResource("Animation_n7urg"),
+"walkingRight": SubResource("Animation_e7sh3")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3t72p"]
@@ -2326,7 +2323,7 @@ nodes/StateMachine/node = SubResource("AnimationNodeStateMachine_xg31g")
 nodes/StateMachine/position = Vector2(-240, -60)
 node_connections = [&"HoldingBlend", 0, &"StateMachine", &"HoldingBlend", 1, &"Holding", &"output", 0, &"HoldingBlend"]
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "head", "collisionShape3D", "HeadIK", "HandIK", "stateLabel", "speedLabel", "playerList", "debugWindow", "interactionCast", "hand", "equip", "staticBody") groups=["Player"]]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("camera", "animationTree", "floatMachine", "nameTag", "head", "collisionShape3D", "HeadIK", "HandIK", "stateLabel", "speedLabel", "playerList", "debugWindow", "interactionCast", "hand", "equip", "staticBody", "EquipHandPosition") groups=["Player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_mask = 23
 script = ExtResource("1_3rtis")
@@ -2346,8 +2343,9 @@ acceleration = 7.0
 deceleration = 7.0
 interactionCast = NodePath("Head/RotationPoint/Camera3D/InteractionRay")
 hand = NodePath("Head/RotationPoint/Camera3D/Hand")
-equip = NodePath("Head/RotationPoint/Camera3D/Equip")
+equip = NodePath("Head/RotationPoint/Camera3D/EquipHandPosition/Equip")
 staticBody = NodePath("Head/RotationPoint/Camera3D/StaticBody3D")
+EquipHandPosition = NodePath("Head/RotationPoint/Camera3D/EquipHandPosition")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.032
@@ -2370,7 +2368,7 @@ bones/8/rotation = Quaternion(-0.388663, 0.199357, -0.185249, 0.880273)
 bones/8/scale = Vector3(1, 1, 1)
 bones/9/rotation = Quaternion(-0.152504, -4.27981e-08, 0.206124, 0.966569)
 bones/10/rotation = Quaternion(-0.527606, -0.0660125, -0.00283927, 0.846916)
-bones/11/rotation = Quaternion(0.324745, 0.124031, -0.03029, 0.937144)
+bones/11/rotation = Quaternion(0.324745, 0.124031, -0.03029, 0.937145)
 bones/12/rotation = Quaternion(0.0172237, -0.00857894, -0.20332, 0.978923)
 bones/12/scale = Vector3(1, 1, 1)
 bones/13/rotation = Quaternion(-0.27253, -0.0295457, 0.00391546, 0.961686)
@@ -2424,7 +2422,7 @@ target_node = NodePath("../../../../Head/RotationPoint/HeadBoneTarget")
 process_priority = 1
 root_bone = &"pec.r"
 tip_bone = &"palm2.r"
-target_node = NodePath("../../../../Head/RotationPoint/Camera3D/HandTarget")
+target_node = NodePath("../../../../Head/RotationPoint/Camera3D/EquipHandPosition/HandTarget")
 
 [node name="NameTag" type="Label3D" parent="."]
 transform = Transform3D(-0.3, 0, -4.52987e-08, 0, 0.3, 0, 4.52987e-08, 0, -0.3, 0, -0.0464681, -0.195011)
@@ -2448,7 +2446,7 @@ collision_mask = 22
 [node name="AnimationTree" type="AnimationTree" parent="."]
 root_node = NodePath("../character")
 libraries = {
-"": SubResource("AnimationLibrary_lk1fe")
+"": SubResource("AnimationLibrary_lbf46")
 }
 tree_root = SubResource("AnimationNodeBlendTree_sppp1")
 anim_player = NodePath("../character/AnimationPlayer")
@@ -2480,11 +2478,14 @@ node_a = NodePath("../StaticBody3D")
 [node name="StaticBody3D" type="StaticBody3D" parent="Head/RotationPoint/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
-[node name="Equip" type="Marker3D" parent="Head/RotationPoint/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.234897, -0.199575, -0.46837)
-
-[node name="HandTarget" type="Node3D" parent="Head/RotationPoint/Camera3D"]
+[node name="EquipHandPosition" type="Node3D" parent="Head/RotationPoint/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.273916, -0.175279, -0.356817)
+
+[node name="HandTarget" type="Node3D" parent="Head/RotationPoint/Camera3D/EquipHandPosition"]
+transform = Transform3D(1, 0, 0, 0, 0.463528, 0.886082, 0, -0.886082, 0.463528, 0, 0, 0)
+
+[node name="Equip" type="Marker3D" parent="Head/RotationPoint/Camera3D/EquipHandPosition"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0737788, -0.0053851, -0.0810995)
 
 [node name="HeadBoneTarget" type="Node3D" parent="Head/RotationPoint"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.0548558, 0)
