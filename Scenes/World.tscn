@@ -50,7 +50,6 @@ texture_filter = 5
 script = ExtResource("1_nr3g4")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Player/Ragdoll/ragdoll.tscn")
 spawn_path = NodePath("..")
 
 [node name="Ground" type="CSGBox3D" parent="."]

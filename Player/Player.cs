@@ -46,6 +46,7 @@ public partial class Player : CharacterBody3D
 	[Export] private Marker3D hand;
 	[Export] private Marker3D equip;
 	[Export] private StaticBody3D staticBody;
+	[Export] private Node3D EquipHandPosition;
 	private dynamic PickedItem;
 	private ItemResource itemResource;
 	private int _heldItemId;
@@ -386,10 +387,20 @@ public partial class Player : CharacterBody3D
 	{
 		if (_heldItemId != 0 && heldItem is null)
 		{
-			HandIK.Start();
 			HeldItem item = gameManager.GetItemResource(_heldItemId).ItemInHand.Instantiate() as HeldItem;
+			if (item.holdType == 0)
+			{
+				EquipHandPosition.Position = new Vector3(0.274f, -0.175f, -0.357f);
+				EquipHandPosition.Rotation = Vector3.Zero;
+			}
+			else if (item.holdType == 1)
+			{
+				EquipHandPosition.Position = new Vector3(0.274f, -0.211f, -0.357f);
+				EquipHandPosition.RotationDegrees = new Vector3(0, 0, 90);
+			}
 			item.SetMultiplayerAuthority((int)Id);
 			equip.AddChild(item);
+			HandIK.Start();
 			heldItem = item;
 		}
 		else if (heldItem is not null && _heldItemId == 0)
@@ -535,7 +546,6 @@ public partial class Player : CharacterBody3D
 	public void HandleRpcAnimations(string state, bool isGroundedRpc, Vector3 velocity, Basis basis, bool isHolding)
 	{
 		animationTree.Set("parameters/HoldingBlend/blend_amount", isHolding);
-		GD.Print(isHolding);
 
 		if (state == "seated")
 		{
