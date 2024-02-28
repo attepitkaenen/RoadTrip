@@ -100,6 +100,18 @@ visibility_update_mode = 1
 [node name="EngineBay" parent="." instance=ExtResource("2_6y7ah")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 1.632)
 
+[node name="EngineMount" parent="EngineBay" index="2"]
+_partId = 100
+_partCondition = 100.0
+
+[node name="BatteryMount" parent="EngineBay" index="3"]
+_partId = 103
+_partCondition = 100.0
+
+[node name="StarterMount" parent="EngineBay" index="9"]
+_partId = 108
+_partCondition = 100.0
+
 [node name="Dashboard3" parent="." instance=ExtResource("3_tqb1p")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.634657, 1.21247)
 
@@ -437,3 +449,5 @@ shape = SubResource("BoxShape3D_khang")
 [node name="Roof1" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.303, -0.12064)
 shape = SubResource("BoxShape3D_kkank")
+
+[editable path="EngineBay"]

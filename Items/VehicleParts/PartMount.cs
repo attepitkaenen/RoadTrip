@@ -47,6 +47,7 @@ public partial class PartMount : Node3D
         _partArea = GetNode<Area3D>("Area3D");
         _partArea.BodyEntered += PartEntered;
         _partArea.BodyExited += PartExited;
+        EmitSignal(SignalName.PartChanged, _partId, _partCondition, partType.ToString());
     }
 
     public override void _PhysicsProcess(double delta)
