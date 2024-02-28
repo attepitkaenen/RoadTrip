@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://7eis7so5p5lh"]
+[gd_scene load_steps=27 format=3 uid="uid://7eis7so5p5lh"]
 
 [ext_resource type="Script" path="res://Vehicles/Leluota Aito/Aito.cs" id="1_lai86"]
 [ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Leluota Aito/aito.blend" id="3_0l07t"]
@@ -44,6 +44,9 @@ albedo_color = Color(0.431373, 0.223529, 0.113725, 1)
 material = SubResource("StandardMaterial3D_wtrmi")
 size = Vector3(0.5, 0.1, 0.5)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_vpsqh"]
+size = Vector3(1.7, 1, 2.61176)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_cwr7c"]
 size = Vector3(1.7, 0.110742, 2.58591)
 
@@ -77,7 +80,7 @@ size = Vector3(0.179956, 0.079999, 1.01154)
 [sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.102235, 1.64003)
 
-[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "engineBay")]
+[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "engineBay", "_itemArea")]
 collision_layer = 4
 collision_mask = 6
 mass = 900.0
@@ -86,6 +89,7 @@ center_of_mass = Vector3(0, 0.201208, 0.245741)
 script = ExtResource("1_lai86")
 _synchronizer = NodePath("MultiplayerSynchronizer")
 engineBay = NodePath("EngineBay")
+_itemArea = NodePath("ItemArea")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.016
@@ -349,6 +353,14 @@ mesh = SubResource("BoxMesh_5rl2c")
 
 [node name="SeatPosition" type="Marker3D" parent="Seat2"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.596146, 0.0536157)
+
+[node name="ItemArea" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ItemArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.554544, -0.0159607)
+shape = SubResource("BoxShape3D_vpsqh")
 
 [node name="Floor" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0446289, -0.045975)

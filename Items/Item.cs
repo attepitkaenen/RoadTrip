@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class Item : RigidBody3D
@@ -5,6 +6,7 @@ public partial class Item : RigidBody3D
 	public int playerHolding = 0;
 	[Export] public int ItemId;
 	[Export] bool isLogging = false;
+	public Vehicle vehicle;
 	GameManager gameManager;
 
 	// Sync properties
@@ -35,7 +37,6 @@ public partial class Item : RigidBody3D
 		timer.Start(2);
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SyncProperties()
 	{
 		timer.Start(2);
@@ -51,12 +52,22 @@ public partial class Item : RigidBody3D
 		syncAngularVelocity = angularVelocity;
 	}
 
+
 	public override void _PhysicsProcess(double delta)
 	{
 		if (!IsMultiplayerAuthority())
 		{
 			return;
 		};
+
+		if (vehicle is not null)
+		{
+			CustomIntegrator = true;
+		}
+		else
+		{
+			CustomIntegrator = false;
+		}
 
 		Quaternion q1 = GlobalBasis.GetRotationQuaternion();
 		Quaternion q2 = lastBasis.GetRotationQuaternion();
@@ -74,11 +85,6 @@ public partial class Item : RigidBody3D
 			angle = Mathf.Tau - angle;
 		}
 
-		if (isLogging)
-		{
-			GD.Print($"{LinearVelocity.Length()} : {angle} : {(lastPosition - GlobalPosition).Length()}");
-		}
-
 		if (LinearVelocity.Length() > 0.1f || AngularVelocity.Length() > 0.1f || angle > 0.1f || (lastPosition - GlobalPosition).Length() > 0.01f)
 		{
 			lastBasis = GlobalBasis;
@@ -86,6 +92,7 @@ public partial class Item : RigidBody3D
 			Rpc(nameof(SyncItem), GlobalPosition, GlobalBasis, LinearVelocity, AngularVelocity);
 		}
 	}
+
 	public override void _IntegrateForces(PhysicsDirectBodyState3D state)
 	{
 		if (!IsMultiplayerAuthority())
@@ -100,6 +107,14 @@ public partial class Item : RigidBody3D
 			state.LinearVelocity = syncLinearVelocity;
 			state.AngularVelocity = syncAngularVelocity;
 			return;
+		}
+
+		if (vehicle is not null)
+		{
+			// state.LinearVelocity = vehicle.LinearVelocity + Vector3.Down;
+			state.LinearVelocity = state.LinearVelocity; // + (Vector3.Down * 0.1f)
+			state.AngularVelocity = vehicle.AngularVelocity;
+			GlobalRotation = vehicle.GlobalRotation;
 		}
 	}
 
