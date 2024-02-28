@@ -1,13 +1,12 @@
-[gd_scene load_steps=26 format=3 uid="uid://d0oh83p5unnoa"]
+[gd_scene load_steps=27 format=3 uid="uid://c0rxm7urfduwm"]
 
 [ext_resource type="Script" path="res://Vehicles/Leluota Aito/Aito.cs" id="1_g2kx1"]
-[ext_resource type="Script" path="res://Items/VehicleParts/Windshield/WindshieldMount.cs" id="2_7qtxi"]
-[ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay/EngineBay.tscn" id="2_w0agl"]
-[ext_resource type="PackedScene" uid="uid://cluf4svnj38ms" path="res://Items/VehicleParts/Dashboard/Dashboard.tscn" id="3_7upht"]
-[ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Leluota Aito/aito.blend" id="4_cntk2"]
-[ext_resource type="Script" path="res://Items/VehicleParts/Door/DoorMount.cs" id="5_geq6a"]
-[ext_resource type="Script" path="res://Items/VehicleParts/Tire/TireHandler.cs" id="7_0pipl"]
-[ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="7_5g6db"]
+[ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay/EngineBay.tscn" id="2_6y7ah"]
+[ext_resource type="PackedScene" uid="uid://cluf4svnj38ms" path="res://Items/VehicleParts/Dashboard/Dashboard.tscn" id="3_tqb1p"]
+[ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Leluota Aito/aito.blend" id="4_172l5"]
+[ext_resource type="Script" path="res://Items/VehicleParts/PartMount.cs" id="5_axqt2"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Tire/TireHandler.cs" id="6_5k62b"]
+[ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="7_jiosd"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]
 properties/0/path = NodePath(".:syncRotation")
@@ -25,14 +24,14 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath(".:syncAngularVelocity")
 properties/4/spawn = true
 properties/4/replication_mode = 1
-properties/5/path = NodePath("Speedometer:text")
-properties/5/spawn = true
-properties/5/replication_mode = 1
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_33uxk"]
-size = Vector3(0.2, 0.2, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x5enl"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y5j3k"]
+size = Vector3(0.2, 0.555078, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_27p1i"]
 size = Vector3(0.2, 0.2, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0dfu3"]
@@ -44,6 +43,9 @@ albedo_color = Color(0.431373, 0.223529, 0.113725, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_5rl2c"]
 material = SubResource("StandardMaterial3D_wtrmi")
 size = Vector3(0.5, 0.1, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vpsqh"]
+size = Vector3(1.7, 1, 2.61176)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cwr7c"]
 size = Vector3(1.7, 0.110742, 2.58591)
@@ -72,13 +74,13 @@ size = Vector3(0.234998, 0.352081, 0.605466)
 [sub_resource type="BoxShape3D" id="BoxShape3D_khang"]
 size = Vector3(0.179956, 0.360035, 0.66223)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_86gdv"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_ta441"]
 size = Vector3(0.179956, 0.079999, 1.01154)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_awdqq"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.102235, 1.64003)
 
-[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "_speedometer", "engineBay")]
+[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "engineBay", "_itemArea")]
 collision_layer = 4
 collision_mask = 6
 mass = 900.0
@@ -86,8 +88,8 @@ center_of_mass_mode = 1
 center_of_mass = Vector3(0, 0.201208, 0.245741)
 script = ExtResource("1_g2kx1")
 _synchronizer = NodePath("MultiplayerSynchronizer")
-_speedometer = NodePath("Speedometer")
 engineBay = NodePath("EngineBay")
+_itemArea = NodePath("ItemArea")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.016
@@ -95,179 +97,147 @@ delta_interval = 0.016
 replication_config = SubResource("SceneReplicationConfig_4inyu")
 visibility_update_mode = 1
 
-[node name="WindshieldMount" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.959859, 1.70136)
-script = ExtResource("2_7qtxi")
-_windshieldId = 116
-_windshieldCondition = 100.0
-
-[node name="Area3D" type="Area3D" parent="WindshieldMount"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.573657, 0.154331)
-collision_layer = 8
-collision_mask = 8
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WindshieldMount/Area3D"]
-shape = SubResource("BoxShape3D_33uxk")
-
-[node name="EngineBay" parent="." instance=ExtResource("2_w0agl")]
+[node name="EngineBay" parent="." instance=ExtResource("2_6y7ah")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 1.632)
-_engineId = 100
-_engineCondition = 100.0
-_radiatorId = 102
-_radiatorCondition = 100.0
-_fuelInjectorId = 104
-_fuelInjectorCondition = 100.0
-_batteryId = 103
-_batteryCondition = 100.0
-_alternatorId = 105
-_alternatorCondition = 100.0
-_intakeId = 107
-_intakeCondition = 100.0
-_waterTankId = 106
-_waterTankCondition = 100.0
-_starterId = 108
-_starterCondition = 100.0
 
-[node name="Dashboard3" parent="." instance=ExtResource("3_7upht")]
+[node name="Dashboard3" parent="." instance=ExtResource("3_tqb1p")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.634657, 1.21247)
 
-[node name="aito" parent="." instance=ExtResource("4_cntk2")]
+[node name="aito" parent="." instance=ExtResource("4_172l5")]
 transform = Transform3D(-1.18, 0, -1.78175e-07, 0, 1.18, 0, 1.78175e-07, 0, -1.18, 0, 0.514511, 0.334204)
 
 [node name="CenterOfMass" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201208, 0.245741)
 
-[node name="Speedometer" type="Label3D" parent="."]
-transform = Transform3D(-0.2, 1.08224e-08, -2.81933e-08, 0, 0.186716, 0.0716735, 3.01992e-08, 0.0716735, -0.186716, 0.341741, 0.719213, 1.33736)
-modulate = Color(1, 0.619608, 0.121569, 1)
-text = "0"
-font_size = 128
-outline_size = 6
+[node name="Doors and Panels" type="Node3D" parent="."]
 
-[node name="Doors" type="Node3D" parent="."]
-
-[node name="FL" type="Node3D" parent="Doors"]
+[node name="FrontLeftMount" type="Node3D" parent="Doors and Panels"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.823348, 0.115296, 1.04343)
-script = ExtResource("5_geq6a")
-_doorId = 110
-_doorCondition = 100.0
+script = ExtResource("5_axqt2")
+partType = 9
 
-[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors/FL"]
+[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors and Panels/FrontLeftMount"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.395705, 0.112859)
 angular_limit/enable = true
 angular_limit/upper = 0.0
 angular_limit/lower = -1.39626
 
-[node name="Area3D" type="Area3D" parent="Doors/FL"]
+[node name="Area3D" type="Area3D" parent="Doors and Panels/FrontLeftMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.392271, -0.331468)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/FL/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors and Panels/FrontLeftMount/Area3D"]
 shape = SubResource("BoxShape3D_x5enl")
 
-[node name="Bonnet" type="Node3D" parent="Doors"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.739044, 1.44787)
-script = ExtResource("5_geq6a")
-_doorId = 114
-_doorCondition = 100.0
-isHorizontal = true
+[node name="BonnetMount" type="Node3D" parent="Doors and Panels"]
+transform = Transform3D(1, 0, 0, 0, 0.945519, -0.325568, 0, 0.325568, 0.945519, 0, 0.792412, 1.42843)
+script = ExtResource("5_axqt2")
+partType = 10
 
-[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors/Bonnet"]
+[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors and Panels/BonnetMount"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.025301, -0.0109911)
 angular_limit/enable = true
 angular_limit/upper = 2.0944
 angular_limit/lower = 0.0
 
-[node name="Area3D" type="Area3D" parent="Doors/Bonnet"]
+[node name="Area3D" type="Area3D" parent="Doors and Panels/BonnetMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0270618, 0.320455)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/Bonnet/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors and Panels/BonnetMount/Area3D"]
 shape = SubResource("BoxShape3D_x5enl")
 
-[node name="Boot" type="Node3D" parent="Doors"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.27859, -0.991264)
-script = ExtResource("5_geq6a")
-_doorId = 115
-_doorCondition = 100.0
-isHorizontal = true
+[node name="BootMount" type="Node3D" parent="Doors and Panels"]
+transform = Transform3D(-1, 1.30766e-07, 7.54979e-08, 0, 0.5, -0.866025, -1.50996e-07, -0.866025, -0.5, 0, 1.27859, -0.991264)
+script = ExtResource("5_axqt2")
+partType = 10
 
-[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors/Boot"]
+[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors and Panels/BootMount"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 angular_limit/enable = true
-angular_limit/upper = 0.0
-angular_limit/lower = -2.96706
+angular_limit/upper = 2.96706
+angular_limit/lower = 0.0
 
-[node name="Area3D" type="Area3D" parent="Doors/Boot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0270618, -0.264247)
+[node name="Area3D" type="Area3D" parent="Doors and Panels/BootMount"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.58911e-08, 0.120191, 0.399669)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/Boot/Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1337e-09, -0.321952, -0.0587225)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors and Panels/BootMount/Area3D"]
 shape = SubResource("BoxShape3D_x5enl")
 
-[node name="FR" type="Node3D" parent="Doors"]
+[node name="FrontRightMount" type="Node3D" parent="Doors and Panels"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.823, 0.115, 1.04344)
-script = ExtResource("5_geq6a")
-_doorId = 111
-_doorCondition = 100.0
+script = ExtResource("5_axqt2")
+partType = 9
 
-[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors/FR"]
+[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors and Panels/FrontRightMount"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.395705, 0.112859)
 angular_limit/enable = true
 angular_limit/upper = 1.39626
 angular_limit/lower = 0.0
 
-[node name="Area3D" type="Area3D" parent="Doors/FR"]
+[node name="Area3D" type="Area3D" parent="Doors and Panels/FrontRightMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.392271, -0.331468)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/FR/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors and Panels/FrontRightMount/Area3D"]
 shape = SubResource("BoxShape3D_x5enl")
 
-[node name="BR" type="Node3D" parent="Doors"]
+[node name="BackRightMount" type="Node3D" parent="Doors and Panels"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.823, 0.115, 0.0434446)
-script = ExtResource("5_geq6a")
-_doorId = 112
-_doorCondition = 110.0
+script = ExtResource("5_axqt2")
+partType = 9
 
-[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors/BR"]
+[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors and Panels/BackRightMount"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.395705, 0.112859)
 angular_limit/enable = true
 angular_limit/upper = 1.39626
 angular_limit/lower = 0.0
 
-[node name="Area3D" type="Area3D" parent="Doors/BR"]
+[node name="Area3D" type="Area3D" parent="Doors and Panels/BackRightMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.392271, -0.331468)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/BR/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors and Panels/BackRightMount/Area3D"]
 shape = SubResource("BoxShape3D_x5enl")
 
-[node name="BL" type="Node3D" parent="Doors"]
+[node name="BackLeftMount" type="Node3D" parent="Doors and Panels"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.823, 0.115, 0.043)
-script = ExtResource("5_geq6a")
-_doorId = 113
-_doorCondition = 100.0
+script = ExtResource("5_axqt2")
+partType = 9
 
-[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors/BL"]
+[node name="HingeJoint3D" type="HingeJoint3D" parent="Doors and Panels/BackLeftMount"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.395705, 0.112859)
 angular_limit/enable = true
 angular_limit/upper = 0.0
 angular_limit/lower = -1.39626
 
-[node name="Area3D" type="Area3D" parent="Doors/BL"]
+[node name="Area3D" type="Area3D" parent="Doors and Panels/BackLeftMount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.392271, -0.331468)
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/BL/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors and Panels/BackLeftMount/Area3D"]
 shape = SubResource("BoxShape3D_x5enl")
+
+[node name="WindshieldMount" type="Node3D" parent="Doors and Panels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01771, 1.04033)
+script = ExtResource("5_axqt2")
+partType = 8
+
+[node name="Area3D" type="Area3D" parent="Doors and Panels/WindshieldMount"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0669816, 0.0287597)
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors and Panels/WindshieldMount/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.177539, 0)
+shape = SubResource("BoxShape3D_y5j3k")
 
 [node name="WheelFL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.1, 1.55)
@@ -276,16 +246,20 @@ wheel_radius = 0.1
 wheel_rest_length = 0.2
 wheel_friction_slip = 1.5
 suspension_stiffness = 70.0
-script = ExtResource("7_0pipl")
-_tireId = 109
-_tireCondition = 100.0
+script = ExtResource("6_5k62b")
 
-[node name="Area3D" type="Area3D" parent="WheelFL"]
+[node name="TireMount" type="Node3D" parent="WheelFL"]
+script = ExtResource("5_axqt2")
+_partId = 109
+_partCondition = 100.0
+partType = 11
+
+[node name="Area3D" type="Area3D" parent="WheelFL/TireMount"]
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WheelFL/Area3D"]
-shape = SubResource("BoxShape3D_x5enl")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WheelFL/TireMount/Area3D"]
+shape = SubResource("BoxShape3D_27p1i")
 
 [node name="WheelFR" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.1, 1.55)
@@ -294,16 +268,20 @@ wheel_radius = 0.1
 wheel_rest_length = 0.2
 wheel_friction_slip = 1.5
 suspension_stiffness = 70.0
-script = ExtResource("7_0pipl")
-_tireId = 109
-_tireCondition = 100.0
+script = ExtResource("6_5k62b")
 
-[node name="Area3D" type="Area3D" parent="WheelFR"]
+[node name="TireMount" type="Node3D" parent="WheelFR"]
+script = ExtResource("5_axqt2")
+_partId = 109
+_partCondition = 100.0
+partType = 11
+
+[node name="Area3D" type="Area3D" parent="WheelFR/TireMount"]
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WheelFR/Area3D"]
-shape = SubResource("BoxShape3D_x5enl")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WheelFR/TireMount/Area3D"]
+shape = SubResource("BoxShape3D_27p1i")
 
 [node name="WheelBL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.1, -1)
@@ -312,16 +290,20 @@ wheel_radius = 0.1
 wheel_rest_length = 0.2
 wheel_friction_slip = 1.3
 suspension_stiffness = 70.0
-script = ExtResource("7_0pipl")
-_tireId = 109
-_tireCondition = 100.0
+script = ExtResource("6_5k62b")
 
-[node name="Area3D" type="Area3D" parent="WheelBL"]
+[node name="TireMount" type="Node3D" parent="WheelBL"]
+script = ExtResource("5_axqt2")
+_partId = 109
+_partCondition = 100.0
+partType = 11
+
+[node name="Area3D" type="Area3D" parent="WheelBL/TireMount"]
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WheelBL/Area3D"]
-shape = SubResource("BoxShape3D_x5enl")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WheelBL/TireMount/Area3D"]
+shape = SubResource("BoxShape3D_27p1i")
 
 [node name="WheelBR" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.1, -1)
@@ -330,23 +312,27 @@ wheel_radius = 0.1
 wheel_rest_length = 0.2
 wheel_friction_slip = 1.3
 suspension_stiffness = 70.0
-script = ExtResource("7_0pipl")
-_tireId = 109
-_tireCondition = 100.0
+script = ExtResource("6_5k62b")
 
-[node name="Area3D" type="Area3D" parent="WheelBR"]
+[node name="TireMount" type="Node3D" parent="WheelBR"]
+script = ExtResource("5_axqt2")
+_partId = 109
+_partCondition = 100.0
+partType = 11
+
+[node name="Area3D" type="Area3D" parent="WheelBR/TireMount"]
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WheelBR/Area3D"]
-shape = SubResource("BoxShape3D_x5enl")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WheelBR/TireMount/Area3D"]
+shape = SubResource("BoxShape3D_27p1i")
 
 [node name="DriverSeat" type="RigidBody3D" parent="." groups=["Seat"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.352479, 0.22269, 0.397925)
 collision_layer = 4
 collision_mask = 15
 freeze = true
-script = ExtResource("7_5g6db")
+script = ExtResource("7_jiosd")
 isDriverSeat = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DriverSeat"]
@@ -364,7 +350,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.321629, 0.22269, 0.397925)
 collision_layer = 4
 collision_mask = 15
 freeze = true
-script = ExtResource("7_5g6db")
+script = ExtResource("7_jiosd")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Seat2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0636719, 0)
@@ -375,6 +361,14 @@ mesh = SubResource("BoxMesh_5rl2c")
 
 [node name="SeatPosition" type="Marker3D" parent="Seat2"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.596146, 0.0536157)
+
+[node name="ItemArea" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ItemArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.554544, -0.0159607)
+shape = SubResource("BoxShape3D_vpsqh")
 
 [node name="Floor" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0446289, -0.045975)
@@ -428,18 +422,18 @@ shape = SubResource("BoxShape3D_odob8")
 transform = Transform3D(1, 0, 0, 0, 0.961516, -0.274748, 0, 0.274748, 0.961516, 0.775375, 0.535521, 1.66391)
 shape = SubResource("BoxShape3D_khang")
 
+[node name="FrontLeft2" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.988657, 0.0732126, 0.131138, 0, 0.873143, -0.487463, -0.150191, 0.481934, 0.863239, 0.694183, 1.13695, 0.957329)
+shape = SubResource("BoxShape3D_ta441")
+
+[node name="FrontRight2" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.988756, -0.0729522, -0.130533, 0, 0.872922, -0.48786, 0.149535, 0.482374, 0.863107, -0.692, 1.11265, 0.944)
+shape = SubResource("BoxShape3D_ta441")
+
 [node name="FrontRight" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.961516, -0.274748, 0, 0.274748, 0.961516, -0.775682, 0.535521, 1.66391)
 shape = SubResource("BoxShape3D_khang")
 
-[node name="FrontLeft2" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.988657, 0.0732126, 0.131138, 0, 0.873143, -0.487463, -0.150191, 0.481934, 0.863239, 0.694183, 1.13695, 0.957329)
-shape = SubResource("BoxShape3D_86gdv")
-
-[node name="FrontRight2" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.988756, -0.0729522, -0.130533, 0, 0.872922, -0.48786, 0.149535, 0.482374, 0.863107, -0.692, 1.11265, 0.944)
-shape = SubResource("BoxShape3D_86gdv")
-
 [node name="Roof1" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.303, -0.12064)
-shape = SubResource("BoxShape3D_awdqq")
+shape = SubResource("BoxShape3D_kkank")

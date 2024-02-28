@@ -3,7 +3,7 @@ using System;
 
 public partial class TireHandler : VehicleWheel3D
 {
-    [ExportGroup("Engine properties")]
+    [ExportGroup("Tire properties")]
     Tire _tire;
     PartMount _tireMount;
     [Export] private int _tireId;
@@ -13,6 +13,8 @@ public partial class TireHandler : VehicleWheel3D
     {
         _tireMount = GetNode<PartMount>("TireMount");
         _tireMount.PartChanged += PartChanged;
+        _tireId = _tireMount.GetPartId();
+        _tireCondition = _tireMount.GetPartCondition();
     }
 
     public override void _PhysicsProcess(double delta)

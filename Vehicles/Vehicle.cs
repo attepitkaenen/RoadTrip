@@ -8,6 +8,7 @@ public partial class Vehicle : VehicleBody3D
 	[Export] private MultiplayerSynchronizer _synchronizer;
 	[Export] public EngineBay engineBay;
 	[Export] public float breakForce = 50;
+	[Export] private Area3D _itemArea;
 	private Seat _driverSeat;
 	float enginePower = 0;
 	float maxSteer = 0.8f;
@@ -33,6 +34,9 @@ public partial class Vehicle : VehicleBody3D
 		{
 			CustomIntegrator = true;
 		};
+
+		_itemArea.BodyEntered += ItemEntered;
+		_itemArea.BodyExited += ItemExited;
 
 		_driverSeat = GetNode<Seat>("DriverSeat");
 	}
@@ -105,20 +109,21 @@ public partial class Vehicle : VehicleBody3D
 
 	public void ItemEntered(Node3D node)
 	{
-		// if (node is Item item)
-		// {
-		// 	item.vehicle = this;
-		// 	items.Add(item);
-		// }
+		if (node is Item item)
+		{
+			item.vehicle = this;
+			items.Add(item);
+		}
+
 	}
 
 	public void ItemExited(Node3D node)
 	{
-		// if (node is Item item)
-		// {
-		// 	item.vehicle = null;
-		// 	items.Remove(item);
-		// }
+		if (node is Item item)
+		{
+			item.vehicle = null;
+			items.Remove(item);
+		}
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
