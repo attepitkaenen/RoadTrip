@@ -9,7 +9,8 @@ public partial class TireHandler : VehicleWheel3D
     [Export] private int _tireId;
     [Export] private float _tireCondition;
 
-    public override void _Ready()
+
+    public override void _EnterTree()
     {
         _tireMount = GetNode<PartMount>("TireMount");
         _tireMount.PartChanged += PartChanged;

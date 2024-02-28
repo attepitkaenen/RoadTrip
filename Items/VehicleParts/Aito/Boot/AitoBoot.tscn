@@ -4,13 +4,13 @@
 [ext_resource type="PackedScene" uid="uid://vul6k0n882n5" path="res://Items/VehicleParts/Aito/Boot/aitoBoot.blend" id="2_0xirq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6r01e"]
-size = Vector3(1.18774, 0.436279, 0.0896912)
+size = Vector3(1.188, 0.436, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2hjdp"]
-size = Vector3(0.642212, 0.333344, 0.0776825)
+size = Vector3(0.642, 0.333, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qkkdk"]
-size = Vector3(1.28347, 0.18441, 0.0782166)
+size = Vector3(1.283, 0.184, 0.2)
 
 [node name="AitoBoot" type="RigidBody3D"]
 collision_layer = 16
@@ -23,13 +23,13 @@ ItemId = 115
 transform = Transform3D(1.18, 0, 2.81334e-07, -2.43642e-07, 0.59, 1.02191, -1.40667e-07, -1.02191, 0.59, -1.14504e-07, -1.51234, -9.26852e-05)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(-1, -4.48625e-08, -7.5034e-08, 7.57103e-08, -0.0152712, -0.999884, 4.37114e-08, -0.999884, 0.0152712, -0.00256347, -0.0228854, 0.221068)
+transform = Transform3D(-1, -4.48625e-08, -7.5034e-08, 7.57103e-08, -0.0152712, -0.999884, 4.37114e-08, -0.999884, 0.0152712, -0.00256347, 0.0235358, 0.238061)
 shape = SubResource("BoxShape3D_6r01e")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(-1, -1.35282e-08, -8.63697e-08, 7.57103e-08, 0.359964, -0.932966, 4.37114e-08, -0.932966, -0.359964, -0.00579832, -0.0542284, 0.584078)
+transform = Transform3D(-1, -1.35282e-08, -8.63697e-08, 7.57103e-08, 0.359964, -0.932966, 4.37114e-08, -0.932966, -0.359964, -0.00579832, -0.00780723, 0.601071)
 shape = SubResource("BoxShape3D_2hjdp")
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
-transform = Transform3D(-1, -1.35282e-08, -8.63697e-08, 7.57103e-08, 0.359964, -0.932966, 4.37114e-08, -0.932966, -0.359964, -0.00243948, -0.0575152, 0.499101)
+transform = Transform3D(-1, -1.35282e-08, -8.63697e-08, 7.57103e-08, 0.359964, -0.932966, 4.37114e-08, -0.932966, -0.359964, -0.00243948, -0.011094, 0.516094)
 shape = SubResource("BoxShape3D_qkkdk")

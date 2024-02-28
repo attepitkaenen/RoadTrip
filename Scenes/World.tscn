@@ -312,22 +312,22 @@ size = Vector3(5.81396, 0.580909, 2.63043)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.98241, 1.8272, 1.06013)
 
 [node name="Item2" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1499, 2.99281, -6.09811)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8488, 1.52854, -5.29617)
 
 [node name="Item3" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1499, 3.26722, -6.09811)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8488, 1.80295, -5.29617)
 
 [node name="Item4" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1499, 3.55586, -6.09811)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8488, 2.09159, -5.29617)
 
 [node name="Item5" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1499, 3.80783, -6.09811)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8488, 2.34356, -5.29617)
 
 [node name="Item6" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1485, 4.05956, -6.1015)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8474, 2.59529, -5.90471)
 
 [node name="Item7" parent="Items" instance=ExtResource("5_xddwy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1485, 4.32266, -6.1015)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8474, 2.85839, -5.90471)
 
 [node name="Item8" parent="Items" instance=ExtResource("5_xddwy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1485, 4.58099, -6.1015)
