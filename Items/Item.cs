@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class Item : RigidBody3D
@@ -35,14 +36,13 @@ public partial class Item : RigidBody3D
 		timer.Start(2);
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SyncProperties()
 	{
 		timer.Start(2);
 		Rpc(nameof(SyncItem), GlobalPosition, GlobalBasis, LinearVelocity, AngularVelocity);
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered)]
 	public void SyncItem(Vector3 position, Basis basis, Vector3 linearVelocity, Vector3 angularVelocity)
 	{
 		syncPosition = position;
@@ -51,8 +51,10 @@ public partial class Item : RigidBody3D
 		syncAngularVelocity = angularVelocity;
 	}
 
+
 	public override void _PhysicsProcess(double delta)
 	{
+
 		if (!IsMultiplayerAuthority())
 		{
 			return;
@@ -74,11 +76,6 @@ public partial class Item : RigidBody3D
 			angle = Mathf.Tau - angle;
 		}
 
-		if (isLogging)
-		{
-			GD.Print($"{LinearVelocity.Length()} : {angle} : {(lastPosition - GlobalPosition).Length()}");
-		}
-
 		if (LinearVelocity.Length() > 0.1f || AngularVelocity.Length() > 0.1f || angle > 0.1f || (lastPosition - GlobalPosition).Length() > 0.01f)
 		{
 			lastBasis = GlobalBasis;
@@ -86,6 +83,7 @@ public partial class Item : RigidBody3D
 			Rpc(nameof(SyncItem), GlobalPosition, GlobalBasis, LinearVelocity, AngularVelocity);
 		}
 	}
+
 	public override void _IntegrateForces(PhysicsDirectBodyState3D state)
 	{
 		if (!IsMultiplayerAuthority())
@@ -112,6 +110,14 @@ public partial class Item : RigidBody3D
 	{
 		gameManager.Rpc(nameof(gameManager.DestroyItem), GetPath());
 	}
+
+
+	public void LashItemDown(Vector3 position, Vector3 rotation)
+	{
+		GlobalPosition = position;
+		GlobalRotation = rotation;
+	}
+
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Hit(int damage, Vector3 bulletTravelDirection)

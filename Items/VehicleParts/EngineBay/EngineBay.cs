@@ -55,8 +55,7 @@ public partial class EngineBay : Node3D
     [Export] private int _starterId;
     [Export] private float _starterCondition;
 
-
-    public override void _Ready()
+    public override void _EnterTree()
     {
         _engineMount = GetNode<PartMount>("EngineMount");
         _engineMount.PartChanged += PartChanged;
@@ -110,6 +109,7 @@ public partial class EngineBay : Node3D
 
     public void PartChanged(int itemId, float condition, string partType)
     {
+        GD.Print("Part changed");
         switch (partType)
         {
             case "EngineDropped":

@@ -41,12 +41,13 @@ public partial class PartMount : Node3D
         {
             multiplayerSynchronizer = GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
         }
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPartIdPath());
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPartConditionPath());
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_partId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_partCondition");
 
         _partArea = GetNode<Area3D>("Area3D");
         _partArea.BodyEntered += PartEntered;
         _partArea.BodyExited += PartExited;
+        EmitSignal(SignalName.PartChanged, _partId, _partCondition, partType.ToString());
     }
 
     public override void _PhysicsProcess(double delta)
@@ -54,14 +55,14 @@ public partial class PartMount : Node3D
         HandlePart();
     }
 
-    public string GetPartIdPath()
+    public int GetPartId()
     {
-        return GetPath() + ":_partId";
+        return _partId;
     }
 
-    public string GetPartConditionPath()
+    public float GetPartCondition()
     {
-        return GetPath() + ":_partCondition";
+        return _partCondition;
     }
 
     public dynamic GetPart()
