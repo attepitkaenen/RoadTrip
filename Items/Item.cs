@@ -6,7 +6,6 @@ public partial class Item : RigidBody3D
 	public int playerHolding = 0;
 	[Export] public int ItemId;
 	[Export] bool isLogging = false;
-	public Vehicle vehicle;
 	GameManager gameManager;
 
 	// Sync properties
@@ -43,7 +42,7 @@ public partial class Item : RigidBody3D
 		Rpc(nameof(SyncItem), GlobalPosition, GlobalBasis, LinearVelocity, AngularVelocity);
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered)]
 	public void SyncItem(Vector3 position, Basis basis, Vector3 linearVelocity, Vector3 angularVelocity)
 	{
 		syncPosition = position;
@@ -55,19 +54,11 @@ public partial class Item : RigidBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+
 		if (!IsMultiplayerAuthority())
 		{
 			return;
 		};
-
-		if (vehicle is not null)
-		{
-			CustomIntegrator = true;
-		}
-		else
-		{
-			CustomIntegrator = false;
-		}
 
 		Quaternion q1 = GlobalBasis.GetRotationQuaternion();
 		Quaternion q2 = lastBasis.GetRotationQuaternion();
@@ -108,14 +99,6 @@ public partial class Item : RigidBody3D
 			state.AngularVelocity = syncAngularVelocity;
 			return;
 		}
-
-		if (vehicle is not null)
-		{
-			// state.LinearVelocity = vehicle.LinearVelocity + Vector3.Down;
-			state.LinearVelocity = state.LinearVelocity; // + (Vector3.Down * 0.1f)
-			state.AngularVelocity = vehicle.AngularVelocity;
-			GlobalRotation = vehicle.GlobalRotation;
-		}
 	}
 
 	public bool IsColliding()
@@ -127,6 +110,14 @@ public partial class Item : RigidBody3D
 	{
 		gameManager.Rpc(nameof(gameManager.DestroyItem), GetPath());
 	}
+
+
+	public void LashItemDown(Vector3 position, Vector3 rotation)
+	{
+		GlobalPosition = position;
+		GlobalRotation = rotation;
+	}
+
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Hit(int damage, Vector3 bulletTravelDirection)
