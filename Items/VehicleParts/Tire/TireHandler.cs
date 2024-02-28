@@ -3,13 +3,14 @@ using System;
 
 public partial class TireHandler : VehicleWheel3D
 {
-    [ExportGroup("Engine properties")]
+    [ExportGroup("Tire properties")]
     Tire _tire;
     PartMount _tireMount;
     [Export] private int _tireId;
     [Export] private float _tireCondition;
 
-    public override void _Ready()
+
+    public override void _EnterTree()
     {
         _tireMount = GetNode<PartMount>("TireMount");
         _tireMount.PartChanged += PartChanged;

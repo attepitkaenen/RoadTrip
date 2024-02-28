@@ -8,12 +8,13 @@ public partial class Vehicle : VehicleBody3D
 	[Export] private MultiplayerSynchronizer _synchronizer;
 	[Export] public EngineBay engineBay;
 	[Export] public float breakForce = 50;
+	[Export] private Area3D _itemArea;
 	private Seat _driverSeat;
 	float enginePower = 0;
 	float maxSteer = 0.8f;
 	private Vector2 _inputDir;
 	bool braking;
-	public List<Item> items = new List<Item>();
+	public Dictionary<Item, Marker3D> items = new Dictionary<Item, Marker3D>();
 	public List<VehicleWheel3D> wheels = new List<VehicleWheel3D>();
 
 	// Sync properties
@@ -34,18 +35,24 @@ public partial class Vehicle : VehicleBody3D
 			CustomIntegrator = true;
 		};
 
+		_itemArea.BodyEntered += ItemEntered;
+		_itemArea.BodyExited += ItemExited;
+
 		_driverSeat = GetNode<Seat>("DriverSeat");
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
+		HandleItems();
+
 		if (!IsMultiplayerAuthority()) return;
+
 
 		enginePower = engineBay.GetHorsePower();
 
 		if (_driverSeat.seatedPlayerId < 1)
 		{
-			Brake = breakForce;
+			Brake = 10;
 			EngineForce = 0;
 		}
 
@@ -105,20 +112,65 @@ public partial class Vehicle : VehicleBody3D
 
 	public void ItemEntered(Node3D node)
 	{
-		// if (node is Item item)
-		// {
-		// 	item.vehicle = this;
-		// 	items.Add(item);
-		// }
+		if (LinearVelocity.Length() > 5) return;
+
+		if (node is Item item)
+		{
+			Rpc(nameof(AddItemToList), item.GetPath());
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void AddItemToList(string itemPath)
+	{
+		if (items.Keys.Contains(GetNode(itemPath)))
+		{
+			return;
+		}
+		Marker3D positionInVehicle = new Marker3D();
+		AddChild(positionInVehicle);
+		items.Add(GetNode<Item>(itemPath), positionInVehicle);
 	}
 
 	public void ItemExited(Node3D node)
 	{
-		// if (node is Item item)
-		// {
-		// 	item.vehicle = null;
-		// 	items.Remove(item);
-		// }
+		if (node is Item item)
+		{
+			Rpc(nameof(RemoveItemFromList), item.GetPath());
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void RemoveItemFromList(string itemPath)
+	{
+		if (!items.Keys.Contains(GetNode(itemPath)))
+		{
+			return;
+		}
+		Item item = GetNode<Item>(itemPath);
+		items[item].QueueFree();
+		items.Remove(item);
+	}
+
+	public void HandleItems()
+	{
+		if (LinearVelocity.Length() > 5)
+		{
+			foreach (var item in items.Keys)
+			{
+				Marker3D itemMarker = items[item];
+				item.LashItemDown(itemMarker.GlobalPosition, itemMarker.GlobalRotation);
+			}
+		}
+		else
+		{
+			foreach (var item in items.Keys)
+			{
+				Marker3D itemMarker = items[item];
+				itemMarker.GlobalPosition = item.GlobalPosition;
+				itemMarker.GlobalRotation = item.GlobalRotation;
+			}
+		}
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
