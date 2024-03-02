@@ -128,7 +128,6 @@ public partial class Door : Item, IMounted
         GlobalRotation = rotation;
     }
 
-
     public void Uninstall()
     {
         if (_mount is not null)

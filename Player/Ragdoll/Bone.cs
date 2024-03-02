@@ -1,14 +1,44 @@
-using Godot;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using Godot;
 
 public partial class Bone : PhysicalBone3D
 {
 	public int playerHolding = 0;
+	MultiplayerSynchronizer multiplayerSynchronizer;
+	Vector3 syncPos;
+	Vector3 syncRot;
 
+    // public override void _Ready()
+    // {
+    //     var ragdoll = GetParent().GetParent().GetParent().GetParent<Ragdoll>();
+	// 	multiplayerSynchronizer = ragdoll.multiplayerSynchronizer;
+    // }
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	// public void ActivateSync()
+	// {
+	// 	multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncPos");
+    //     multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncRot");
+	// }
+
+	// public void DeactivateSync()
+	// {
+    //     multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncPos");
+    //     multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncRot");
+	// }
+
+    // public override void _PhysicsProcess(double delta)
+    // {
+    //     if (!IsMultiplayerAuthority())
+	// 	{
+	// 		Position = Position.Lerp(syncPos, 0.1f);
+	// 		Rotation = Position.Lerp(syncRot, 0.1f);;
+	// 		return;
+	// 	}
+	// 	syncPos = Position;
+	// 	syncRot = Rotation;
+    // }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Move(Vector3 handPosition, Basis handBasis, int playerId)
 	{
 		if (playerHolding == 0)
