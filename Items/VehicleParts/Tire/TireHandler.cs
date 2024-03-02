@@ -23,7 +23,6 @@ public partial class TireHandler : VehicleWheel3D
 
     public void PartChanged(int itemId, float condition, string partType)
     {
-        GD.Print("Tire changed");
         _tireId = itemId;
         _tireCondition = condition;
     }
