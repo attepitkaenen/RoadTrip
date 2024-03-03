@@ -106,14 +106,6 @@ public partial class GameManager : Node
 		return item;
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void DestroyItem(string itemPath)
-	{
-		// if (Multiplayer.IsServer())
-		GetNode(itemPath).QueueFree();
-	}
-
-
 	public void ResetWorld()
 	{
 		world = null;

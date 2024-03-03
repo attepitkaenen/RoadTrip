@@ -10,21 +10,34 @@ public partial class Ragdoll : Node3D
     [Export] Skeleton3D skeleton;
     [Export] Camera3D camera;
     [Export] MeshInstance3D head;
+    [Export] private SkeletonIK3D HeadIK;
+    [Export] private SkeletonIK3D HandIK;
+    [Export] private AnimationPlayer _animationPlayer;
     private Vector3 _spawnVelocity = Vector3.Zero;
-    public int playerId;
+    Player _player;
     Array<Bone> bones = new Array<Bone>();
     bool isActive;
 
     public override void _Ready()
     {
-        Visible = false;
+        _player = GetParent<Player>();
+        HeadIK.Start();
+        HandIK.Start();
+        if (IsMultiplayerAuthority())
+        {
+            SetBoneCollision(false);
+            head.Visible = false;
+        }
 
         foreach (var child in skeleton.GetChildren())
         {
             if (child is Bone bone)
             {
                 bones.Add(bone);
-                bone.SetCollisionLayerValue(6, false);
+                if (IsMultiplayerAuthority())
+                {
+                    bone.SetCollisionLayerValue(6, false);
+                }
             }
         }
     }
@@ -39,6 +52,25 @@ public partial class Ragdoll : Node3D
                 boneInfo[bone.Position] = bone.Rotation;
             }
             Rpc(nameof(UpdateRagdoll), boneInfo);
+        }
+
+        if (isActive)
+        {
+            HeadIK.Interpolation = 0;
+            HandIK.Interpolation = 0;
+        }
+        else
+        {
+            HeadIK.Interpolation = 1;
+
+            if (_player.IsHolding())
+            {
+                HandIK.Interpolation = 1;
+            }
+            else
+            {
+                HandIK.Interpolation = 0;
+            }
         }
     }
 
@@ -56,34 +88,36 @@ public partial class Ragdoll : Node3D
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void Activate(Vector3 position)
+    public void Activate(string boneName, Vector3 bonePushDirection)
     {
-        if (IsMultiplayerAuthority())
-        {
-            camera.Current = true;
-            head.Visible = false;
-        }
-
+        HeadIK.Stop();
+        HandIK.Stop();
         isActive = true;
-
-        SetBoneCollision(true);
         Position = Vector3.Zero;
         skeleton.PhysicalBonesStartSimulation();
 
-        Visible = true;
-
+        if (IsMultiplayerAuthority())
+        {
+            SetBoneCollision(true);
+            camera.Current = true;
+            var bone = skeleton.GetChildren().First(node => node.Name == boneName) as Bone;
+            GD.Print(bone);
+            bone.Impact(bonePushDirection);
+        }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void Deactivate()
     {
+        if (IsMultiplayerAuthority())
+        {
+            camera.Current = true;
+            SetBoneCollision(false);
+        }
+        HeadIK.Start();
+        HandIK.Start();
         isActive = false;
-
         skeleton.PhysicalBonesStopSimulation();
-        SetBoneCollision(false);
-        Visible = false;
-        if (!IsMultiplayerAuthority()) return;
-        camera.Current = true;
     }
 
     public void SetBoneCollision(bool status)

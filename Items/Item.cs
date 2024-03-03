@@ -17,6 +17,8 @@ public partial class Item : RigidBody3D
 	public Vector3 lastPosition;
 	public Basis lastBasis;
 
+	private bool _queuedForDeletion = false;
+
 	Timer timer;
 
 
@@ -76,7 +78,7 @@ public partial class Item : RigidBody3D
 			angle = Mathf.Tau - angle;
 		}
 
-		if (LinearVelocity.Length() > 0.1f || AngularVelocity.Length() > 0.1f || angle > 0.1f || (lastPosition - GlobalPosition).Length() > 0.01f)
+		if (LinearVelocity.Length() > 0.1f || AngularVelocity.Length() > 0.1f || angle > 0.1f || (lastPosition - GlobalPosition).Length() > 0.01f && !_queuedForDeletion)
 		{
 			lastBasis = GlobalBasis;
 			lastPosition = GlobalPosition;
@@ -106,11 +108,18 @@ public partial class Item : RigidBody3D
 		return GetCollidingBodies().Count > 0;
 	}
 
-	public void DestroyItem()
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void QueueItemDestruction()
 	{
-		gameManager.Rpc(nameof(gameManager.DestroyItem), GetPath());
+		_queuedForDeletion = true;
+		Rpc(nameof(DestroyItem));
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void DestroyItem()
+	{
+		QueueFree();
+	}
 
 	public void LashItemDown(Vector3 position, Vector3 rotation)
 	{
