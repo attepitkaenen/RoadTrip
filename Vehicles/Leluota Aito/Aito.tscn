@@ -226,7 +226,7 @@ collision_mask = 8
 shape = SubResource("BoxShape3D_x5enl")
 
 [node name="WindshieldMount" type="Node3D" parent="Doors and Panels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01771, 1.04033)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09063, 1.07017)
 script = ExtResource("8_jrpr4")
 partType = 8
 

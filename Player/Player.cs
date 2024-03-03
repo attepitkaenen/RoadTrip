@@ -11,7 +11,6 @@ public partial class Player : CharacterBody3D
 	public string userName;
 	GameManager gameManager;
 	MenuHandler menuHandler;
-	MultiplayerController multiplayerController;
 	MultiplayerSynchronizer multiplayerSynchronizer;
 
 	[ExportGroup("Required Nodes")]
@@ -20,10 +19,9 @@ public partial class Player : CharacterBody3D
 	[Export] private FloatMachine floatMachine;
 	[Export] private Label3D nameTag;
 	[Export] private Node3D head;
-	[Export] private PackedScene ragdollScene;
-	[Export] private CollisionShape3D collisionShape3D;
-	[Export] private SkeletonIK3D HeadIK;
-	[Export] private SkeletonIK3D HandIK;
+	[Export] public CollisionShape3D collisionShape3D;
+	[Export] Ragdoll ragdoll;
+
 
 	[ExportGroup("Debug Nodes")]
 	[Export] private Label stateLabel;
@@ -50,12 +48,11 @@ public partial class Player : CharacterBody3D
 	private dynamic PickedItem;
 	private ItemResource itemResource;
 	private int _heldItemId;
-	private HeldItem heldItem;
+	private HeldItem _heldItem;
 	private float Strength = 20f;
 	private int Health = 10;
 
 	Seat seat;
-	Ragdoll ragdoll;
 
 	public MovementState movementState { get; set; } = MovementState.idle;
 	public enum MovementState
@@ -72,7 +69,7 @@ public partial class Player : CharacterBody3D
 
 	// Sync properties
 	public Vector3 syncPosition;
-	public Vector3 syncRotation;
+	// public Vector3 syncRotation;
 	public Basis syncBasis;
 
 	public Vector3 spawnLocation = new Vector3(0, 3, 0);
@@ -85,8 +82,7 @@ public partial class Player : CharacterBody3D
 	{
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		menuHandler = GetTree().Root.GetNode<MenuHandler>("MenuHandler");
-		multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
-		multiplayerSynchronizer = GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+		multiplayerSynchronizer = GetNode<MultiplayerSynchronizer>("PlayerSynchronizer");
 
 		SetMultiplayerAuthority(int.Parse(Name));
 
@@ -97,7 +93,6 @@ public partial class Player : CharacterBody3D
 		}
 
 		menuHandler.OpenMenu(MenuHandler.MenuType.none);
-		GetNode<MeshInstance3D>("character/Armature/Skeleton3D/Head").Hide();
 		nameTag.Visible = false;
 		camera.Current = true;
 		sensitivity = gameManager.Sensitivity;
@@ -105,7 +100,6 @@ public partial class Player : CharacterBody3D
 
 	public override void _Ready()
 	{
-		HeadIK.Start();
 		if (GetMultiplayerAuthority() == Id)
 		{
 			menuHandler.OpenMenu(MenuHandler.MenuType.none);
@@ -116,40 +110,42 @@ public partial class Player : CharacterBody3D
 	{
 		if (!IsMultiplayerAuthority() || menuHandler.currentMenu != MenuHandler.MenuType.none) return;
 
-		if (PickedItem is not null &&
-			Input.IsActionPressed("interact") &&
-			@event is InputEventMouseMotion)
+		if (@event is InputEventMouseMotion)
 		{
-			InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
-			staticBody.RotateY(mouseMotion.Relative.X * sensitivity);
-			staticBody.RotateX(mouseMotion.Relative.Y * sensitivity);
-		}
-		else if (@event is InputEventMouseMotion)
-		{
-			InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
-			var rotationPoint = head.GetNode<Node3D>("RotationPoint");
-			rotationPoint.RotateX(-mouseMotion.Relative.Y * sensitivity);
-
-			Vector3 rotationPointRotation = rotationPoint.Rotation;
-			rotationPointRotation.X = Mathf.Clamp(rotationPointRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f));
-			rotationPoint.Rotation = rotationPointRotation;
-
-			if (movementState == MovementState.seated)
+			if (PickedItem is not null && Input.IsActionPressed("interact"))
 			{
-				head.RotateY(-mouseMotion.Relative.X * sensitivity);
+				InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
+				staticBody.RotateY(mouseMotion.Relative.X * sensitivity);
+				staticBody.RotateX(mouseMotion.Relative.Y * sensitivity);
 			}
 			else
 			{
-				RotateY(-mouseMotion.Relative.X * sensitivity);
+				InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
+				var rotationPoint = head.GetNode<Node3D>("RotationPoint");
+				rotationPoint.RotateX(-mouseMotion.Relative.Y * sensitivity);
+
+				Vector3 rotationPointRotation = rotationPoint.Rotation;
+				rotationPointRotation.X = Mathf.Clamp(rotationPointRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f));
+				rotationPoint.Rotation = rotationPointRotation;
+
+				if (movementState == MovementState.seated)
+				{
+					head.RotateY(-mouseMotion.Relative.X * sensitivity);
+				}
+				else
+				{
+					RotateY(-mouseMotion.Relative.X * sensitivity);
+				}
 			}
 		}
 	}
+
 
 	public override void _PhysicsProcess(double delta)
 	{
 		if (!IsMultiplayerAuthority()) return;
 
-		Rpc(nameof(HandleRpcAnimations), movementState.ToString(), isGrounded, Velocity, GlobalBasis, _heldItemId != 0);
+		Rpc(nameof(HandleRpcAnimations), movementState.ToString(), isGrounded, Velocity, GlobalBasis, IsHolding());
 	}
 
 	public override void _Process(double delta)
@@ -158,12 +154,10 @@ public partial class Player : CharacterBody3D
 
 		if (movementState == MovementState.unconscious)
 		{
-			Visible = false;
 			collisionShape3D.Disabled = true;
 		}
 		else
 		{
-			Visible = true;
 			collisionShape3D.Disabled = false;
 		}
 
@@ -189,12 +183,8 @@ public partial class Player : CharacterBody3D
 			{
 				Health = 10;
 				movementState = MovementState.idle;
-				if (ragdoll is not null)
-				{
-					GlobalPosition = ragdoll.GetUpPosition();
-					ragdoll.SwitchCamera();
-					ragdoll.Rpc(nameof(ragdoll.Destroy));
-				}
+				GlobalPosition = ragdoll.GetUpPosition();
+				ragdoll.Rpc(nameof(ragdoll.Deactivate));
 			}
 			return;
 		}
@@ -211,7 +201,7 @@ public partial class Player : CharacterBody3D
 
 		// sync properties to lerp movement for other players
 		syncPosition = GlobalPosition;
-		syncRotation = GlobalRotation;
+		// syncRotation = GlobalRotation;
 		syncBasis = GlobalBasis;
 
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
@@ -353,6 +343,11 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
+	public bool IsHolding()
+	{
+		return _heldItemId != 0;
+	}
+
 	public void HandleSeat()
 	{
 		var newSeat = floatMachine.GetSeat();
@@ -385,7 +380,7 @@ public partial class Player : CharacterBody3D
 
 	public void HandleHeldItem()
 	{
-		if (_heldItemId != 0 && heldItem is null)
+		if (IsHolding() && _heldItem is null)
 		{
 			HeldItem item = gameManager.GetItemResource(_heldItemId).ItemInHand.Instantiate() as HeldItem;
 			if (item.holdType == 0)
@@ -400,20 +395,18 @@ public partial class Player : CharacterBody3D
 			}
 			item.SetMultiplayerAuthority((int)Id);
 			equip.AddChild(item);
-			HandIK.Start();
-			heldItem = item;
+			_heldItem = item;
 		}
-		else if (heldItem is not null && _heldItemId == 0)
+		else if (_heldItem is not null && !IsHolding())
 		{
-			HandIK.Stop();
-			heldItem = null;
+			_heldItem = null;
 			equip.GetChild(0).QueueFree();
 		}
 	}
 
 	public void HandleInteraction()
 	{
-		if (PickedItem is null && heldItem is null && Input.IsActionJustPressed("leftClick") && interactionCast.GetCollider() is Interactable interactable)
+		if (PickedItem is null && _heldItem is null && Input.IsActionJustPressed("leftClick") && interactionCast.GetCollider() is Interactable interactable)
 		{
 			interactable.Rpc(nameof(interactable.Press));
 		}
@@ -422,54 +415,49 @@ public partial class Player : CharacterBody3D
 	public void HandleItem()
 	{
 		// Install vehicle part if holding a toolbox
-		if (Input.IsActionJustPressed("rightClick") && PickedItem is Installable part && part.canBeInstalled && heldItem is Toolbox)
+		if (Input.IsActionJustPressed("rightClick") && PickedItem is Installable part && part.canBeInstalled && _heldItem is Toolbox)
 		{
 			PickedItem = null;
 			part.Install();
 			GD.Print("INSTALL PART");
 		}
-		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is CarPart installedPart && heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
+		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is CarPart installedPart && _heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
 		{
 			installedPart.Uninstall();
 		}
-		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is Door door && heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
+		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is Door installedDoor && _heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
 		{
-			door.Uninstall();
+			installedDoor.Uninstall();
 		}
 
 		// Equip held item
-		else if (Input.IsActionJustPressed("equip") && PickedItem is Item && heldItem is null)
+		else if (Input.IsActionJustPressed("equip") && PickedItem is Item && _heldItem is null)
 		{
 			GD.Print("Item picked");
 			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
 			if (itemResource.Equippable)
 			{
-				Rpc(nameof(SetHeldItem), itemResource.ItemId);
-				PickedItem.DestroyItem();
+				SetHeldItem(itemResource.ItemId);
+				PickedItem.RpcId(1, nameof(PickedItem.QueueItemDestruction));
 				PickedItem = null;
 			}
 		}
 		// Drop held item
-		else if (Input.IsActionJustPressed("equip") && PickedItem is null && heldItem is not null && itemResource is not null)
+		else if (Input.IsActionJustPressed("equip") && PickedItem is null && _heldItem is not null && itemResource is not null)
 		{
-			gameManager.RpcId(1, nameof(gameManager.DropItem), Id, itemResource.ItemId, hand.GlobalPosition);
-			Rpc(nameof(SetHeldItem), 0);
+			DropHeldItem();
 		}
 
-
 		// Stop picking items when item held
-		if (heldItem is not Toolbox && heldItem is not null) return;
+		if (_heldItem is not Toolbox && _heldItem is not null) return;
 
 		// Pick and drop item
 		if (Input.IsActionJustPressed("leftClick"))
 		{
-			if (interactionCast.GetCollider() is Item item && PickedItem is null && item.playerHolding == 0)
+			dynamic collider = interactionCast.GetCollider();
+			if ((collider is Item || collider is Door || collider is Bone) && PickedItem is null && collider.playerHolding == 0)
 			{
-				PickItem(item);
-			}
-			else if (interactionCast.GetCollider() is Bone bone && PickedItem is null && bone.playerHolding == 0)
-			{
-				PickItem(bone);
+				PickItem(collider);
 			}
 			else if (PickedItem is not null)
 			{
@@ -478,7 +466,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		// Throw item
-		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null && heldItem is null)
+		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null && _heldItem is null && PickedItem is not Door)
 		{
 			Vector3 throwDirection = (hand.GlobalPosition - camera.GlobalPosition).Normalized();
 			PickedItem.Rpc("Throw", throwDirection, Strength);
@@ -514,10 +502,17 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
+	public void DropHeldItem()
+	{
+		gameManager.RpcId(1, nameof(gameManager.DropItem), Id, itemResource.ItemId, hand.GlobalPosition);
+		SetHeldItem(0);
+	}
+
 	public void DropPickedItem()
 	{
 		PickedItem.Rpc(nameof(PickedItem.Drop));
 		PickedItem = null;
+		hand.Position = new Vector3(0, 0, -1);
 	}
 
 	public void PickItem(dynamic item)
@@ -572,45 +567,31 @@ public partial class Player : CharacterBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	public void Hit(int damage, Vector3 bulletForce)
+	public void Hit(int damage, string boneName, Vector3 bulletDirection)
 	{
+		if (!IsMultiplayerAuthority()) return;
 		GD.Print($"Player {Name} was hit for {damage}");
 		Health -= damage;
 
 		if (Health <= 0)
 		{
-			Rpc(nameof(SpawnRagdoll), int.Parse(Name), Velocity + bulletForce);
+			movementState = MovementState.unconscious;
+
+			if (IsHolding())
+			{
+				DropHeldItem();
+			}
+
+			// Stop sitting if seated
 			if (movementState == MovementState.seated)
 			{
 				seat.Rpc(nameof(seat.Stand));
 				seat = null;
 				GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
 			}
-			movementState = MovementState.unconscious;
-			GD.Print($"Spawn ragdoll for {Name}");
-			Visible = false;
+			ragdoll.Rpc(nameof(ragdoll.Activate), boneName, bulletDirection);
 			collisionShape3D.Disabled = true;
 		}
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SpawnRagdoll(int playerId, Vector3 velocity)
-	{
-		if (Multiplayer.IsServer())
-		{
-			var ragdoll = ragdollScene.Instantiate<Ragdoll>();
-			ragdoll.MoveRagdoll(new Vector3(GlobalPosition.X, GlobalPosition.Y - 1.2f, GlobalPosition.Z), GlobalRotation, velocity);
-			GetParent().AddChild(ragdoll, true);
-			ragdoll.playerId = playerId;
-			RpcId(playerId, nameof(SetRagdoll), ragdoll.GetPath());
-		}
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void SetRagdoll(string ragdollPath)
-	{
-		ragdoll = GetNode<Ragdoll>(ragdollPath);
-		ragdoll.SwitchCamera();
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -620,7 +601,6 @@ public partial class Player : CharacterBody3D
 		PickedItem = GetTree().Root.GetNode<Item>(itemPath);
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SetHeldItem(int itemId)
 	{
 		_heldItemId = itemId;
