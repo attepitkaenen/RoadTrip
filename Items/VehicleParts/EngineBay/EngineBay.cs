@@ -109,7 +109,6 @@ public partial class EngineBay : Node3D
 
     public void PartChanged(int itemId, float condition, string partType)
     {
-        GD.Print("Part changed");
         switch (partType)
         {
             case "EngineDropped":

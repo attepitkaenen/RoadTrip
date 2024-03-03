@@ -16,23 +16,23 @@ public partial class FloatMachine : Node
 	private float floatHeight;
 
 
-	public Vector3 Float()
+
+	public override void _PhysicsProcess(double delta)
+	{
+		floatOffset = Mathf.Lerp(floatOffset, lerpFloatOffset, 0.05f);
+
+		// Handle Floating
+		player.Velocity += FloatPlayer();
+	}
+
+	public Vector3 FloatPlayer()
 	{
 		if (floatCast.IsColliding())
 		{
-			Vector3 position = player.Position;
-			int closestIndex = GetClosestIndex();
-			Vector3 collisionPoint = floatCast.GetCollisionPoint(closestIndex);
-			float distance = new Vector3(collisionPoint.X, position.Y, collisionPoint.Z).DistanceTo(collisionPoint);
-
-			if (floatCast.GetCollider(closestIndex) is RigidBody3D body)
-			{
-				var moveForce = Vector3.Down * floatForce * player.gravity;
-				body.ApplyForce(moveForce);
-			}
-
-			// the number is supposed to be half of the hitbox height
-			floatHeight = -distance + floatOffset + 0.6f;
+			Vector3 closestCollisionPoint = floatCast.GetCollisionPoint(GetIndexOfClosestCollider());
+			float distance = Math.Abs(player.Position.Y - closestCollisionPoint.Y);
+			CapsuleShape3D playerCollider = player.collisionShape3D.Shape as CapsuleShape3D;
+			floatHeight = -distance + floatOffset + (playerCollider.Height / 2);
 
 			if (floatHeight > 0 && player.movementState != Player.MovementState.jumping)
 			{
@@ -52,7 +52,6 @@ public partial class FloatMachine : Node
 		{
 			player.isGrounded = false;
 		}
-
 		return Vector3.Zero;
 	}
 
@@ -60,7 +59,7 @@ public partial class FloatMachine : Node
 	{
 		if (floatCast.IsColliding())
 		{
-			var closestIndex = GetClosestIndex();
+			var closestIndex = GetIndexOfClosestCollider();
 
 			if (floatCast.GetCollider(closestIndex) is Seat seat)
 			{
@@ -70,7 +69,7 @@ public partial class FloatMachine : Node
 		return null;
 	}
 
-	public int GetClosestIndex()
+	public int GetIndexOfClosestCollider()
 	{
 		var position = player.Position;
 		var distance = 2f;
@@ -105,13 +104,5 @@ public partial class FloatMachine : Node
 			return Math.Clamp(distance, 0f, 1f);
 		}
 		return 1.15f;
-	}
-
-	public override void _PhysicsProcess(double delta)
-	{
-		floatOffset = Mathf.Lerp(floatOffset, lerpFloatOffset, 0.05f);
-
-		// Handle Floating
-		player.Velocity += Float();
 	}
 }

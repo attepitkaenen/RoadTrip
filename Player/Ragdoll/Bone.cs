@@ -1,14 +1,20 @@
-using Godot;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using Godot;
 
 public partial class Bone : PhysicalBone3D
 {
 	public int playerHolding = 0;
+	Player player;
+	Vector3 syncPos;
+	Vector3 syncRot;
+
+    public override void _Ready()
+    {
+        player = GetParent().GetParent().GetParent().GetParent().GetParent<Player>();
+    }
 
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Move(Vector3 handPosition, Basis handBasis, int playerId)
 	{
 		if (playerHolding == 0)
@@ -45,8 +51,11 @@ public partial class Bone : PhysicalBone3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Hit(int damage, Vector3 bulletTravelDirection)
 	{
-		GD.Print($"{Name} was hit for {damage}");
+		player.Hit(damage, Name, bulletTravelDirection);
+	}
 
+	public void Impact(Vector3 bulletTravelDirection)
+	{
 		if (playerHolding == 0)
 		{
 			LinearVelocity += bulletTravelDirection * 10;
