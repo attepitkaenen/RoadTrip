@@ -4,39 +4,15 @@ using Godot;
 public partial class Bone : PhysicalBone3D
 {
 	public int playerHolding = 0;
-	MultiplayerSynchronizer multiplayerSynchronizer;
+	Player player;
 	Vector3 syncPos;
 	Vector3 syncRot;
 
-    // public override void _Ready()
-    // {
-    //     var ragdoll = GetParent().GetParent().GetParent().GetParent<Ragdoll>();
-	// 	multiplayerSynchronizer = ragdoll.multiplayerSynchronizer;
-    // }
+    public override void _Ready()
+    {
+        player = GetParent().GetParent().GetParent().GetParent().GetParent<Player>();
+    }
 
-	// public void ActivateSync()
-	// {
-	// 	multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncPos");
-    //     multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncRot");
-	// }
-
-	// public void DeactivateSync()
-	// {
-    //     multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncPos");
-    //     multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncRot");
-	// }
-
-    // public override void _PhysicsProcess(double delta)
-    // {
-    //     if (!IsMultiplayerAuthority())
-	// 	{
-	// 		Position = Position.Lerp(syncPos, 0.1f);
-	// 		Rotation = Position.Lerp(syncRot, 0.1f);;
-	// 		return;
-	// 	}
-	// 	syncPos = Position;
-	// 	syncRot = Rotation;
-    // }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Move(Vector3 handPosition, Basis handBasis, int playerId)
@@ -77,6 +53,12 @@ public partial class Bone : PhysicalBone3D
 	{
 		GD.Print($"{Name} was hit for {damage}");
 
+		player.Hit(damage, Name, bulletTravelDirection);
+	}
+
+	public void Impact(Vector3 bulletTravelDirection)
+	{
+		GD.Print("IMPACT");
 		if (playerHolding == 0)
 		{
 			LinearVelocity += bulletTravelDirection * 10;
