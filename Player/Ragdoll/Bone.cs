@@ -51,14 +51,11 @@ public partial class Bone : PhysicalBone3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void Hit(int damage, Vector3 bulletTravelDirection)
 	{
-		GD.Print($"{Name} was hit for {damage}");
-
 		player.Hit(damage, Name, bulletTravelDirection);
 	}
 
 	public void Impact(Vector3 bulletTravelDirection)
 	{
-		GD.Print("IMPACT");
 		if (playerHolding == 0)
 		{
 			LinearVelocity += bulletTravelDirection * 10;
