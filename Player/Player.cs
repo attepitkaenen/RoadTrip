@@ -394,7 +394,7 @@ public partial class Player : CharacterBody3D
 				EquipHandPosition.RotationDegrees = new Vector3(0, 0, 90);
 			}
 			item.SetMultiplayerAuthority((int)Id);
-			equip.AddChild(item);
+			equip.AddChild(item, true);
 			_heldItem = item;
 		}
 		else if (_heldItem is not null && !IsHolding())

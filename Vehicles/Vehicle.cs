@@ -128,7 +128,7 @@ public partial class Vehicle : VehicleBody3D
 			return;
 		}
 		Marker3D positionInVehicle = new Marker3D();
-		AddChild(positionInVehicle);
+		AddChild(positionInVehicle, true);
 		items.Add(GetNode<Item>(itemPath), positionInVehicle);
 	}
 

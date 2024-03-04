@@ -121,7 +121,7 @@ public partial class GameManager : Node
 		if (Multiplayer.IsServer())
 		{
 			var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<SceneManager>();
-			AddChild(scene);
+			AddChild(scene, true);
 			world = scene;
 		}
 	}
@@ -155,7 +155,7 @@ public partial class GameManager : Node
 			currentPlayer.Name = playerState.Id.ToString();
 
 			GD.Print($"Spawning player {playerState.Name} with id: {playerState.Id}");
-			AddChild(currentPlayer);
+			AddChild(currentPlayer, true);
 
 			int playerIndex = GetPlayerStates().Values.ToList().IndexOf(playerState);
 			var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");

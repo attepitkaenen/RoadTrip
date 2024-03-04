@@ -33,7 +33,7 @@ public partial class Item : RigidBody3D
 			return;
 		};
 		timer = new Timer();
-		AddChild(timer);
+		AddChild(timer, true);
 		timer.Timeout += SyncProperties;
 		timer.Start(2);
 	}
