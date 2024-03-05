@@ -33,7 +33,7 @@ public partial class Item : RigidBody3D
 			return;
 		};
 		timer = new Timer();
-		AddChild(timer);
+		AddChild(timer, true);
 		timer.Timeout += SyncProperties;
 		timer.Start(2);
 	}
@@ -53,10 +53,8 @@ public partial class Item : RigidBody3D
 		syncAngularVelocity = angularVelocity;
 	}
 
-
 	public override void _PhysicsProcess(double delta)
 	{
-
 		if (!IsMultiplayerAuthority())
 		{
 			return;
@@ -116,7 +114,7 @@ public partial class Item : RigidBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void DestroyItem()
+	private void DestroyItem()
 	{
 		QueueFree();
 	}

@@ -18,7 +18,6 @@ public interface IMounted
     public void SetPositionAndRotation(Vector3 position, Vector3 rotation);
 
     public void Uninstall();
-
-    public void DestroyPart();
+    void QueueFree();
 
 }

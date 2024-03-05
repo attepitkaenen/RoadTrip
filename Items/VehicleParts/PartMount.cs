@@ -102,7 +102,7 @@ public partial class PartMount : Node3D
     public IMounted SpawnInstalledPart(int itemId, float condition, Vector3 partPosition, Vector3 partRotation)
     {
         var part = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as IMounted;
-        AddChild((dynamic)part);
+        AddChild((dynamic)part, true);
         part.SetMount(this);
         part.SetCondition(condition);
         part.SetId(itemId);
@@ -122,6 +122,7 @@ public partial class PartMount : Node3D
         {
             gameManager.RpcId(1, nameof(gameManager.SpawnPart), itemId, condition, position, rotation);
         }
+        _part.QueueFree();
     }
 
     private void InstallPart(int itemId, float condition)

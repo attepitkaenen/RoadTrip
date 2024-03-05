@@ -60,7 +60,6 @@ public partial class MainMenu : Menu
 
     public void _on_host_pressed()
     {
-        GD.Print(buttons.Count);
         ToggleHostAndJoinDisabled(true);
         multiplayerController.CreateGame();
     }

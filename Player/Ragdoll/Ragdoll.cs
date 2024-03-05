@@ -63,7 +63,7 @@ public partial class Ragdoll : Node3D
         {
             HeadIK.Interpolation = 1;
 
-            if (_player.IsHolding())
+            if (_player.playerInteraction.IsHolding())
             {
                 HandIK.Interpolation = 1;
             }
@@ -101,7 +101,6 @@ public partial class Ragdoll : Node3D
             SetBoneCollision(true);
             camera.Current = true;
             var bone = skeleton.GetChildren().First(node => node.Name == boneName) as Bone;
-            GD.Print(bone);
             bone.Impact(bonePushDirection);
         }
     }

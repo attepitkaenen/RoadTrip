@@ -82,7 +82,6 @@ public partial class MultiplayerController : Control
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void PeerDisconnected(long id)
 	{
-		GD.Print(Multiplayer.GetUniqueId());
 		GD.Print("Player: " + id + " disconnected");
 		players.Remove(id);
 		gameManager.RemovePlayer(id);

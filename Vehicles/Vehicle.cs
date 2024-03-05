@@ -5,7 +5,7 @@ using System.Linq;
 
 public partial class Vehicle : VehicleBody3D
 {
-	[Export] private MultiplayerSynchronizer _synchronizer;
+	[Export] private MultiplayerSynchronizer _multiplayerSynchronizer;
 	[Export] public EngineBay engineBay;
 	[Export] public float breakForce = 50;
 	[Export] private Area3D _itemArea;
@@ -35,6 +35,12 @@ public partial class Vehicle : VehicleBody3D
 			CustomIntegrator = true;
 		};
 
+		var seats = GetChildren().Where(node => node is Seat).Select(node => node as Seat);
+		foreach (Seat seat in seats)
+		{
+			_multiplayerSynchronizer.ReplicationConfig.AddProperty(seat.GetPath() + ":seatedPlayerId");
+		}
+
 		_itemArea.BodyEntered += ItemEntered;
 		_itemArea.BodyExited += ItemExited;
 
@@ -58,13 +64,13 @@ public partial class Vehicle : VehicleBody3D
 
 		if (LinearVelocity.Length() < 0.1f && !_driverSeat.occupied && false) // REMOVE FALSE WHEN DONE
 		{
-			_synchronizer.ReplicationInterval = 1f;
-			_synchronizer.DeltaInterval = 1f;
+			_multiplayerSynchronizer.ReplicationInterval = 1f;
+			_multiplayerSynchronizer.DeltaInterval = 1f;
 		}
 		else
 		{
-			_synchronizer.ReplicationInterval = 0.016f;
-			_synchronizer.DeltaInterval = 0.016f;
+			_multiplayerSynchronizer.ReplicationInterval = 0.016f;
+			_multiplayerSynchronizer.DeltaInterval = 0.016f;
 		}
 
 		syncLinearVelocity = LinearVelocity;
@@ -123,31 +129,41 @@ public partial class Vehicle : VehicleBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void AddItemToList(string itemPath)
 	{
-		if (items.Keys.Contains(GetNode(itemPath)))
+		Item item = GetNodeOrNull<Item>(itemPath);
+		if (items.Keys.Contains(item))
 		{
 			return;
 		}
 		Marker3D positionInVehicle = new Marker3D();
-		AddChild(positionInVehicle);
-		items.Add(GetNode<Item>(itemPath), positionInVehicle);
+		AddChild(positionInVehicle, true);
+		items.Add(item, positionInVehicle);
 	}
 
 	public void ItemExited(Node3D node)
 	{
 		if (node is Item item)
 		{
-			Rpc(nameof(RemoveItemFromList), item.GetPath());
+			if (item is not null)
+			{
+				Rpc(nameof(RemoveItemFromList), item.GetPath());
+			}
 		}
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void RemoveItemFromList(string itemPath)
 	{
-		if (!items.Keys.Contains(GetNode(itemPath)))
+        Item item = GetNodeOrNull<Item>(itemPath);
+		if (item is null)
 		{
 			return;
 		}
-		Item item = GetNode<Item>(itemPath);
+
+		if (!items.Keys.Contains(item))
+		{
+			return;
+		}
+
 		items[item].QueueFree();
 		items.Remove(item);
 	}

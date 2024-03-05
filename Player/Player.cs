@@ -14,11 +14,11 @@ public partial class Player : CharacterBody3D
 	MultiplayerSynchronizer multiplayerSynchronizer;
 
 	[ExportGroup("Required Nodes")]
+	[Export] public PlayerInteraction playerInteraction;
 	[Export] private Camera3D camera;
 	[Export] private AnimationTree animationTree;
 	[Export] private FloatMachine floatMachine;
 	[Export] private Label3D nameTag;
-	[Export] private Node3D head;
 	[Export] public CollisionShape3D collisionShape3D;
 	[Export] Ragdoll ragdoll;
 
@@ -31,7 +31,7 @@ public partial class Player : CharacterBody3D
 
 
 	[ExportGroup("Movement properties")]
-	[Export] private float sensitivity = 0.001f;
+	[Export] public float sensitivity = 0.001f;
 	[Export] private float acceleration = 4f;
 	[Export] private float deceleration = 5f;
 	[Export] private float speed = 3f;
@@ -39,17 +39,10 @@ public partial class Player : CharacterBody3D
 	[Export] private float runningMultiplier = 1.5f;
 	public bool isGrounded { get; set; } = false;
 
-	[ExportGroup("Interaction properties")]
-	[Export] private RayCast3D interactionCast;
-	[Export] private Marker3D hand;
-	[Export] private Marker3D equip;
-	[Export] private StaticBody3D staticBody;
-	[Export] private Node3D EquipHandPosition;
-	private dynamic PickedItem;
-	private ItemResource itemResource;
-	private int _heldItemId;
-	private HeldItem _heldItem;
-	private float Strength = 20f;
+
+
+
+	public float strength = 20f;
 	private int Health = 10;
 
 	Seat seat;
@@ -110,18 +103,12 @@ public partial class Player : CharacterBody3D
 	{
 		if (!IsMultiplayerAuthority() || menuHandler.currentMenu != MenuHandler.MenuType.none) return;
 
-		if (@event is InputEventMouseMotion)
+		if (@event is InputEventMouseMotion && movementState != MovementState.unconscious)
 		{
-			if (PickedItem is not null && Input.IsActionPressed("interact"))
+			if (!playerInteraction.IsMovingItem() || !Input.IsActionPressed("interact"))
 			{
 				InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
-				staticBody.RotateY(mouseMotion.Relative.X * sensitivity);
-				staticBody.RotateX(mouseMotion.Relative.Y * sensitivity);
-			}
-			else
-			{
-				InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
-				var rotationPoint = head.GetNode<Node3D>("RotationPoint");
+				var rotationPoint = playerInteraction.GetNode<Node3D>("RotationPoint");
 				rotationPoint.RotateX(-mouseMotion.Relative.Y * sensitivity);
 
 				Vector3 rotationPointRotation = rotationPoint.Rotation;
@@ -130,7 +117,7 @@ public partial class Player : CharacterBody3D
 
 				if (movementState == MovementState.seated)
 				{
-					head.RotateY(-mouseMotion.Relative.X * sensitivity);
+					playerInteraction.RotateY(-mouseMotion.Relative.X * sensitivity);
 				}
 				else
 				{
@@ -145,7 +132,7 @@ public partial class Player : CharacterBody3D
 	{
 		if (!IsMultiplayerAuthority()) return;
 
-		Rpc(nameof(HandleRpcAnimations), movementState.ToString(), isGrounded, Velocity, GlobalBasis, IsHolding());
+		Rpc(nameof(HandleRpcAnimations), movementState.ToString(), isGrounded, Velocity, GlobalBasis, playerInteraction.IsHolding());
 	}
 
 	public override void _Process(double delta)
@@ -160,8 +147,6 @@ public partial class Player : CharacterBody3D
 		{
 			collisionShape3D.Disabled = false;
 		}
-
-		HandleHeldItem();
 
 		//Lerp movement for other players
 		if (!IsMultiplayerAuthority())
@@ -207,12 +192,6 @@ public partial class Player : CharacterBody3D
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
 
-		HandleItem();
-
-		HandleInteraction();
-
-		FlipCar();
-
 		HandleSeat();
 
 		HandleDebugLines();
@@ -231,7 +210,7 @@ public partial class Player : CharacterBody3D
 
 
 		// Makes head and body same rotation when not seated
-		head.GlobalRotation = GlobalRotation;
+		playerInteraction.GlobalRotation = GlobalRotation;
 
 		// Handle movementState changes
 		if (Health <= 0)
@@ -343,10 +322,6 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	public bool IsHolding()
-	{
-		return _heldItemId != 0;
-	}
 
 	public void HandleSeat()
 	{
@@ -364,162 +339,6 @@ public partial class Player : CharacterBody3D
 			GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
 			movementState = MovementState.idle;
 		}
-	}
-
-	public void FlipCar()
-	{
-		if (Input.IsActionPressed("leftClick") && PickedItem is null)
-		{
-			if (interactionCast.GetCollider() is Vehicle vehicle)
-			{
-				var axis = -head.GlobalBasis.X;
-				vehicle.Rpc(nameof(vehicle.Flip), axis);
-			}
-		}
-	}
-
-	public void HandleHeldItem()
-	{
-		if (IsHolding() && _heldItem is null)
-		{
-			HeldItem item = gameManager.GetItemResource(_heldItemId).ItemInHand.Instantiate() as HeldItem;
-			if (item.holdType == 0)
-			{
-				EquipHandPosition.Position = new Vector3(0.274f, -0.175f, -0.357f);
-				EquipHandPosition.Rotation = Vector3.Zero;
-			}
-			else if (item.holdType == 1)
-			{
-				EquipHandPosition.Position = new Vector3(0.274f, -0.211f, -0.357f);
-				EquipHandPosition.RotationDegrees = new Vector3(0, 0, 90);
-			}
-			item.SetMultiplayerAuthority((int)Id);
-			equip.AddChild(item);
-			_heldItem = item;
-		}
-		else if (_heldItem is not null && !IsHolding())
-		{
-			_heldItem = null;
-			equip.GetChild(0).QueueFree();
-		}
-	}
-
-	public void HandleInteraction()
-	{
-		if (PickedItem is null && _heldItem is null && Input.IsActionJustPressed("leftClick") && interactionCast.GetCollider() is Interactable interactable)
-		{
-			interactable.Rpc(nameof(interactable.Press));
-		}
-	}
-
-	public void HandleItem()
-	{
-		// Install vehicle part if holding a toolbox
-		if (Input.IsActionJustPressed("rightClick") && PickedItem is Installable part && part.canBeInstalled && _heldItem is Toolbox)
-		{
-			PickedItem = null;
-			part.Install();
-			GD.Print("INSTALL PART");
-		}
-		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is CarPart installedPart && _heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
-		{
-			installedPart.Uninstall();
-		}
-		else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is Door installedDoor && _heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
-		{
-			installedDoor.Uninstall();
-		}
-
-		// Equip held item
-		else if (Input.IsActionJustPressed("equip") && PickedItem is Item && _heldItem is null)
-		{
-			GD.Print("Item picked");
-			itemResource = gameManager.GetItemResource(PickedItem.ItemId);
-			if (itemResource.Equippable)
-			{
-				SetHeldItem(itemResource.ItemId);
-				PickedItem.RpcId(1, nameof(PickedItem.QueueItemDestruction));
-				PickedItem = null;
-			}
-		}
-		// Drop held item
-		else if (Input.IsActionJustPressed("equip") && PickedItem is null && _heldItem is not null && itemResource is not null)
-		{
-			DropHeldItem();
-		}
-
-		// Stop picking items when item held
-		if (_heldItem is not Toolbox && _heldItem is not null) return;
-
-		// Pick and drop item
-		if (Input.IsActionJustPressed("leftClick"))
-		{
-			dynamic collider = interactionCast.GetCollider();
-			if ((collider is Item || collider is Door || collider is Bone) && PickedItem is null && collider.playerHolding == 0)
-			{
-				PickItem(collider);
-			}
-			else if (PickedItem is not null)
-			{
-				DropPickedItem();
-			}
-		}
-
-		// Throw item
-		else if (Input.IsActionJustPressed("rightClick") && PickedItem is not null && _heldItem is null && PickedItem is not Door)
-		{
-			Vector3 throwDirection = (hand.GlobalPosition - camera.GlobalPosition).Normalized();
-			PickedItem.Rpc("Throw", throwDirection, Strength);
-			PickedItem = null;
-		}
-
-		// Drop item if forced into a wall
-		else if (PickedItem is Item && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 1 && PickedItem.IsColliding())
-		{
-			DropPickedItem();
-		}
-		else if ((PickedItem is Bone || PickedItem is Door) && (hand.GlobalPosition - PickedItem.GlobalPosition).Length() > 0.9f)
-		{
-			DropPickedItem();
-		}
-
-
-		// Move item
-		if (PickedItem is not null)
-		{
-			staticBody.Position = hand.Position;
-			PickedItem.Rpc("Move", hand.GlobalPosition, staticBody.GlobalBasis, int.Parse(Name));
-		}
-
-		// Move item closer and further
-		if (Input.IsActionJustPressed("scrollDown") && hand.Position.Z < -0.5f)
-		{
-			hand.Position = new Vector3(hand.Position.X, hand.Position.Y, hand.Position.Z + 0.1f);
-		}
-		else if (Input.IsActionJustPressed("scrollUp") && hand.Position.Z > -2)
-		{
-			hand.Position = new Vector3(hand.Position.X, hand.Position.Y, hand.Position.Z - 0.1f);
-		}
-	}
-
-	public void DropHeldItem()
-	{
-		gameManager.RpcId(1, nameof(gameManager.DropItem), Id, itemResource.ItemId, hand.GlobalPosition);
-		SetHeldItem(0);
-	}
-
-	public void DropPickedItem()
-	{
-		PickedItem.Rpc(nameof(PickedItem.Drop));
-		PickedItem = null;
-		hand.Position = new Vector3(0, 0, -1);
-	}
-
-	public void PickItem(dynamic item)
-	{
-		PickedItem = item;
-		hand.GlobalPosition = item.GlobalPosition;
-		staticBody.GlobalBasis = PickedItem.GlobalBasis;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -577,9 +396,9 @@ public partial class Player : CharacterBody3D
 		{
 			movementState = MovementState.unconscious;
 
-			if (IsHolding())
+			if (playerInteraction.IsHolding())
 			{
-				DropHeldItem();
+				playerInteraction.DropHeldItem();
 			}
 
 			// Stop sitting if seated
@@ -592,17 +411,5 @@ public partial class Player : CharacterBody3D
 			ragdoll.Rpc(nameof(ragdoll.Activate), boneName, bulletDirection);
 			collisionShape3D.Disabled = true;
 		}
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void SetPickedItem(string itemPath)
-	{
-		GD.Print($"Should pickup {itemPath}");
-		PickedItem = GetTree().Root.GetNode<Item>(itemPath);
-	}
-
-	public void SetHeldItem(int itemId)
-	{
-		_heldItemId = itemId;
 	}
 }
