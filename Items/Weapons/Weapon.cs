@@ -68,7 +68,7 @@ public partial class Weapon : HeldItem
         effect.Basis = result;
 
         effect.Position = position;
-        GetTree().Root.AddChild(effect);
+        GetTree().Root.AddChild(effect, true);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
