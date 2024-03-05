@@ -13,7 +13,7 @@ public partial class Installable : Item
         if (canBeInstalled)
         {
             EmitSignal(SignalName.InstallPart, ItemId, _condition);
-            DestroyItem();
+            RpcId(1, nameof(QueueItemDestruction));
         }
     }
 

@@ -123,31 +123,42 @@ public partial class Vehicle : VehicleBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void AddItemToList(string itemPath)
 	{
-		if (items.Keys.Contains(GetNode(itemPath)))
+		Item item = GetNodeOrNull<Item>(itemPath);
+		if (items.Keys.Contains(item))
 		{
 			return;
 		}
 		Marker3D positionInVehicle = new Marker3D();
 		AddChild(positionInVehicle, true);
-		items.Add(GetNode<Item>(itemPath), positionInVehicle);
+		items.Add(item, positionInVehicle);
 	}
 
 	public void ItemExited(Node3D node)
 	{
 		if (node is Item item)
 		{
-			Rpc(nameof(RemoveItemFromList), item.GetPath());
+			if (item is not null)
+			{
+				Rpc(nameof(RemoveItemFromList), item.GetPath());
+			}
 		}
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void RemoveItemFromList(string itemPath)
 	{
-		if (!items.Keys.Contains(GetNode(itemPath)))
+        Item item = GetNodeOrNull<Item>(itemPath);
+		if (item is null)
+		{
+			GD.Print("Shit null");
+			return;
+		}
+
+		if (!items.Keys.Contains(item))
 		{
 			return;
 		}
-		Item item = GetNode<Item>(itemPath);
+
 		items[item].QueueFree();
 		items.Remove(item);
 	}

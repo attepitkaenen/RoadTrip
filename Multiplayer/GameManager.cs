@@ -24,7 +24,7 @@ public partial class GameManager : Node
 		}
 		multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
 
-		Callable spawnCallable = new Callable(this, MethodName.SpawnItem);
+		Callable spawnCallable = new Callable(this, MethodName.SpawnNode);
 		multiplayerSpawner.SpawnFunction = spawnCallable;
 	}
 
@@ -87,7 +87,7 @@ public partial class GameManager : Node
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void DropItem(int playerId, int itemId, Vector3 position)
+	public void SpawnItem(int playerId, int itemId, Vector3 position)
 	{
 		var item = multiplayerSpawner.Spawn(itemId) as Item;
 		item.GlobalPosition = position;
@@ -97,13 +97,13 @@ public partial class GameManager : Node
 			return;
 		}
 		var player = GetNode<Player>($"{playerId}");
-		player.RpcId(playerId, nameof(player.SetPickedItem), item.GetPath());
+		player.playerInteraction.RpcId(playerId, nameof(player.playerInteraction.SetPickedItem), item.GetPath());
 	}
 
-	Node SpawnItem(int itemId)
+	Node SpawnNode(int itemId)
 	{
-		var item = GetItemResource(itemId).ItemOnFloor.Instantiate();
-		return item;
+		var node = GetItemResource(itemId).ItemOnFloor.Instantiate();
+		return node;
 	}
 
 	public void ResetWorld()

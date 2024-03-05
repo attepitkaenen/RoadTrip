@@ -63,7 +63,7 @@ public partial class Ragdoll : Node3D
         {
             HeadIK.Interpolation = 1;
 
-            if (_player.IsHolding())
+            if (_player.playerInteraction.IsHolding())
             {
                 HandIK.Interpolation = 1;
             }
