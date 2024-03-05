@@ -5,7 +5,7 @@ using System.Linq;
 
 public partial class Vehicle : VehicleBody3D
 {
-	[Export] private MultiplayerSynchronizer _synchronizer;
+	[Export] private MultiplayerSynchronizer _multiplayerSynchronizer;
 	[Export] public EngineBay engineBay;
 	[Export] public float breakForce = 50;
 	[Export] private Area3D _itemArea;
@@ -35,6 +35,12 @@ public partial class Vehicle : VehicleBody3D
 			CustomIntegrator = true;
 		};
 
+		var seats = GetChildren().Where(node => node is Seat).Select(node => node as Seat);
+		foreach (Seat seat in seats)
+		{
+			_multiplayerSynchronizer.ReplicationConfig.AddProperty(seat.GetPath() + ":seatedPlayerId");
+		}
+
 		_itemArea.BodyEntered += ItemEntered;
 		_itemArea.BodyExited += ItemExited;
 
@@ -58,13 +64,13 @@ public partial class Vehicle : VehicleBody3D
 
 		if (LinearVelocity.Length() < 0.1f && !_driverSeat.occupied && false) // REMOVE FALSE WHEN DONE
 		{
-			_synchronizer.ReplicationInterval = 1f;
-			_synchronizer.DeltaInterval = 1f;
+			_multiplayerSynchronizer.ReplicationInterval = 1f;
+			_multiplayerSynchronizer.DeltaInterval = 1f;
 		}
 		else
 		{
-			_synchronizer.ReplicationInterval = 0.016f;
-			_synchronizer.DeltaInterval = 0.016f;
+			_multiplayerSynchronizer.ReplicationInterval = 0.016f;
+			_multiplayerSynchronizer.DeltaInterval = 0.016f;
 		}
 
 		syncLinearVelocity = LinearVelocity;
@@ -150,7 +156,6 @@ public partial class Vehicle : VehicleBody3D
         Item item = GetNodeOrNull<Item>(itemPath);
 		if (item is null)
 		{
-			GD.Print("Shit null");
 			return;
 		}
 

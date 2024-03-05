@@ -80,14 +80,14 @@ size = Vector3(0.179956, 0.079999, 1.01154)
 [sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.102235, 1.64003)
 
-[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_synchronizer", "engineBay", "_itemArea")]
+[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_multiplayerSynchronizer", "engineBay", "_itemArea")]
 collision_layer = 4
 collision_mask = 6
 mass = 900.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, 0.201208, 0.245741)
 script = ExtResource("1_lai86")
-_synchronizer = NodePath("MultiplayerSynchronizer")
+_multiplayerSynchronizer = NodePath("MultiplayerSynchronizer")
 engineBay = NodePath("EngineBay")
 _itemArea = NodePath("ItemArea")
 
