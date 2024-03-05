@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://c0rxm7urfduwm"]
+[gd_scene load_steps=24 format=3 uid="uid://c0rxm7urfduwm"]
 
 [ext_resource type="Script" path="res://Vehicles/Leluota Aito/Aito.cs" id="1_g2kx1"]
 [ext_resource type="PackedScene" uid="uid://qtf1m1jdet0q" path="res://Items/VehicleParts/EngineBay/EngineBay.tscn" id="2_6y7ah"]
@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://d36bofrno2ln1" path="res://Vehicles/Leluota Aito/aito.blend" id="4_172l5"]
 [ext_resource type="Script" path="res://Items/VehicleParts/PartMount.cs" id="5_axqt2"]
 [ext_resource type="Script" path="res://Items/VehicleParts/Tire/TireHandler.cs" id="6_5k62b"]
-[ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="7_jiosd"]
+[ext_resource type="PackedScene" uid="uid://ccgebu0extq6q" path="res://Vehicles/Seat/Seat.tscn" id="7_aqoyv"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4inyu"]
 properties/0/path = NodePath(".:syncRotation")
@@ -33,16 +33,6 @@ size = Vector3(0.2, 0.555078, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_27p1i"]
 size = Vector3(0.2, 0.2, 0.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_0dfu3"]
-size = Vector3(0.5, 0.1, 0.5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wtrmi"]
-albedo_color = Color(0.431373, 0.223529, 0.113725, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_5rl2c"]
-material = SubResource("StandardMaterial3D_wtrmi")
-size = Vector3(0.5, 0.1, 0.5)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vpsqh"]
 size = Vector3(1.7, 1, 2.61176)
@@ -80,7 +70,7 @@ size = Vector3(0.179956, 0.079999, 1.01154)
 [sub_resource type="BoxShape3D" id="BoxShape3D_kkank"]
 size = Vector3(1.5, 0.102235, 1.64003)
 
-[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_multiplayerSynchronizer", "engineBay", "_itemArea")]
+[node name="Aito" type="VehicleBody3D" node_paths=PackedStringArray("_multiplayerSynchronizer", "engineBay", "_itemArea", "_driverSeat")]
 collision_layer = 4
 collision_mask = 6
 mass = 900.0
@@ -90,6 +80,7 @@ script = ExtResource("1_g2kx1")
 _multiplayerSynchronizer = NodePath("MultiplayerSynchronizer")
 engineBay = NodePath("EngineBay")
 _itemArea = NodePath("ItemArea")
+_driverSeat = NodePath("DriverSeat")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.016
@@ -339,40 +330,12 @@ collision_mask = 8
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WheelBR/TireMount/Area3D"]
 shape = SubResource("BoxShape3D_27p1i")
 
-[node name="DriverSeat" type="RigidBody3D" parent="." groups=["Seat"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.352479, 0.22269, 0.397925)
-collision_layer = 4
-collision_mask = 15
-freeze = true
-script = ExtResource("7_jiosd")
-isDriverSeat = true
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DriverSeat"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0636719, 0)
-shape = SubResource("BoxShape3D_0dfu3")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="DriverSeat/CollisionShape3D"]
-mesh = SubResource("BoxMesh_5rl2c")
-
-[node name="SeatPosition" type="Marker3D" parent="DriverSeat"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.596146, 0.0536157)
-
-[node name="Seat2" type="RigidBody3D" parent="." groups=["Seat"]]
+[node name="DriverSeat" parent="." instance=ExtResource("7_aqoyv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.321629, 0.22269, 0.397925)
-collision_layer = 4
-collision_mask = 15
-freeze = true
-script = ExtResource("7_jiosd")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Seat2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0636719, 0)
-shape = SubResource("BoxShape3D_0dfu3")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Seat2/CollisionShape3D"]
-mesh = SubResource("BoxMesh_5rl2c")
-
-[node name="SeatPosition" type="Marker3D" parent="Seat2"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.596146, 0.0536157)
+[node name="Seat" parent="." instance=ExtResource("7_aqoyv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.352479, 0.22269, 0.397925)
+isDriverSeat = true
 
 [node name="ItemArea" type="Area3D" parent="."]
 collision_layer = 8
