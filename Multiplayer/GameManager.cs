@@ -44,7 +44,6 @@ public partial class GameManager : Node
 		GD.Print($"Respawning {Multiplayer.GetUniqueId()}");
 		var player = GetTree().GetNodesInGroup("Player").ToList().Find(player => player.Name == $"{Multiplayer.GetUniqueId()}") as Player;
 		int playerIndex = GetPlayerIndex(player.Id);
-		GD.Print(playerIndex);
 		var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
 		foreach (Node3D spawnPoint in spawnPoints)
 		{

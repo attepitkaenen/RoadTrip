@@ -125,6 +125,7 @@ public partial class PlayerInteraction : Node3D
         }
         else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is CarPart installedPart && _heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
         {
+            GD.Print("Uninstalling part");
             installedPart.Uninstall();
         }
         else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is Door installedDoor && _heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)

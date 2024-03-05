@@ -57,7 +57,6 @@ public partial class CarPart : Node3D, IMounted
         if (_mount is not null)
         {
             _mount.Rpc(nameof(_mount.RemoveInstalledPart), _itemId, _condition, GlobalPosition, GlobalRotation);
-            // Rpc(nameof(DestroyPart));
         }
     }
 
