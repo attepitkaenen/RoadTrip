@@ -90,6 +90,13 @@ public partial class Ragdoll : Node3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void Activate(string boneName, Vector3 bonePushDirection)
     {
+        if (isActive == true)
+        {
+            var bone = skeleton.GetChildren().First(node => node.Name == boneName) as Bone;
+            bone.Impact(bonePushDirection);
+            return;
+        }
+
         HeadIK.Stop();
         HandIK.Stop();
         isActive = true;
