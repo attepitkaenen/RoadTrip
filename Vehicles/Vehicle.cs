@@ -9,7 +9,7 @@ public partial class Vehicle : VehicleBody3D
 	[Export] public EngineBay engineBay;
 	[Export] public float breakForce = 50;
 	[Export] private Area3D _itemArea;
-	private Seat _driverSeat;
+	[Export] private Seat _driverSeat;
 	float enginePower = 0;
 	float maxSteer = 0.8f;
 	private Vector2 _inputDir;
@@ -35,16 +35,14 @@ public partial class Vehicle : VehicleBody3D
 			CustomIntegrator = true;
 		};
 
-		var seats = GetChildren().Where(node => node is Seat).Select(node => node as Seat);
-		foreach (Seat seat in seats)
-		{
-			_multiplayerSynchronizer.ReplicationConfig.AddProperty(seat.GetPath() + ":seatedPlayerId");
-		}
+		// var seats = GetChildren().Where(node => node is Seat).Select(node => node as Seat);
+		// foreach (Seat seat in seats)
+		// {
+		// 	_multiplayerSynchronizer.ReplicationConfig.AddProperty(seat.GetPath() + ":seatedPlayerId");
+		// }
 
 		_itemArea.BodyEntered += ItemEntered;
 		_itemArea.BodyExited += ItemExited;
-
-		_driverSeat = GetNode<Seat>("DriverSeat");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -56,7 +54,7 @@ public partial class Vehicle : VehicleBody3D
 
 		enginePower = engineBay.GetHorsePower();
 
-		if (_driverSeat.seatedPlayerId < 1)
+		if (_driverSeat.GetSeatedPlayerId() < 1)
 		{
 			Brake = 10;
 			EngineForce = 0;
