@@ -45,7 +45,7 @@ public partial class Player : CharacterBody3D
 	public float strength = 20f;
 	private int Health = 10;
 
-	Seat seat;
+	Seat _seat;
 
 	public MovementState movementState { get; set; } = MovementState.idle;
 	public enum MovementState
@@ -137,8 +137,6 @@ public partial class Player : CharacterBody3D
 
 	public override void _Process(double delta)
 	{
-		if (movementState == MovementState.seated && !IsMultiplayerAuthority()) return;
-
 		if (movementState == MovementState.unconscious)
 		{
 			collisionShape3D.Disabled = true;
@@ -151,6 +149,11 @@ public partial class Player : CharacterBody3D
 		//Lerp movement for other players
 		if (!IsMultiplayerAuthority())
 		{
+			if (movementState == MovementState.seated)
+			{
+				Velocity = Vector3.Zero;
+				return;
+			}
 			var newState = Transform;
 			newState.Origin = GlobalPosition.Lerp(syncPosition, 0.2f);
 			var a = newState.Basis.GetRotationQuaternion().Normalized();
@@ -200,9 +203,9 @@ public partial class Player : CharacterBody3D
 		if (movementState == MovementState.seated)
 		{
 			Velocity = Vector3.Zero;
-			if (seat is Seat && seat.isDriverSeat)
+			if (_seat.isDriverSeat)
 			{
-				Vehicle vehicle = seat.GetParent<Vehicle>();
+				Vehicle vehicle = _seat.GetVehicle();
 				vehicle.RpcId(1, nameof(vehicle.Drive), Input.GetActionStrength("left") - Input.GetActionStrength("right"), Input.GetActionStrength("up") - Input.GetActionStrength("down"), Input.IsActionPressed("jump"), delta);
 			}
 			return;
@@ -322,20 +325,19 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-
 	public void HandleSeat()
 	{
 		var newSeat = floatMachine.GetSeat();
 		if (newSeat is Seat && Input.IsActionJustPressed("equip") && movementState != MovementState.seated && !newSeat.occupied)
 		{
-			seat = newSeat;
-			seat.Rpc(nameof(seat.Sit), int.Parse(Name));
+			_seat = newSeat;
+			_seat.Rpc(nameof(_seat.Sit), Id);
 			movementState = MovementState.seated;
 		}
 		else if (Input.IsActionJustPressed("equip") && movementState == MovementState.seated)
 		{
-			seat.Rpc(nameof(seat.Stand));
-			seat = null;
+			_seat.Rpc(nameof(_seat.Stand));
+			_seat = null;
 			GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
 			movementState = MovementState.idle;
 		}
@@ -404,8 +406,8 @@ public partial class Player : CharacterBody3D
 			// Stop sitting if seated
 			if (movementState == MovementState.seated)
 			{
-				seat.Rpc(nameof(seat.Stand));
-				seat = null;
+				_seat.Rpc(nameof(_seat.Stand));
+				_seat = null;
 				GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
 			}
 			ragdoll.Rpc(nameof(ragdoll.Activate), boneName, bulletDirection);

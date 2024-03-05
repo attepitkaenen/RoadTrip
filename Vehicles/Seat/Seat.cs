@@ -4,8 +4,10 @@ using System.Linq;
 
 public partial class Seat : RigidBody3D
 {
+	Vehicle _vehicle;
 	public Marker3D seatPosition;
-	public long seatedPlayerId = -1;
+	private Player _seatedPlayer;
+	private long _seatedPlayerId = 0;
 	public bool occupied = false;
 	[Export] public bool isDriverSeat = false;
 	[Signal] public delegate void PlayerSeatedEventHandler(int playerId);
@@ -13,17 +15,30 @@ public partial class Seat : RigidBody3D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_vehicle = GetParentOrNull<Vehicle>();
 		seatPosition = GetNode<Marker3D>("SeatPosition");
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		var vehicle = GetParent();
-		if (vehicle is Vehicle)
+		if (_seatedPlayer is null && _seatedPlayerId != 0)
 		{
-			SetMultiplayerAuthority(vehicle.GetMultiplayerAuthority());
+			_seatedPlayer = GetPlayer(_seatedPlayerId);
 		}
-		MovePassenger();
+		else if (_seatedPlayerId == 0)
+		{
+			_seatedPlayer = null;
+		}
+
+		if (_seatedPlayer is not null)
+		{
+			MovePassenger(_seatedPlayer);
+		}
+	}
+
+	public Vehicle GetVehicle()
+	{
+		return _vehicle;
 	}
 
 	public Vector3 GetPosition()
@@ -36,9 +51,9 @@ public partial class Seat : RigidBody3D
 		return seatPosition.GlobalRotation;
 	}
 
-	public long GetPlayerId()
+	public long GetSeatedPlayerId()
 	{
-		return seatedPlayerId;
+		return _seatedPlayerId;
 	}
 
 	public Player GetPlayer(long Id)
@@ -48,34 +63,28 @@ public partial class Seat : RigidBody3D
 		return players.First(player => player.Name == Id.ToString()) as Player;
 	}
 
-	public void MovePassenger()
+	public void MovePassenger(Player player)
 	{
-		if (occupied)
-		{
-			var player = GetPlayer(seatedPlayerId);
-			if (player is not null)
-			{
-				player.MovePlayer(GetPosition(), GetRotation());
-			}
-		}
+		player.MovePlayer(GetPosition(), GetRotation());
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void Sit(long playerId)
 	{
-		if (seatedPlayerId == -1)
+		GD.Print("Sit");
+		if (_seatedPlayerId == 0)
 		{
-			seatedPlayerId = playerId;
+			_seatedPlayerId = playerId;
 			occupied = true;
 		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void Stand()
 	{
-		if (seatedPlayerId != -1)
+		if (_seatedPlayerId != 0)
 		{
-			seatedPlayerId = -1;
+			_seatedPlayerId = 0;
 			occupied = false;
 		}
 	}
