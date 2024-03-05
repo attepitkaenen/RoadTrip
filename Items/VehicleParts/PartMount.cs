@@ -122,6 +122,7 @@ public partial class PartMount : Node3D
         {
             gameManager.RpcId(1, nameof(gameManager.SpawnPart), itemId, condition, position, rotation);
         }
+        _part.QueueFree();
     }
 
     private void InstallPart(int itemId, float condition)

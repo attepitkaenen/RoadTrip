@@ -745,20 +745,8 @@ transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 14.129
 [node name="StockTireDropped4" parent="." instance=ExtResource("21_rh7hh")]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 14.1589, 1.41584, -6.97545)
 
-[node name="StockAlternatorDropped2" parent="." instance=ExtResource("22_ki834")]
-transform = Transform3D(0.962791, -0.270248, 0, 0.270248, 0.962791, 0, 0, 0, 1, 11.5053, 1.08401, -1.99296)
-
-[node name="StockAlternatorDropped3" parent="." instance=ExtResource("23_pv31n")]
-transform = Transform3D(0.931361, -0.364097, 0, 0.364097, 0.931361, 0, 0, 0, 1, 11.3546, 1, -2.76575)
-
-[node name="StockAlternatorDropped4" parent="." instance=ExtResource("24_u6aox")]
-transform = Transform3D(0.951132, -0.308785, 0, 0.308785, 0.951132, 0, 0, 0, 1, 11.2744, 1, -4.07568)
-
-[node name="StockAlternatorDropped5" parent="." instance=ExtResource("25_icb03")]
-transform = Transform3D(0.930692, -0.365803, 0, 0.365803, 0.930692, 0, 0, 0, 1, 11.7573, 1, -5.08242)
-
 [node name="AitoBonnet" parent="." instance=ExtResource("26_r2dta")]
-transform = Transform3D(0.0426081, 0, 0.999092, 0, 1, 0, -0.999092, 0, 0.0426081, 11.7168, 1.58533, -3.41254)
+transform = Transform3D(0.0426081, 0, 0.999092, 0, 1, 0, -0.999092, 0, 0.0426081, 12.1507, 1.58533, -4.13644)
 
 [node name="Shelf" parent="." instance=ExtResource("25_u4b10")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.8762, 0.718349, -6.93881)
@@ -771,5 +759,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1765, 1.71835, -3.03579)
 
 [node name="Aito" parent="." instance=ExtResource("27_pcrg7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.7668, 1.25908, -4.70138)
+
+[node name="AitoBRDoorDropped" parent="." instance=ExtResource("24_u6aox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1951, 0.718349, -2.06013)
+
+[node name="AitoFLDoorDropped" parent="." instance=ExtResource("22_ki834")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4102, 0.718349, -2.91988)
+
+[node name="AitoFRDoorDropped" parent="." instance=ExtResource("23_pv31n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.584, 0.718348, -3.84725)
+
+[node name="AitoBLDoorDropped" parent="." instance=ExtResource("25_icb03")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.6864, 0.718349, -2.04588)
 
 [editable path="Items/Item31"]

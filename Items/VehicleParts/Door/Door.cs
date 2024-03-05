@@ -132,19 +132,18 @@ public partial class Door : Item, IMounted
     {
         if (_mount is not null)
         {
-            _mount.RpcId(1, nameof(_mount.RemoveInstalledPart), _itemId, _condition, GlobalPosition, GlobalRotation);
-            Rpc(nameof(DestroyPart));
+            Rpc(nameof(UnSyncPart));
+            _mount.Rpc(nameof(_mount.RemoveInstalledPart), _itemId, _condition, GlobalPosition, GlobalRotation);
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void DestroyPart()
+    public void UnSyncPart()
     {
         _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncPosition");
         _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncBasis");
         _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncRotation");
         _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncLinearVelocity");
         _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncAngularVelocity");
-        QueueFree();
     }
 }
