@@ -91,7 +91,7 @@ public partial class GameManager : Node
 		var item = multiplayerSpawner.Spawn(itemId) as Item;
 		item.GlobalPosition = position;
 
-		if (playerId == -1)
+		if (playerId == 0)
 		{
 			return;
 		}

@@ -33,12 +33,8 @@ public partial class Weapon : HeldItem
         dynamic collider = _bulletRay.GetCollider();
         var bulletTravelDirection = (_bulletRay.GetCollisionPoint() - GlobalPosition).Normalized();
         Rpc(nameof(PlayEffects));
-        if (collider is Player player)
-        {
-            player.RpcId(int.Parse(player.Name), nameof(player.Hit), stats.Damage, bulletTravelDirection * stats.Damage / 3);
-            Rpc(nameof(SpawnHitEffect), _bulletRay.GetCollisionPoint(), _bulletRay.GetCollisionNormal());
-        }
-        else if (collider is Item || collider is Bone)
+        
+        if (collider is Item || collider is Bone)
         {
             collider.Rpc(nameof(collider.Hit), stats.Damage, bulletTravelDirection);
             if (collider is Bone)
@@ -52,7 +48,7 @@ public partial class Weapon : HeldItem
     public void SpawnHitEffect(Vector3 position, Vector3 hitNormal)
     {
         var effect = _bloodHit.Instantiate<GpuParticles3D>();
-        
+
         var result = new Basis();
         var scale = Basis.Scale;
 

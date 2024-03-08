@@ -14,9 +14,9 @@ public partial class PlayerInteraction : Node3D
     [Export] private StaticBody3D staticBody;
     [Export] private Node3D EquipHandPosition;
     private dynamic PickedItem;
-    private ItemResource itemResource;
+    // private ItemResource itemResource;
     private int _heldItemId;
-    private HeldItem _heldItem;
+    public HeldItem _heldItem;
 
     public override void _Ready()
     {
@@ -136,19 +136,19 @@ public partial class PlayerInteraction : Node3D
         // Equip held item
         else if (Input.IsActionJustPressed("equip") && PickedItem is Item && _heldItem is null)
         {
-            GD.Print("Item picked");
-            itemResource = gameManager.GetItemResource(PickedItem.ItemId);
+            ItemResource itemResource = gameManager.GetItemResource(PickedItem.ItemId);
             if (itemResource.Equippable)
             {
+                GD.Print("Item picked");
                 SetHeldItem(itemResource.ItemId);
                 PickedItem.RpcId(1, nameof(PickedItem.QueueItemDestruction));
                 PickedItem = null;
             }
         }
         // Drop held item
-        else if (Input.IsActionJustPressed("equip") && PickedItem is null && _heldItem is not null && itemResource is not null)
+        else if (Input.IsActionJustPressed("equip") && PickedItem is null && _heldItem is not null)
         {
-            DropHeldItem();
+            DropHeldItem(true);
         }
 
         // Stop picking items when item held
@@ -205,18 +205,32 @@ public partial class PlayerInteraction : Node3D
         }
     }
 
-    public void DropHeldItem()
+    public void DropHeldItem(bool pickDroppedItem)
     {
-        GD.Print(player.Id + " : " + itemResource.ItemId + " : " + hand.GlobalPosition);
-        gameManager.RpcId(1, nameof(gameManager.SpawnItem), player.Id, itemResource.ItemId, hand.GlobalPosition);
+        long id;
+
+        if (pickDroppedItem)
+        {
+            id = player.Id;
+        }
+        else
+        {
+            id = 0;
+        }
+
+        GD.Print(player.Id + " : " + _heldItemId + " : " + hand.GlobalPosition);
+        gameManager.RpcId(1, nameof(gameManager.SpawnItem), id, _heldItemId, hand.GlobalPosition);
         SetHeldItem(0);
     }
 
     public void DropPickedItem()
     {
-        PickedItem.Rpc(nameof(PickedItem.Drop));
-        PickedItem = null;
-        hand.Position = new Vector3(0, 0, -1);
+        if (PickedItem is not null)
+        {
+            PickedItem.Rpc(nameof(PickedItem.Drop));
+            PickedItem = null;
+            hand.Position = new Vector3(0, 0, -1);
+        }
     }
 
     public void PickItem(dynamic item)
