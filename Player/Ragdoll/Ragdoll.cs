@@ -6,14 +6,11 @@ using Godot.Collections;
 
 public partial class Ragdoll : Node3D
 {
-    [Export] public MultiplayerSynchronizer multiplayerSynchronizer;
     [Export] Skeleton3D skeleton;
     [Export] Camera3D camera;
     [Export] MeshInstance3D head;
     [Export] private SkeletonIK3D HeadIK;
     [Export] private SkeletonIK3D HandIK;
-    [Export] private AnimationPlayer _animationPlayer;
-    private Vector3 _spawnVelocity = Vector3.Zero;
     Player _player;
     Array<Bone> bones = new Array<Bone>();
     bool isActive;
@@ -54,24 +51,15 @@ public partial class Ragdoll : Node3D
             Rpc(nameof(UpdateRagdoll), boneInfo);
         }
 
-        if (isActive)
+        if (_player.playerInteraction.IsHolding())
         {
-            HeadIK.Interpolation = 0;
-            HandIK.Interpolation = 0;
+            HandIK.Interpolation = 1;
         }
         else
         {
-            HeadIK.Interpolation = 1;
-
-            if (_player.playerInteraction.IsHolding())
-            {
-                HandIK.Interpolation = 1;
-            }
-            else
-            {
-                HandIK.Interpolation = 0;
-            }
+            HandIK.Interpolation = 0;
         }
+
     }
 
 
@@ -97,9 +85,9 @@ public partial class Ragdoll : Node3D
             return;
         }
 
+        isActive = true;
         HeadIK.Stop();
         HandIK.Stop();
-        isActive = true;
         Position = Vector3.Zero;
         skeleton.PhysicalBonesStartSimulation();
 

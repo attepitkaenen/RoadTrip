@@ -128,7 +128,7 @@ public partial class Vehicle : VehicleBody3D
 	public void AddItemToList(string itemPath)
 	{
 		Item item = GetNodeOrNull<Item>(itemPath);
-		if (items.Keys.Contains(item))
+		if ((items.Count > 0 && items.Keys.Contains(item)) || item is null)
 		{
 			return;
 		}
