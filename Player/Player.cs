@@ -24,17 +24,20 @@ public partial class Player : CharacterBody3D
 
 
 	[ExportGroup("Debug Nodes")]
-	[Export] private Label stateLabel;
-	[Export] private Label speedLabel;
-	[Export] private ItemList playerList;
+	[Export] private VBoxContainer _debugContainer;
+	[Export] private VBoxContainer _lobbyContainer;
 	[Export] private Control debugWindow;
+	private Label speedDebug = new Label();
+	private Label fpsDebug = new Label();
+	private Label movementStateDebug = new Label();
+	private Label holdingItemDebug = new Label();
 
 
 	[ExportGroup("Movement properties")]
 	[Export] public float sensitivity = 0.001f;
 	[Export] private float acceleration = 4f;
 	[Export] private float deceleration = 5f;
-	[Export] private float speed = 3f;
+	[Export] public float speed = 3f;
 	[Export] private float jumpVelocity = 4.5f;
 	[Export] private float runningMultiplier = 1.5f;
 	public bool isGrounded { get; set; } = false;
@@ -97,6 +100,11 @@ public partial class Player : CharacterBody3D
 		{
 			menuHandler.OpenMenu(MenuHandler.MenuType.none);
 		}
+
+		AddDebugLine(fpsDebug);
+		AddDebugLine(movementStateDebug);
+		AddDebugLine(speedDebug);
+		AddDebugLine(holdingItemDebug);
 	}
 
 	public override void _Input(InputEvent @event)
@@ -125,14 +133,6 @@ public partial class Player : CharacterBody3D
 				}
 			}
 		}
-	}
-
-
-	public override void _PhysicsProcess(double delta)
-	{
-		if (!IsMultiplayerAuthority()) return;
-
-		Rpc(nameof(HandleRpcAnimations), movementState.ToString(), isGrounded, Velocity, GlobalBasis, playerInteraction.IsHolding());
 	}
 
 	public override void _Process(double delta)
@@ -176,10 +176,8 @@ public partial class Player : CharacterBody3D
 			}
 			return;
 		}
-		else
-		{
-			camera.Current = true;
-		}
+
+		camera.Current = true;
 
 		// Movement logic
 		Vector3 velocity = Velocity;
@@ -197,7 +195,7 @@ public partial class Player : CharacterBody3D
 
 		HandleSeat();
 
-		HandleDebugLines();
+		HandleDebugUpdate(delta);
 
 		// Stop movement if seated and handle driving
 		if (movementState == MovementState.seated)
@@ -300,7 +298,12 @@ public partial class Player : CharacterBody3D
 		MoveAndSlide();
 	}
 
-	public void HandleDebugLines()
+	public void AddDebugLine(Label label)
+	{
+		_debugContainer.AddChild(label);
+	}
+
+	public void HandleDebugUpdate(double delta)
 	{
 		if (Input.IsActionJustPressed("debug"))
 		{
@@ -309,20 +312,22 @@ public partial class Player : CharacterBody3D
 
 		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
 
-		stateLabel.Text = movementState.ToString();
-		speedLabel.Text = Math.Round(currentSpeed, 2).ToString();
+		movementStateDebug.Text = "Movement state: " + movementState.ToString();
+		speedDebug.Text = "Velocity: " + Math.Round(currentSpeed, 2).ToString();
+		fpsDebug.Text = "FPS: " + Math.Round(1.0f / delta);
+		holdingItemDebug.Text = "Holding item: " + playerInteraction._heldItem;
 
-		playerList.Clear();
-		while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
-		{
-			playerList.AddItem("");
-		}
-		var index = 0;
-		foreach (var (id, playerState) in gameManager.GetPlayerStates())
-		{
-			playerList.SetItemText(index, $"{playerState.Name} : {playerState.Id}");
-			index++;
-		}
+		// playerList.Clear();
+		// while (playerList.ItemCount < gameManager.GetPlayerStates().Count)
+		// {
+		// 	playerList.AddItem("");
+		// }
+		// var index = 0;
+		// foreach (var (id, playerState) in gameManager.GetPlayerStates())
+		// {
+		// 	playerList.SetItemText(index, $"{playerState.Name} : {playerState.Id}");
+		// 	index++;
+		// }
 	}
 
 	public void HandleSeat()
@@ -358,60 +363,30 @@ public partial class Player : CharacterBody3D
 		GlobalRotation = rotation;
 	}
 
-	[Rpc(CallLocal = true)]
-	public void HandleRpcAnimations(string state, bool isGroundedRpc, Vector3 velocity, Basis basis, bool isHolding)
-	{
-		animationTree.Set("parameters/HoldingBlend/blend_amount", isHolding);
-
-		if (state == "seated")
-		{
-			animationTree.Set("parameters/StateMachine/conditions/walk", false);
-			animationTree.Set("parameters/StateMachine/conditions/jump", false);
-			animationTree.Set("parameters/StateMachine/conditions/sit", true);
-			return;
-		}
-		else if (state == "jumping" || !isGroundedRpc)
-		{
-			animationTree.Set("parameters/StateMachine/conditions/walk", false);
-			animationTree.Set("parameters/StateMachine/conditions/sit", false);
-			animationTree.Set("parameters/StateMachine/conditions/jump", true);
-		}
-		else
-		{
-			velocity *= basis;
-			Vector2 walkingIntensity = new Vector2(-(velocity.Z / (speed * 2)), velocity.X / (speed * 2));
-			animationTree.Set("parameters/StateMachine/conditions/walk", true);
-			animationTree.Set("parameters/StateMachine/walking/blend_position", walkingIntensity);
-			animationTree.Set("parameters/StateMachine/conditions/sit", false);
-			animationTree.Set("parameters/StateMachine/conditions/jump", false);
-		}
-	}
-
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void Hit(int damage, string boneName, Vector3 bulletDirection)
 	{
-		if (!IsMultiplayerAuthority()) return;
+		if(!IsMultiplayerAuthority()) return;
 		GD.Print($"Player {Name} was hit for {damage}");
 		Health -= damage;
 
 		if (Health <= 0)
 		{
-			movementState = MovementState.unconscious;
-
 			if (playerInteraction.IsHolding())
 			{
-				playerInteraction.DropHeldItem();
+				playerInteraction.DropHeldItem(false);
 			}
 
 			// Stop sitting if seated
-			if (movementState == MovementState.seated)
+			if (_seat is not null)
 			{
 				_seat.Rpc(nameof(_seat.Stand));
 				_seat = null;
 				GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
 			}
+
+			movementState = MovementState.unconscious;
 			ragdoll.Rpc(nameof(ragdoll.Activate), boneName, bulletDirection);
-			collisionShape3D.Disabled = true;
 		}
 	}
 }
