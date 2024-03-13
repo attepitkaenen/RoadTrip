@@ -13,7 +13,7 @@ public partial class MultiplayerController : Control
 	private int maxConnections = 20;
 	private string defaultServerIp = "127.0.0.1";
 
-	PlayerState playerState = new PlayerState { Id = 1, Name = "Jorma" };
+	PlayerState playerState = new PlayerState { Id = 1, Name = "Jorma", IsLoading = true };
 	int playersLoaded = 0;
 	public bool isGameStarted = false;
 
@@ -30,6 +30,7 @@ public partial class MultiplayerController : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		ProcessMode = ProcessModeEnum.Always;
 		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		Multiplayer.PeerConnected += PeerConnected;
@@ -91,7 +92,7 @@ public partial class MultiplayerController : Control
 	private void PeerConnected(long id)
 	{
 		GD.Print($"Player {id} has connected");
-		RpcId(id, nameof(RegisterPlayer), playerState.Id, playerState.Name);
+		RpcId(id, nameof(RegisterPlayer), playerState.Id, playerState.Name, playerState.IsLoading);
 	}
 
 	public void Disconnect()
@@ -156,7 +157,7 @@ public partial class MultiplayerController : Control
 		Multiplayer.MultiplayerPeer = null;
 	}
 
-	[Rpc(CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void LoadGame()
 	{
 		GD.Print("Loading game");
@@ -179,13 +180,29 @@ public partial class MultiplayerController : Control
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void RegisterPlayer(long id, string name)
+	public void RegisterPlayer(long id, string name, bool isLoading)
 	{
-		var newPlayerState = new PlayerState { Name = name, Id = id };
 		GD.Print($"Registering player {Multiplayer.GetRemoteSenderId()}");
+		var newPlayerState = new PlayerState { Name = name, Id = id, IsLoading = isLoading };
 		var newPlayerId = Multiplayer.GetRemoteSenderId();
+
+		if (Multiplayer.IsServer())
+		{
+			foreach (var player in players)
+			{
+				Rpc(nameof(RegisterPlayer), player.Key, player.Value.Name, player.Value.IsLoading);
+			}
+		}
+
 		players[newPlayerId] = newPlayerState;
 		EmitSignal(SignalName.PlayerConnected, newPlayerId, newPlayerState);
 		gameManager.StartGame();
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SetLoadingStatus(bool status)
+	{
+		// GD.Print($"On player {Multiplayer.GetUniqueId()} the status for loading player {Multiplayer.GetRemoteSenderId()} is set to {status}");
+		players[Multiplayer.GetRemoteSenderId()].IsLoading = status;
 	}
 }

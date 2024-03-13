@@ -5,4 +5,5 @@ public partial class PlayerState : GodotObject
 {
 	public string Name;
 	public long Id;
+	public bool IsLoading;
 }
