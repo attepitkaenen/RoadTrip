@@ -9,6 +9,7 @@ public partial class GameManager : Node
 	[Export] private PackedScene playerScene;
 	[Export] public Array<ItemResource> itemList = new Array<ItemResource>();
 	[Export] public MultiplayerSpawner multiplayerSpawner;
+	public MenuHandler menuHandler;
 	public SceneManager world;
 	private MultiplayerController multiplayerController;
 	public float Sensitivity = 0.001f;
@@ -23,6 +24,7 @@ public partial class GameManager : Node
 			itemList.Add(item);
 		}
 		multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
+		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
 
 		Callable spawnCallable = new Callable(this, MethodName.SpawnNode);
 		multiplayerSpawner.SpawnFunction = spawnCallable;
@@ -117,12 +119,9 @@ public partial class GameManager : Node
 
 	public void LoadGame()
 	{
-		if (Multiplayer.IsServer())
-		{
-			var scene = ResourceLoader.Load<PackedScene>("res://Scenes/World.tscn").Instantiate<SceneManager>();
-			AddChild(scene, true);
-			world = scene;
-		}
+		var scene = ResourceLoader.Load<PackedScene>("res://Scenes/Menus/LoadingScreen.tscn").Instantiate<LoadingScreen>();
+		AddChild(scene, true);
+		menuHandler.OpenMenu(MenuHandler.MenuType.none);
 	}
 
 	public void StartGame()
