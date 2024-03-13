@@ -119,6 +119,7 @@ public partial class GameManager : Node
 
 	public void LoadGame()
 	{
+		GD.Print("Should go to loading screen");
 		var scene = ResourceLoader.Load<PackedScene>("res://Scenes/Menus/LoadingScreen.tscn").Instantiate<LoadingScreen>();
 		AddChild(scene, true);
 		menuHandler.OpenMenu(MenuHandler.MenuType.none);

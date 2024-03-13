@@ -157,7 +157,7 @@ public partial class MultiplayerController : Control
 		Multiplayer.MultiplayerPeer = null;
 	}
 
-	[Rpc(CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void LoadGame()
 	{
 		GD.Print("Loading game");
@@ -182,9 +182,18 @@ public partial class MultiplayerController : Control
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void RegisterPlayer(long id, string name, bool isLoading)
 	{
-		var newPlayerState = new PlayerState { Name = name, Id = id, IsLoading = isLoading };
 		GD.Print($"Registering player {Multiplayer.GetRemoteSenderId()}");
+		var newPlayerState = new PlayerState { Name = name, Id = id, IsLoading = isLoading };
 		var newPlayerId = Multiplayer.GetRemoteSenderId();
+
+		if (Multiplayer.IsServer())
+		{
+			foreach (var player in players)
+			{
+				Rpc(nameof(RegisterPlayer), player.Key, player.Value.Name, player.Value.IsLoading);
+			}
+		}
+
 		players[newPlayerId] = newPlayerState;
 		EmitSignal(SignalName.PlayerConnected, newPlayerId, newPlayerState);
 		gameManager.StartGame();
