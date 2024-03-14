@@ -128,7 +128,8 @@ collision_layer = 8
 collision_mask = 15
 contact_monitor = true
 script = ExtResource("1_ue5ts")
-ItemId = 1
+itemId = 1
+condition = 6.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0731923, 0.121338)

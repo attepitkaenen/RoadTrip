@@ -19,6 +19,7 @@ config/icon="res://icon.png"
 
 GameManager="*res://Multiplayer/GameManager.tscn"
 MultiplayerController="*res://Multiplayer/MultiplayerController.cs"
+SaveManager="*res://Multiplayer/Saving/SaveManager.cs"
 
 [display]
 

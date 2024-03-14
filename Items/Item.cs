@@ -4,7 +4,8 @@ using Godot;
 public partial class Item : RigidBody3D
 {
 	public int playerHolding = 0;
-	[Export] public int ItemId;
+	[Export] public int itemId;
+	[Export] public float condition;
 	[Export] bool isLogging = false;
 	GameManager gameManager;
 

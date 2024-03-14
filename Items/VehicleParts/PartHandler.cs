@@ -9,7 +9,7 @@ public partial class PartHandler : Node3D
     private Marker3D _marker;
     private int _partId;
     private float _partCondition;
-    private dynamic part;
+    // private dynamic part;
     [Export] Parts partToHandle;
 
     private enum Parts

@@ -16,6 +16,7 @@ public partial class PlayerInteraction : Node3D
     private dynamic PickedItem;
     // private ItemResource itemResource;
     private int _heldItemId;
+    private float _heldItemCondition;
     public HeldItem _heldItem;
 
     public override void _Ready()
@@ -136,11 +137,11 @@ public partial class PlayerInteraction : Node3D
         // Equip held item
         else if (Input.IsActionJustPressed("equip") && PickedItem is Item && _heldItem is null)
         {
-            ItemResource itemResource = gameManager.GetItemResource(PickedItem.ItemId);
+            ItemResource itemResource = gameManager.GetItemResource(PickedItem.itemId);
             if (itemResource.Equippable)
             {
                 GD.Print("Item picked");
-                SetHeldItem(itemResource.ItemId);
+                SetHeldItem(itemResource.ItemId, PickedItem.condition);
                 PickedItem.RpcId(1, nameof(PickedItem.QueueItemDestruction));
                 PickedItem = null;
             }
@@ -219,8 +220,8 @@ public partial class PlayerInteraction : Node3D
         }
 
         GD.Print(player.Id + " : " + _heldItemId + " : " + hand.GlobalPosition);
-        gameManager.RpcId(1, nameof(gameManager.SpawnItem), id, _heldItemId, hand.GlobalPosition);
-        SetHeldItem(0);
+        gameManager.RpcId(1, nameof(gameManager.SpawnItem), id, _heldItemId, _heldItemCondition, hand.GlobalPosition, hand.GlobalRotation);
+        SetHeldItem(0, 0);
     }
 
     public void DropPickedItem()
@@ -247,9 +248,10 @@ public partial class PlayerInteraction : Node3D
         PickedItem = GetTree().Root.GetNode<Item>(itemPath);
     }
 
-    public void SetHeldItem(int itemId)
+    public void SetHeldItem(int itemId, float condition)
     {
         _heldItemId = itemId;
+        _heldItemCondition = condition;
     }
 }
 

@@ -15,8 +15,8 @@ transform = Transform3D(-4.37114e-08, -1, 4.37114e-08, 0, -4.37114e-08, -1, 1, -
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_hi8v0")
-_condition = 100.0
-ItemId = 108
+itemId = 108
+condition = 100.0
 
 [node name="stockStarter" parent="." instance=ExtResource("2_t77d1")]
 transform = Transform3D(0.27, 0, 0, 0, -1.18021e-08, -0.27, 0, 0.27, -1.18021e-08, 7.23469e-10, 0.046047, -0.0294959)

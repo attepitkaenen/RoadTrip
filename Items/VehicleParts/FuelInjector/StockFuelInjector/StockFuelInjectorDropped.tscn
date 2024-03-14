@@ -10,8 +10,8 @@ size = Vector3(0.2, 0.238379, 0.534729)
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_3nxe7")
-_condition = 100.0
-ItemId = 104
+itemId = 104
+condition = 100.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5786e-16, -0.0194562, -0.000631087)

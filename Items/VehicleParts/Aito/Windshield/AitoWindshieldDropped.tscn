@@ -10,8 +10,8 @@ size = Vector3(1.401, 0.851, 0.2)
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_paknq")
-_condition = 100.0
-ItemId = 116
+itemId = 116
+condition = 100.0
 
 [node name="aitoWindshield" parent="." instance=ExtResource("2_rvx7x")]
 transform = Transform3D(-1.18, 0, -1.03159e-07, 0, 1.18, 0, 1.03159e-07, 0, -1.18, 0, -0.565727, -0.750358)

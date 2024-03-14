@@ -60,7 +60,7 @@ public partial class GameManager : Node
 	{
 		if (itemList is not null)
 		{
-			return itemList.First(item => item.ItemId == id);
+			return itemList.FirstOrDefault(item => item.ItemId == id);
 		}
 		return null;
 	}
@@ -78,20 +78,22 @@ public partial class GameManager : Node
 		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SpawnPart(int itemId, float condition, Vector3 position, Vector3 rotation)
-	{
-		var item = multiplayerSpawner.Spawn(itemId) as Installable;
-		item.SetCondition(condition);
-		item.GlobalPosition = position;
-		item.GlobalRotation = rotation;
-	}
+	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	// public void SpawnPart(int itemId, float condition, Vector3 position, Vector3 rotation)
+	// {
+	// 	var item = multiplayerSpawner.Spawn(itemId) as Installable;
+	// 	item.SetCondition(condition);
+	// 	item.GlobalPosition = position;
+	// 	item.GlobalRotation = rotation;
+	// }
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SpawnItem(int playerId, int itemId, Vector3 position)
+	public void SpawnItem(int playerId, int itemId, float condition, Vector3 position, Vector3 rotation)
 	{
 		var item = multiplayerSpawner.Spawn(itemId) as Item;
 		item.GlobalPosition = position;
+		item.GlobalRotation = rotation;
+		item.condition = condition;
 
 		if (playerId == 0)
 		{

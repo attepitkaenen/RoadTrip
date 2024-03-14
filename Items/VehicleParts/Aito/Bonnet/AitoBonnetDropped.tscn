@@ -22,8 +22,8 @@ size = Vector3(0.172949, 0.0639648, 0.29331)
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_lc86j")
-_condition = 100.0
-ItemId = 114
+itemId = 114
+condition = 100.0
 
 [node name="aitoBonnet" parent="." instance=ExtResource("2_y8w0r")]
 transform = Transform3D(-1.18, 3.35852e-08, 9.75386e-08, 0, 1.11571, -0.38417, -1.03159e-07, -0.38417, -1.11571, 0, -0.61935, -0.949842)

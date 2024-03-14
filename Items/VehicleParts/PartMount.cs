@@ -120,7 +120,7 @@ public partial class PartMount : Node3D
 
         if (IsMultiplayerAuthority())
         {
-            gameManager.RpcId(1, nameof(gameManager.SpawnPart), itemId, condition, position, rotation);
+            gameManager.RpcId(1, nameof(gameManager.SpawnItem), 0, itemId, condition, position, rotation);
         }
         _part.QueueFree();
     }

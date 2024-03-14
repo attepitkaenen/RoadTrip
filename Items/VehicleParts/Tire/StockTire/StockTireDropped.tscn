@@ -114,8 +114,8 @@ radius = 0.3
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_65y7e")
-_condition = 10.0
-ItemId = 109
+itemId = 109
+condition = 100.0
 
 [node name="Meshes" type="Node3D" parent="."]
 transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)
