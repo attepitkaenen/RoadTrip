@@ -15,7 +15,6 @@ public partial class Vehicle : VehicleBody3D
 	private Vector2 _inputDir;
 	bool braking;
 	public Dictionary<Item, Marker3D> items = new Dictionary<Item, Marker3D>();
-	public List<VehicleWheel3D> wheels = new List<VehicleWheel3D>();
 
 	// Sync properties
 	Vector3 syncPosition;
@@ -34,12 +33,6 @@ public partial class Vehicle : VehicleBody3D
 		{
 			CustomIntegrator = true;
 		};
-
-		// var seats = GetChildren().Where(node => node is Seat).Select(node => node as Seat);
-		// foreach (Seat seat in seats)
-		// {
-		// 	_multiplayerSynchronizer.ReplicationConfig.AddProperty(seat.GetPath() + ":seatedPlayerId");
-		// }
 
 		_itemArea.BodyEntered += ItemEntered;
 		_itemArea.BodyExited += ItemExited;

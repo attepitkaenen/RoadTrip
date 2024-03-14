@@ -1,7 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://bx0kmxtkqie43"]
+[gd_scene load_steps=9 format=3 uid="uid://bx0kmxtkqie43"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/Tire/Tire.cs" id="1_qegih"]
-[ext_resource type="Resource" uid="uid://dbve3vl2ykebe" path="res://Items/VehicleParts/Tire/StockTire/StockTire.tres" id="2_261wh"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g0rvq"]
 resource_name = "Material.002"
@@ -116,7 +115,6 @@ collision_layer = 8
 collision_mask = 0
 freeze = true
 script = ExtResource("1_qegih")
-stats = ExtResource("2_261wh")
 
 [node name="Meshes" type="Node3D" parent="."]
 transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)

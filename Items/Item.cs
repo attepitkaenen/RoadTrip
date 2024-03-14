@@ -6,6 +6,7 @@ public partial class Item : RigidBody3D
 	public int playerHolding = 0;
 	[Export] public int itemId;
 	[Export] public float condition;
+	[Export] public ItemTypeEnum type;
 	[Export] bool isLogging = false;
 	GameManager gameManager;
 

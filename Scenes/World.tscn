@@ -723,24 +723,36 @@ transform = Transform3D(1, 0, 0, 0, -0.00534071, -0.999986, 0, 0.999986, -0.0053
 
 [node name="StockWaterTankDropped" parent="." instance=ExtResource("18_24wwe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 816.144, 13.6898, 254.703)
+type = null
+isLogging = null
 
 [node name="StockFuelInjectorDropped2" parent="." instance=ExtResource("19_8qxit")]
 transform = Transform3D(0.628058, 0, -0.778166, 0, 1, 0, 0.778166, 0, 0.628058, 818.014, 14.5702, 254.513)
 
 [node name="StockStarterDropped" parent="." instance=ExtResource("20_sy6bp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 817.674, 14.614, 254.523)
+type = null
+isLogging = null
 
 [node name="StockTireDropped" parent="." instance=ExtResource("21_rh7hh")]
 transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 818.034, 13.8036, 254.683)
+type = null
+isLogging = null
 
 [node name="StockTireDropped2" parent="." instance=ExtResource("21_rh7hh")]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 818.024, 13.5215, 254.633)
+type = null
+isLogging = null
 
 [node name="StockTireDropped3" parent="." instance=ExtResource("21_rh7hh")]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 818.704, 13.5226, 254.353)
+type = null
+isLogging = null
 
 [node name="StockTireDropped4" parent="." instance=ExtResource("21_rh7hh")]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 818.734, 13.758, 254.423)
+type = null
+isLogging = null
 
 [node name="AitoBonnet" parent="." instance=ExtResource("26_r2dta")]
 transform = Transform3D(0.0426081, 0, 0.999092, 0, 1, 0, -0.999092, 0, 0.0426081, 816.734, 13.9275, 257.263)

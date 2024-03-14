@@ -111,35 +111,35 @@ public partial class EngineBay : Node3D
     {
         switch (partType)
         {
-            case "EngineDropped":
+            case "Engine":
                 _engineId = itemId;
                 _engineCondition = condition;
                 break;
-            case "BatteryDropped":
+            case "Battery":
                 _batteryId = itemId;
                 _batteryCondition = condition;
                 break;
-            case "StarterDropped":
+            case "Starter":
                 _starterId = itemId;
                 _starterCondition = condition;
                 break;
-            case "AlternatorDropped":
+            case "Alternator":
                 _alternatorId = itemId;
                 _alternatorCondition = condition;
                 break;
-            case "RadiatorDropped":
+            case "Radiator":
                 _radiatorId = itemId;
                 _radiatorCondition = condition;
                 break;
-            case "IntakeDropped":
+            case "Intake":
                 _intakeId = itemId;
                 _intakeCondition = condition;
                 break;
-            case "WaterTankDropped":
+            case "WaterTank":
                 _waterTankId = itemId;
                 _waterTankCondition = condition;
                 break;
-            case "FuelInjectorDropped":
+            case "FuelInjector":
                 _fuelInjectorId = itemId;
                 _fuelInjectorCondition = condition;
                 break;

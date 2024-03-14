@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://cxajf8p8axryv"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Tire/TireDropped.cs" id="1_65y7e"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_1xs1h"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g0rvq"]
 resource_name = "Material.002"
@@ -113,9 +113,10 @@ radius = 0.3
 [node name="StockTireDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_65y7e")
+script = ExtResource("1_1xs1h")
 itemId = 109
 condition = 100.0
+type = 11
 
 [node name="Meshes" type="Node3D" parent="."]
 transform = Transform3D(-3.71547e-09, -0.085, 0, 0.085, -3.71547e-09, 0, 0, 0, 0.085, 0, 0, 0)

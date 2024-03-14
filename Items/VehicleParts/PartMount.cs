@@ -16,23 +16,8 @@ public partial class PartMount : Node3D
     private Area3D _partArea;
     [Export] private int _partId;
     [Export] private float _partCondition;
-    [Export] public PartTypeEnum partType = PartTypeEnum.EngineDropped;
+    [Export] public ItemTypeEnum partType = ItemTypeEnum.Engine;
 
-    public enum PartTypeEnum
-    {
-        EngineDropped,
-        AlternatorDropped,
-        BatteryDropped,
-        RadiatorDropped,
-        FuelInjectorDropped,
-        IntakeDropped,
-        StarterDropped,
-        WaterTankDropped,
-        WindshieldDropped,
-        DoorDropped,
-        HatchDropped,
-        TireDropped
-    }
 
     public override void _Ready()
     {
@@ -73,28 +58,32 @@ public partial class PartMount : Node3D
     // Make part eligible to be installed
     private void PartEntered(Node3D body)
     {
-        var type = body.GetType().ToString();
-        if (type == partType.ToString())
+        if (body is Item item)
         {
-            GD.Print("Correct type!");
-            var part = body as Installable;
-            if (part.canBeInstalled == false)
+            if (item.type == partType)
             {
-                part.InstallPart += InstallPart;
-                part.canBeInstalled = true;
+                GD.Print("Correct type!");
+                var part = body as Installable;
+                if (part.canBeInstalled == false)
+                {
+                    part.InstallPart += InstallPart;
+                    part.canBeInstalled = true;
+                }
             }
         }
     }
 
     private void PartExited(Node3D body)
     {
-        var type = body.GetType().ToString();
-        if (type == partType.ToString())
+        if (body is Item item)
         {
-            var part = body as Installable;
+            if (item.type == partType)
+            {
+                var part = body as Installable;
 
-            part.InstallPart -= InstallPart;
-            part.canBeInstalled = false;
+                part.InstallPart -= InstallPart;
+                part.canBeInstalled = false;
+            }
         }
     }
 

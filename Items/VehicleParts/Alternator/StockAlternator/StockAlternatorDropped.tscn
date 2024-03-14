@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bbdseej3vgkp2"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Alternator/AlternatorDropped.cs" id="1_khdw7"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_ouk8d"]
 [ext_resource type="PackedScene" uid="uid://ckqu8bqnxgpp0" path="res://Items/VehicleParts/Alternator/StockAlternator/alternator.blend" id="2_sm878"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_arj0m"]
@@ -10,9 +10,10 @@ radius = 0.1
 [node name="StockAlternatorDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_khdw7")
+script = ExtResource("1_ouk8d")
 itemId = 105
 condition = 100.0
+type = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0, 0, 0)

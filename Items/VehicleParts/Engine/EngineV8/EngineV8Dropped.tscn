@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://wt475qfxcfm"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Engine/EngineDropped.cs" id="1_6v60d"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_ien0t"]
 [ext_resource type="Material" uid="uid://cs3w4qi8idrrr" path="res://Items/VehicleParts/Engine/EngineV8/EngineV8TempMaterial.tres" id="2_f641k"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7eo7n"]
@@ -93,7 +93,7 @@ shadow_mesh = SubResource("ArrayMesh_h1hwm")
 collision_layer = 8
 collision_mask = 15
 physics_material_override = SubResource("PhysicsMaterial_7eo7n")
-script = ExtResource("1_6v60d")
+script = ExtResource("1_ien0t")
 itemId = 101
 condition = 100.0
 
