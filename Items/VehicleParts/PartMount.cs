@@ -14,8 +14,8 @@ public partial class PartMount : Node3D
     [ExportGroup("Installable part properties")]
     IMounted _part;
     private Area3D _partArea;
-    [Export] private int _partId;
-    [Export] private float _partCondition;
+    [Export] public int _partId;
+    [Export] public float _partCondition;
     [Export] public ItemTypeEnum partType = ItemTypeEnum.Engine;
 
 

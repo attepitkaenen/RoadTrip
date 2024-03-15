@@ -2,6 +2,7 @@ using Godot;
 using Godot.Collections;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 public partial class GameManager : Node
 {
@@ -10,7 +11,7 @@ public partial class GameManager : Node
 	[Export] public Array<ItemResource> itemList = new Array<ItemResource>();
 	[Export] public MultiplayerSpawner multiplayerSpawner;
 	public MenuHandler menuHandler;
-	public SceneManager world;
+	public Node3D world;
 	private MultiplayerController multiplayerController;
 	public float Sensitivity = 0.001f;
 
@@ -30,8 +31,16 @@ public partial class GameManager : Node
 		multiplayerSpawner.SpawnFunction = spawnCallable;
 	}
 
+    public override void _Process(double delta)
+    {
+        if (GetChildren().Count < 2 && multiplayerController.isGameStarted)
+		{
+			multiplayerController.CloseConnection();
+		}
+    }
 
-	public Dictionary<long, PlayerState> GetPlayerStates()
+
+    public Dictionary<long, PlayerState> GetPlayerStates()
 	{
 		return multiplayerController.GetPlayerStates();
 	}
@@ -77,15 +86,6 @@ public partial class GameManager : Node
 			}
 		}
 	}
-
-	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	// public void SpawnPart(int id, float condition, Vector3 position, Vector3 rotation)
-	// {
-	// 	var item = multiplayerSpawner.Spawn(id) as Installable;
-	// 	item.SetCondition(condition);
-	// 	item.GlobalPosition = position;
-	// 	item.GlobalRotation = rotation;
-	// }
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SpawnItem(int playerId, int id, float condition, Vector3 position, Vector3 rotation)

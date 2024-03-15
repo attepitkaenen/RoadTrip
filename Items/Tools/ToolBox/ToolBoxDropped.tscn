@@ -15,6 +15,7 @@ collision_mask = 31
 script = ExtResource("1_v18cb")
 id = 3
 condition = 100.0
+type = 13
 
 [node name="toolbox" parent="." instance=ExtResource("2_s5mhf")]
 transform = Transform3D(-1.66103e-08, 0, 0.38, 0, 0.38, 0, -0.38, 0, -1.66103e-08, 0.035, 0, 0)

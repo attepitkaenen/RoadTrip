@@ -1,20 +1,23 @@
-using Godot;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using Godot;
+using Godot.Collections;
 
 public partial class Vehicle : VehicleBody3D
 {
+	[Export] public int id;
 	[Export] private MultiplayerSynchronizer _multiplayerSynchronizer;
 	[Export] public EngineBay engineBay;
 	[Export] public float breakForce = 50;
 	[Export] private Area3D _itemArea;
 	[Export] private Seat _driverSeat;
+	[Export] private Node3D doorsAndPanels;
 	float enginePower = 0;
 	float maxSteer = 0.8f;
 	private Vector2 _inputDir;
 	bool braking;
 	public Dictionary<Item, Marker3D> items = new Dictionary<Item, Marker3D>();
+	// public Array<PartMount> partMounts = new Array<PartMount>();
 
 	// Sync properties
 	Vector3 syncPosition;
@@ -43,7 +46,6 @@ public partial class Vehicle : VehicleBody3D
 		HandleItems();
 
 		if (!IsMultiplayerAuthority()) return;
-
 
 		enginePower = engineBay.GetHorsePower();
 
@@ -86,6 +88,31 @@ public partial class Vehicle : VehicleBody3D
 			state.AngularVelocity = syncAngularVelocity;
 			return;
 		}
+	}
+
+	public Array<PartMount> GetPartMounts()
+	{
+		var partMounts = new Array<PartMount>();
+
+		var doorsAndPanelsMounts = doorsAndPanels.GetChildren();
+		foreach (PartMount partMount in doorsAndPanelsMounts)
+		{
+			partMounts.Add(partMount);
+		}
+
+		var enginePartMounts = engineBay.GetChildren().Where(node => node is PartMount);
+		foreach (PartMount partMount in enginePartMounts)
+		{
+			partMounts.Add(partMount);
+		}
+
+		var tireMounts = GetChildren().Where(node => node is VehicleWheel3D).Select(wheel => wheel.GetChild(0) as PartMount);
+		foreach (PartMount partMount in tireMounts)
+		{
+			partMounts.Add(partMount);
+		}
+
+		return partMounts;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -144,7 +171,7 @@ public partial class Vehicle : VehicleBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void RemoveItemFromList(string itemPath)
 	{
-        Item item = GetNodeOrNull<Item>(itemPath);
+		Item item = GetNodeOrNull<Item>(itemPath);
 		if (item is null)
 		{
 			return;

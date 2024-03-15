@@ -1,5 +1,4 @@
-using System;
-using System.ComponentModel;
+using System.Linq;
 using Godot;
 using Godot.Collections;
 
@@ -51,14 +50,30 @@ public partial class SaveManager : Node
         Array<VehicleSaveResource> vehicleSaveResources = new Array<VehicleSaveResource>();
 
         var vehicles = GetTree().GetNodesInGroup("Vehicles");
-        // GD.Print(items.Count);
+        GD.Print(vehicles.Count);
         foreach (Vehicle vehicle in vehicles)
         {
-            // var vehicleSaveResource = new VehicleSaveResource(vehicle.id, vehicle.GlobalPosition, vehicle.GlobalRotation, );
-            // vehicleSaveResources.Add(vehicleSaveResource);
+            var vehicleSaveResource = new VehicleSaveResource(vehicle.id, vehicle.GlobalPosition, vehicle.GlobalRotation, GetVehicleParts(vehicle));
+            vehicleSaveResources.Add(vehicleSaveResource);
         }
 
         return vehicleSaveResources;
+    }
+
+    public Dictionary<string, int> GetVehicleParts(Vehicle vehicle)
+    {
+        var partMounts = vehicle.GetPartMounts();
+        GD.Print(partMounts.Count());
+        var parts = new Dictionary<string, int>();
+        foreach (PartMount partMount in partMounts)
+        {
+            if (partMount.GetPartId() != 0) 
+            {
+                GD.Print(partMount.Name);
+                parts[partMount.Name] = partMount.GetPartId();
+            }
+        }
+        return parts;
     }
 
     public void LoadGame()

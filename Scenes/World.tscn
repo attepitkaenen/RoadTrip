@@ -1,6 +1,5 @@
-[gd_scene load_steps=33 format=3 uid="uid://bpbhecm6eyko4"]
+[gd_scene load_steps=32 format=3 uid="uid://bpbhecm6eyko4"]
 
-[ext_resource type="Script" path="res://Scenes/SceneManager.cs" id="1_nr3g4"]
 [ext_resource type="PackedScene" uid="uid://crbxy7tai54ii" path="res://Scenes/Maps/Ilari/Ilari.tscn" id="2_83hdv"]
 [ext_resource type="Material" uid="uid://fp038xxvqgs4" path="res://Materials/meter.tres" id="3_4b1jl"]
 [ext_resource type="Material" uid="uid://gpnl6n783w2y" path="res://Materials/sky.tres" id="4_j0ilt"]
@@ -49,12 +48,8 @@ _data = {
 point_count = 32
 
 [node name="World" type="Node3D" groups=["World"]]
-script = ExtResource("1_nr3g4")
 
 [node name="Ilari" parent="." instance=ExtResource("2_83hdv")]
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-spawn_path = NodePath("..")
 
 [node name="Environment" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 804.584, 12.3421, 261.403)

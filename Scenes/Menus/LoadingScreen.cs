@@ -54,6 +54,8 @@ public partial class LoadingScreen : Control
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void ServerLoaded()
     {
+        multiplayerController.isGameStarted = true;
+        multiplayerController.RpcId(1, nameof(multiplayerController.PlayerLoaded)); 
         GetTree().Paused = false;
         QueueFree();
     }

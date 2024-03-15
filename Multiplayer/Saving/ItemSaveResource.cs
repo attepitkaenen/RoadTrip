@@ -4,7 +4,7 @@ using System;
 [GlobalClass]
 public partial class ItemSaveResource : Resource
 {
-    [Export] public int id { get; set; }
+    [Export] public int Id { get; set; }
     [Export] public Vector3 Position { get; set; }
     [Export] public Vector3 Rotation { get; set; }
     [Export] public float Condition { get; set; }
@@ -13,7 +13,7 @@ public partial class ItemSaveResource : Resource
 
     public ItemSaveResource(int id, Vector3 position, Vector3 rotation, float condition)
     {
-        id = id;
+        Id = id;
         Position = position;
         Rotation = rotation;
         Condition = condition;

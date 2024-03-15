@@ -15,7 +15,7 @@ public partial class PlayerInteraction : Node3D
     [Export] private Node3D EquipHandPosition;
     private dynamic PickedItem;
     // private ItemResource itemResource;
-    private int _heldid;
+    private int _heldItemId;
     private float _heldItemCondition;
     public HeldItem _heldItem;
 
@@ -54,7 +54,7 @@ public partial class PlayerInteraction : Node3D
 
     public bool IsHolding()
     {
-        return _heldid != 0;
+        return _heldItemId != 0;
     }
 
     public bool IsMovingItem()
@@ -85,7 +85,7 @@ public partial class PlayerInteraction : Node3D
     {
         if (IsHolding() && _heldItem is null)
         {
-            HeldItem item = gameManager.GetItemResource(_heldid).ItemInHand.Instantiate() as HeldItem;
+            HeldItem item = gameManager.GetItemResource(_heldItemId).ItemInHand.Instantiate() as HeldItem;
             if (item.holdType == 0)
             {
                 EquipHandPosition.Position = new Vector3(0.274f, -0.175f, -0.357f);
@@ -219,8 +219,8 @@ public partial class PlayerInteraction : Node3D
             id = 0;
         }
 
-        GD.Print(player.Id + " : " + _heldid + " : " + hand.GlobalPosition);
-        gameManager.RpcId(1, nameof(gameManager.SpawnItem), id, _heldid, _heldItemCondition, hand.GlobalPosition, hand.GlobalRotation);
+        GD.Print(player.Id + " : " + _heldItemId + " : " + hand.GlobalPosition);
+        gameManager.RpcId(1, nameof(gameManager.SpawnItem), id, _heldItemId, _heldItemCondition, hand.GlobalPosition, hand.GlobalRotation);
         SetHeldItem(0, 0);
     }
 
@@ -250,7 +250,7 @@ public partial class PlayerInteraction : Node3D
 
     public void SetHeldItem(int id, float condition)
     {
-        _heldid = id;
+        _heldItemId = id;
         _heldItemCondition = condition;
     }
 }
