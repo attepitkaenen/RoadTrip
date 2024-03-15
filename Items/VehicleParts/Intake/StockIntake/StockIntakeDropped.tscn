@@ -12,11 +12,11 @@ size = Vector3(0.100513, 0.206152, 0.109937)
 [sub_resource type="BoxShape3D" id="BoxShape3D_y4rju"]
 size = Vector3(0.100513, 0.126514, 0.255756)
 
-[node name="StockFuelInjectorDropped" type="RigidBody3D"]
+[node name="StockIntakeDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_qic0j")
-itemId = 107
+id = 107
 condition = 100.0
 type = 5
 

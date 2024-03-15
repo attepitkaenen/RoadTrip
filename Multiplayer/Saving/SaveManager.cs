@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using Godot;
 using Godot.Collections;
@@ -16,20 +17,9 @@ public partial class SaveManager : Node
 
     public void SaveGame()
     {
-        SaveResource tempSave = new SaveResource(1);
-        Array<ItemSaveResource> itemSaveResources = new Array<ItemSaveResource>();
-
-        var items = GetTree().GetNodesInGroup("Items");
-        GD.Print(items.Count);
-        foreach (Item item in items)
-        {
-            var ItemSaveResource = new ItemSaveResource(item.itemId, item.GlobalPosition, item.GlobalRotation, item.condition);
-            itemSaveResources.Add(ItemSaveResource);
-        }
-        tempSave.Items = itemSaveResources;
+        SaveResource tempSave = new SaveResource(1, GenerateItemSaves(), GenerateVehicleSaves());
 
         currentSave = tempSave;
-        GD.Print(tempSave.Items[0].Position);
         Error error = ResourceSaver.Save(tempSave, savePath);
 
         if (error != Error.Ok)
@@ -42,10 +32,39 @@ public partial class SaveManager : Node
         }
     }
 
+    public Array<ItemSaveResource> GenerateItemSaves()
+    {
+        Array<ItemSaveResource> itemSaveResources = new Array<ItemSaveResource>();
+
+        var items = GetTree().GetNodesInGroup("Items");
+        GD.Print(items.Count);
+        foreach (Item item in items)
+        {
+            var itemSaveResource = new ItemSaveResource(item.id, item.GlobalPosition, item.GlobalRotation, item.condition);
+            itemSaveResources.Add(itemSaveResource);
+        }
+
+        return itemSaveResources;
+    }
+    public Array<VehicleSaveResource> GenerateVehicleSaves()
+    {
+        Array<VehicleSaveResource> vehicleSaveResources = new Array<VehicleSaveResource>();
+
+        var vehicles = GetTree().GetNodesInGroup("Vehicles");
+        // GD.Print(items.Count);
+        foreach (Vehicle vehicle in vehicles)
+        {
+            // var vehicleSaveResource = new VehicleSaveResource(vehicle.id, vehicle.GlobalPosition, vehicle.GlobalRotation, );
+            // vehicleSaveResources.Add(vehicleSaveResource);
+        }
+
+        return vehicleSaveResources;
+    }
+
     public void LoadGame()
     {
         var load = ResourceLoader.Load<SaveResource>(savePath, "", ResourceLoader.CacheMode.Replace);
-        GD.Print(load.Items[0].ItemId);
-        
+        // GD.Print(load.Items[0].id);
+
     }
 }

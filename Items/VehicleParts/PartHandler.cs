@@ -4,7 +4,7 @@ using System.Collections;
 
 public partial class PartHandler : Node3D
 {
-    [Signal] public delegate void PartInstalledEventHandler(int itemId, float condition, Vector3 partPosition);
+    [Signal] public delegate void PartInstalledEventHandler(int id, float condition, Vector3 partPosition);
     private RayCast3D _rayCast;
     private Marker3D _marker;
     private int _partId;
@@ -47,7 +47,7 @@ public partial class PartHandler : Node3D
                 //     {
                 //         if (_rayCast.GetCollider() is EngineDropped engine)
                 //         {
-                //             _partId = engine.ItemId;
+                //             _partId = engine.id;
                 //             _partCondition = engine.GetCondition();
                 //         }
                 //         break;
@@ -56,7 +56,7 @@ public partial class PartHandler : Node3D
                 //     {
                 //         if (_rayCast.GetCollider() is EngineDropped engine)
                 //         {
-                //             _partId = engine.ItemId;
+                //             _partId = engine.id;
                 //             _partCondition = engine.GetCondition();
                 //         }
                 //         break;
@@ -65,7 +65,7 @@ public partial class PartHandler : Node3D
                 //     {
                 //         if (_rayCast.GetCollider() is EngineDropped engine)
                 //         {
-                //             _partId = engine.ItemId;
+                //             _partId = engine.id;
                 //             _partCondition = engine.GetCondition();
                 //         }
                 //         break;
@@ -74,7 +74,7 @@ public partial class PartHandler : Node3D
                 //     {
                 //         if (_rayCast.GetCollider() is EngineDropped engine)
                 //         {
-                //             _partId = engine.ItemId;
+                //             _partId = engine.id;
                 //             _partCondition = engine.GetCondition();
                 //         }
                 //         break;
@@ -83,7 +83,7 @@ public partial class PartHandler : Node3D
                 //     {
                 //         if (_rayCast.GetCollider() is EngineDropped engine)
                 //         {
-                //             _partId = engine.ItemId;
+                //             _partId = engine.id;
                 //             _partCondition = engine.GetCondition();
                 //         }
                 //         break;
@@ -95,11 +95,11 @@ public partial class PartHandler : Node3D
 
     }
 
-    private void InstallPart(int itemId, float condition)
+    private void InstallPart(int id, float condition)
     {
         GD.Print("Trying to install engine");
-        _partId = itemId;
+        _partId = id;
         _partCondition = condition;
-        EmitSignal(SignalName.PartInstalled, itemId, condition, _marker.Position);
+        EmitSignal(SignalName.PartInstalled, id, condition, _marker.Position);
     }
 }

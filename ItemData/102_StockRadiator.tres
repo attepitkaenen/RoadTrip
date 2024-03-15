@@ -8,7 +8,7 @@
 script = ExtResource("1_akv2s")
 Equippable = false
 ItemName = "StockRadiator"
-ItemId = 102
+id = 102
 Description = ""
 ItemOnFloor = ExtResource("2_4bv4g")
 ItemInHand = ExtResource("1_vcxph")

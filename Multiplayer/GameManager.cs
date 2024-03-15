@@ -60,7 +60,7 @@ public partial class GameManager : Node
 	{
 		if (itemList is not null)
 		{
-			return itemList.FirstOrDefault(item => item.ItemId == id);
+			return itemList.FirstOrDefault(item => item.id == id);
 		}
 		return null;
 	}
@@ -79,18 +79,18 @@ public partial class GameManager : Node
 	}
 
 	// [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	// public void SpawnPart(int itemId, float condition, Vector3 position, Vector3 rotation)
+	// public void SpawnPart(int id, float condition, Vector3 position, Vector3 rotation)
 	// {
-	// 	var item = multiplayerSpawner.Spawn(itemId) as Installable;
+	// 	var item = multiplayerSpawner.Spawn(id) as Installable;
 	// 	item.SetCondition(condition);
 	// 	item.GlobalPosition = position;
 	// 	item.GlobalRotation = rotation;
 	// }
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SpawnItem(int playerId, int itemId, float condition, Vector3 position, Vector3 rotation)
+	public void SpawnItem(int playerId, int id, float condition, Vector3 position, Vector3 rotation)
 	{
-		var item = multiplayerSpawner.Spawn(itemId) as Item;
+		var item = multiplayerSpawner.Spawn(id) as Item;
 		item.GlobalPosition = position;
 		item.GlobalRotation = rotation;
 		item.condition = condition;
@@ -103,9 +103,9 @@ public partial class GameManager : Node
 		player.playerInteraction.RpcId(playerId, nameof(player.playerInteraction.SetPickedItem), item.GetPath());
 	}
 
-	Node SpawnNode(int itemId)
+	Node SpawnNode(int id)
 	{
-		var node = GetItemResource(itemId).ItemOnFloor.Instantiate();
+		var node = GetItemResource(id).ItemOnFloor.Instantiate();
 		return node;
 	}
 

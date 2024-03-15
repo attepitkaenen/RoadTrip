@@ -10,7 +10,7 @@ size = Vector3(1.401, 0.851, 0.2)
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_pfm67")
-itemId = 116
+id = 116
 condition = 100.0
 type = 8
 

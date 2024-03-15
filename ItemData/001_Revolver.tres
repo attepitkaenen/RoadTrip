@@ -8,7 +8,7 @@
 script = ExtResource("3_67svs")
 Equippable = true
 ItemName = "Revolver"
-ItemId = 1
+id = 1
 Description = "6 shot revolver"
 ItemOnFloor = ExtResource("2_pifmb")
 ItemInHand = ExtResource("1_mxa17")

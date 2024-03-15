@@ -7,9 +7,9 @@ public partial class PartMount : Node3D
     GameManager gameManager;
     [Export] MultiplayerSynchronizer multiplayerSynchronizer;
 
-    [Signal] public delegate void PartInstalledEventHandler(int itemId, float condition, string partType);
+    [Signal] public delegate void PartInstalledEventHandler(int id, float condition, string partType);
     [Signal] public delegate void PartUninstalledEventHandler();
-    [Signal] public delegate void PartChangedEventHandler(int itemId, float condition, string partType);
+    [Signal] public delegate void PartChangedEventHandler(int id, float condition, string partType);
 
     [ExportGroup("Installable part properties")]
     IMounted _part;
@@ -87,20 +87,20 @@ public partial class PartMount : Node3D
         }
     }
 
-    // Spawns installed part and sets its condition and itemId
-    public IMounted SpawnInstalledPart(int itemId, float condition, Vector3 partPosition, Vector3 partRotation)
+    // Spawns installed part and sets its condition and id
+    public IMounted SpawnInstalledPart(int id, float condition, Vector3 partPosition, Vector3 partRotation)
     {
-        var part = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as IMounted;
+        var part = gameManager.GetItemResource(id).ItemInHand.Instantiate() as IMounted;
         AddChild((dynamic)part, true);
         part.SetMount(this);
         part.SetCondition(condition);
-        part.SetId(itemId);
+        part.SetId(id);
         return part;
     }
 
     // Handles part removing
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void RemoveInstalledPart(int itemId, float condition, Vector3 position, Vector3 rotation)
+    public void RemoveInstalledPart(int id, float condition, Vector3 position, Vector3 rotation)
     {
         if (_partId == 0) return;
         _partId = 0;
@@ -109,17 +109,17 @@ public partial class PartMount : Node3D
 
         if (IsMultiplayerAuthority())
         {
-            gameManager.RpcId(1, nameof(gameManager.SpawnItem), 0, itemId, condition, position, rotation);
+            gameManager.RpcId(1, nameof(gameManager.SpawnItem), 0, id, condition, position, rotation);
         }
         _part.QueueFree();
     }
 
-    private void InstallPart(int itemId, float condition)
+    private void InstallPart(int id, float condition)
     {
         if (_partId == 0)
         {
-            GD.Print("Installing part with id: " + itemId);
-            Rpc(nameof(SetPartIdAndCondition), itemId, condition);
+            GD.Print("Installing part with id: " + id);
+            Rpc(nameof(SetPartIdAndCondition), id, condition);
         }
     }
 

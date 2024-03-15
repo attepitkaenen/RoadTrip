@@ -8,7 +8,7 @@
 script = ExtResource("1_2myah")
 Equippable = false
 ItemName = "StockBattery"
-ItemId = 103
+id = 103
 Description = ""
 ItemOnFloor = ExtResource("2_bsj2a")
 ItemInHand = ExtResource("1_8i0ri")

@@ -21,9 +21,9 @@ public partial class TireHandler : VehicleWheel3D
         HandleTire();
     }
 
-    public void PartChanged(int itemId, float condition, string partType)
+    public void PartChanged(int id, float condition, string partType)
     {
-        _tireId = itemId;
+        _tireId = id;
         _tireCondition = condition;
     }
 

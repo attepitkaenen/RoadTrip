@@ -12,10 +12,11 @@ public partial class VehicleSaveResource : Resource
 
     public VehicleSaveResource() { }
 
-    public VehicleSaveResource(int vehicleId, Vector3 position, Vector3 rotation, float condition) 
+    public VehicleSaveResource(int vehicleId, Vector3 position, Vector3 rotation, Dictionary<string, int> vehicleParts) 
     {
         VehicleId = vehicleId;
         Position = position;
         Rotation = rotation;
+        VehicleParts = vehicleParts;
     }
 }

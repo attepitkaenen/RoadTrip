@@ -21,7 +21,7 @@ height = 0.2
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_5qkni")
-itemId = 106
+id = 106
 condition = 100.0
 type = 7
 

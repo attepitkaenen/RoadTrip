@@ -8,7 +8,7 @@
 script = ExtResource("1_lbrfx")
 Equippable = true
 ItemName = "ToolBox"
-ItemId = 3
+id = 3
 Description = ""
 ItemOnFloor = ExtResource("1_1rmf6")
 ItemInHand = ExtResource("1_3ajwy")

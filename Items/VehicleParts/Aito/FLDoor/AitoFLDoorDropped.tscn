@@ -22,7 +22,7 @@ size = Vector3(0.1, 0.386612, 0.0786428)
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_3ccyq")
-itemId = 110
+id = 110
 condition = 100.0
 type = 9
 

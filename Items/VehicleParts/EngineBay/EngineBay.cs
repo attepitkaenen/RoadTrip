@@ -107,40 +107,40 @@ public partial class EngineBay : Node3D
         HandleWaterTank();
     }
 
-    public void PartChanged(int itemId, float condition, string partType)
+    public void PartChanged(int id, float condition, string partType)
     {
         switch (partType)
         {
             case "Engine":
-                _engineId = itemId;
+                _engineId = id;
                 _engineCondition = condition;
                 break;
             case "Battery":
-                _batteryId = itemId;
+                _batteryId = id;
                 _batteryCondition = condition;
                 break;
             case "Starter":
-                _starterId = itemId;
+                _starterId = id;
                 _starterCondition = condition;
                 break;
             case "Alternator":
-                _alternatorId = itemId;
+                _alternatorId = id;
                 _alternatorCondition = condition;
                 break;
             case "Radiator":
-                _radiatorId = itemId;
+                _radiatorId = id;
                 _radiatorCondition = condition;
                 break;
             case "Intake":
-                _intakeId = itemId;
+                _intakeId = id;
                 _intakeCondition = condition;
                 break;
             case "WaterTank":
-                _waterTankId = itemId;
+                _waterTankId = id;
                 _waterTankCondition = condition;
                 break;
             case "FuelInjector":
-                _fuelInjectorId = itemId;
+                _fuelInjectorId = id;
                 _fuelInjectorCondition = condition;
                 break;
         }

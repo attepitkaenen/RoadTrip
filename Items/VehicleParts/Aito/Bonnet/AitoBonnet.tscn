@@ -23,7 +23,7 @@ collision_layer = 16
 collision_mask = 11
 script = ExtResource("1_qc41g")
 isHorizontal = true
-ItemId = 114
+id = 114
 
 [node name="aitoBonnet" parent="." instance=ExtResource("2_g25u5")]
 transform = Transform3D(-1.18, 3.35852e-08, 9.75386e-08, 0, 1.11571, -0.38417, -1.03159e-07, -0.38417, -1.11571, 0, -0.61935, -0.949842)

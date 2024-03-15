@@ -4,7 +4,7 @@ using System;
 public partial class CarPart : Node3D, IMounted
 {
     [Export] private float _condition = 100f;
-    private int _itemId;
+    private int _id;
     PartMount _mount;
 
     public override void _Ready()
@@ -33,12 +33,12 @@ public partial class CarPart : Node3D, IMounted
 
     public int GetId()
     {
-        return _itemId;
+        return _id;
     }
 
-    public void SetId(int itemId)
+    public void SetId(int id)
     {
-        _itemId = itemId;
+        _id = id;
     }
 
     public void SetMount(PartMount mount)
@@ -56,7 +56,7 @@ public partial class CarPart : Node3D, IMounted
     {
         if (_mount is not null)
         {
-            _mount.Rpc(nameof(_mount.RemoveInstalledPart), _itemId, _condition, GlobalPosition, GlobalRotation);
+            _mount.Rpc(nameof(_mount.RemoveInstalledPart), _id, _condition, GlobalPosition, GlobalRotation);
         }
     }
 

@@ -8,7 +8,7 @@
 script = ExtResource("1_jj4wm")
 Equippable = false
 ItemName = "EngineV8"
-ItemId = 101
+id = 101
 Description = ""
 ItemOnFloor = ExtResource("2_kwu1i")
 ItemInHand = ExtResource("1_2blh8")

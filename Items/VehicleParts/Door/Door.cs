@@ -6,7 +6,7 @@ public partial class Door : Item, IMounted
     [Export] public bool isHorizontal = false;
     [Export] private float _condition = 100f;
     Vector3 restRotation;
-    int _itemId;
+    int _id;
     HingeJoint3D _hinge;
     Vehicle _vehicle;
     MultiplayerSynchronizer _multiplayerSynchronizer;
@@ -109,12 +109,12 @@ public partial class Door : Item, IMounted
 
     public int GetId()
     {
-        return _itemId;
+        return _id;
     }
 
-    public void SetId(int itemId)
+    public void SetId(int id)
     {
-        _itemId = itemId;
+        _id = id;
     }
 
     public void SetMount(PartMount mount)
@@ -133,7 +133,7 @@ public partial class Door : Item, IMounted
         if (_mount is not null)
         {
             Rpc(nameof(UnSyncPart));
-            _mount.Rpc(nameof(_mount.RemoveInstalledPart), _itemId, _condition, GlobalPosition, GlobalRotation);
+            _mount.Rpc(nameof(_mount.RemoveInstalledPart), _id, _condition, GlobalPosition, GlobalRotation);
         }
     }
 

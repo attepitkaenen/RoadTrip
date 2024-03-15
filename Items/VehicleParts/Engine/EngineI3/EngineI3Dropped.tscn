@@ -26,7 +26,7 @@ collision_layer = 8
 collision_mask = 31
 physics_material_override = SubResource("PhysicsMaterial_7eo7n")
 script = ExtResource("1_fuig0")
-itemId = 100
+id = 100
 condition = 100.0
 
 [node name="Node3D" type="Node3D" parent="."]

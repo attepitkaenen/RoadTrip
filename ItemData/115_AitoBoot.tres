@@ -8,7 +8,7 @@
 script = ExtResource("1_81vpi")
 Equippable = false
 ItemName = "AitoBoot"
-ItemId = 115
+id = 115
 Description = ""
 ItemOnFloor = ExtResource("2_vvv7d")
 ItemInHand = ExtResource("1_68bh8")

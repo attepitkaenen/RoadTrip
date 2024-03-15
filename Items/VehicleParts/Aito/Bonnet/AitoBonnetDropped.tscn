@@ -22,7 +22,7 @@ size = Vector3(0.172949, 0.0639648, 0.29331)
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_noajw")
-itemId = 114
+id = 114
 condition = 100.0
 type = 10
 

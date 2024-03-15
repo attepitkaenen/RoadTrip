@@ -10,7 +10,7 @@ size = Vector3(0.2, 0.2, 0.3)
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_jehbk")
-itemId = 103
+id = 103
 condition = 100.0
 type = 2
 
