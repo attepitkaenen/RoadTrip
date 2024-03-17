@@ -26,6 +26,7 @@ public partial class Item : RigidBody3D
 
 	public override void _Ready()
 	{
+		AddToGroup("Items");
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		ContactMonitor = true;
 		MaxContactsReported = 1;

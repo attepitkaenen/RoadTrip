@@ -1,29 +1,40 @@
 using Godot;
 using Godot.Collections;
-using System.IO;
 using System.Linq;
-using System.Threading;
 
 public partial class GameManager : Node
 {
 	[Signal] public delegate void GameStartedEventHandler(long id);
 	[Export] private PackedScene playerScene;
 	[Export] public Array<ItemResource> itemList = new Array<ItemResource>();
+	[Export] public Array<VehicleResource> vehicleList = new Array<VehicleResource>();
 	[Export] public MultiplayerSpawner multiplayerSpawner;
+	public int saveId;
 	public MenuHandler menuHandler;
-	public Node3D world;
+	public Map world;
 	private MultiplayerController multiplayerController;
 	public float Sensitivity = 0.001f;
 
 	public override void _Ready()
 	{
-		// Load all itemResources
+		ProcessMode = ProcessModeEnum.Always;
+
+		// Load all itemResources and vehicleResources
 		foreach (string fileNameRemap in DirAccess.GetFilesAt("res://ItemData"))
 		{
 			var fileName = fileNameRemap.Replace(".remap", "");
 			var item = GD.Load<ItemResource>("res://ItemData/" + fileName);
 			itemList.Add(item);
 		}
+
+		foreach (string fileNameRemap in DirAccess.GetFilesAt("res://VehicleData"))
+		{
+			var fileName = fileNameRemap.Replace(".remap", "");
+			var vehicle = GD.Load<VehicleResource>("res://VehicleData/" + fileName);
+			vehicleList.Add(vehicle);
+		}
+
+
 		multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
 		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
 
@@ -31,16 +42,16 @@ public partial class GameManager : Node
 		multiplayerSpawner.SpawnFunction = spawnCallable;
 	}
 
-    public override void _Process(double delta)
-    {
-        if (GetChildren().Count < 2 && multiplayerController.isGameStarted)
+	public override void _Process(double delta)
+	{
+		if (GetChildren().Count < 2 && multiplayerController.isGameStarted)
 		{
 			multiplayerController.CloseConnection();
 		}
-    }
+	}
 
 
-    public Dictionary<long, PlayerState> GetPlayerStates()
+	public Dictionary<long, PlayerState> GetPlayerStates()
 	{
 		return multiplayerController.GetPlayerStates();
 	}
@@ -69,7 +80,16 @@ public partial class GameManager : Node
 	{
 		if (itemList is not null)
 		{
-			return itemList.FirstOrDefault(item => item.id == id);
+			return itemList.FirstOrDefault(item => item.Id == id);
+		}
+		return null;
+	}
+
+	public VehicleResource GetVehicleResource(int id)
+	{
+		if (vehicleList is not null)
+		{
+			return vehicleList.FirstOrDefault(vehicle => vehicle.Id == id);
 		}
 		return null;
 	}
@@ -90,7 +110,9 @@ public partial class GameManager : Node
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SpawnItem(int playerId, int id, float condition, Vector3 position, Vector3 rotation)
 	{
-		var item = multiplayerSpawner.Spawn(id) as Item;
+		var scene = GetItemResource(id).ItemOnFloor.ResourcePath;
+		var item = multiplayerSpawner.Spawn(scene) as Item;
+
 		item.GlobalPosition = position;
 		item.GlobalRotation = rotation;
 		item.condition = condition;
@@ -103,14 +125,47 @@ public partial class GameManager : Node
 		player.playerInteraction.RpcId(playerId, nameof(player.playerInteraction.SetPickedItem), item.GetPath());
 	}
 
-	Node SpawnNode(int id)
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SpawnVehicle(int id, Vector3 position, Vector3 rotation, Array<VehiclePartSaveResource> vehicleParts)
 	{
-		var node = GetItemResource(id).ItemOnFloor.Instantiate();
-		return node;
+		var scene = GetVehicleResource(id).VehicleBody.ResourcePath;
+		var vehicle = multiplayerSpawner.Spawn(scene) as Vehicle;
+
+		vehicle.GlobalPosition = position;
+		vehicle.GlobalRotation = rotation;
+
+		if (vehicleParts.Count < 1) return;
+		
+		var partMounts = vehicle.GetPartMounts();
+		foreach (PartMount partMount in partMounts)
+		{
+			foreach (VehiclePartSaveResource partSave in vehicleParts)
+			{
+				if (partSave.PartMountName == partMount.Name)
+				{
+					partMount.partId = partSave.Id;
+					partMount.partCondition = partSave.Condition;
+				}
+			} 
+		}
+	}
+
+
+	public void InstantiateMap(string mapPath)
+	{
+		var map = multiplayerSpawner.Spawn(mapPath) as Map;
+		world = map;
+		GD.Print("Setting world to " + world);
+	}
+
+	Node SpawnNode(string nodePath)
+	{
+		return (ResourceLoader.Load(nodePath) as PackedScene).Instantiate();
 	}
 
 	public void ResetWorld()
 	{
+		GD.Print("Resetting world");
 		world = null;
 		var destroyList = GetChildren().Where(node => node is not MultiplayerSpawner).ToList();
 		if (destroyList.Count > 0)
@@ -149,7 +204,7 @@ public partial class GameManager : Node
 				return;
 			}
 		}
-		var world = GetNodeOrNull("World");
+		GD.Print("World is " + world);
 		if (world is not null && Multiplayer.IsServer())
 		{
 			Player currentPlayer = playerScene.Instantiate<Player>();

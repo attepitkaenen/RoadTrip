@@ -13,7 +13,6 @@ public partial class TireHandler : VehicleWheel3D
     public override void _EnterTree()
     {
         _tireMount = GetNode<PartMount>("TireMount");
-        _tireMount.PartChanged += PartChanged;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -21,14 +20,11 @@ public partial class TireHandler : VehicleWheel3D
         HandleTire();
     }
 
-    public void PartChanged(int id, float condition, string partType)
-    {
-        _tireId = id;
-        _tireCondition = condition;
-    }
-
     public void HandleTire()
     {
+        _tireId = _tireMount.GetPartId();
+        _tireCondition = _tireMount.GetPartCondition();
+
         if (_tireId != 0 && _tire is null)
         {
             _tire = _tireMount.GetPart() as Tire;

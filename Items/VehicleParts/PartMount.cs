@@ -14,8 +14,8 @@ public partial class PartMount : Node3D
     [ExportGroup("Installable part properties")]
     IMounted _part;
     private Area3D _partArea;
-    [Export] public int _partId;
-    [Export] public float _partCondition;
+    [Export] public int partId;
+    [Export] public float partCondition;
     [Export] public ItemTypeEnum partType = ItemTypeEnum.Engine;
 
 
@@ -26,13 +26,13 @@ public partial class PartMount : Node3D
         {
             multiplayerSynchronizer = GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
         }
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_partId");
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_partCondition");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partCondition");
 
         _partArea = GetNode<Area3D>("Area3D");
         _partArea.BodyEntered += PartEntered;
         _partArea.BodyExited += PartExited;
-        EmitSignal(SignalName.PartChanged, _partId, _partCondition, partType.ToString());
+        EmitSignal(SignalName.PartChanged, partId, partCondition, partType.ToString());
     }
 
     public override void _PhysicsProcess(double delta)
@@ -42,12 +42,12 @@ public partial class PartMount : Node3D
 
     public int GetPartId()
     {
-        return _partId;
+        return partId;
     }
 
     public float GetPartCondition()
     {
-        return _partCondition;
+        return partCondition;
     }
 
     public dynamic GetPart()
@@ -102,9 +102,9 @@ public partial class PartMount : Node3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void RemoveInstalledPart(int id, float condition, Vector3 position, Vector3 rotation)
     {
-        if (_partId == 0) return;
-        _partId = 0;
-        _partCondition = 0;
+        if (partId == 0) return;
+        partId = 0;
+        partCondition = 0;
         EmitSignal(SignalName.PartChanged, 0, 0, partType.ToString());
 
         if (IsMultiplayerAuthority())
@@ -116,7 +116,7 @@ public partial class PartMount : Node3D
 
     private void InstallPart(int id, float condition)
     {
-        if (_partId == 0)
+        if (partId == 0)
         {
             GD.Print("Installing part with id: " + id);
             Rpc(nameof(SetPartIdAndCondition), id, condition);
@@ -125,11 +125,11 @@ public partial class PartMount : Node3D
 
     public void HandlePart()
     {
-        if (_partId != 0 && _part is null)
+        if (partId != 0 && _part is null)
         {
-            _part = SpawnInstalledPart(_partId, _partCondition, Position, GlobalRotation);
+            _part = SpawnInstalledPart(partId, partCondition, Position, GlobalRotation);
         }
-        else if (_partId == 0 && _part is not null)
+        else if (partId == 0 && _part is not null)
         {
             _part = null;
         }
@@ -139,7 +139,7 @@ public partial class PartMount : Node3D
     public void SetPartIdAndCondition(int id, float condition)
     {
         EmitSignal(SignalName.PartChanged, id, condition, partType.ToString());
-        _partCondition = condition;
-        _partId = id;
+        partCondition = condition;
+        partId = id;
     }
 }

@@ -16,7 +16,20 @@ public partial class SaveManager : Node
 
     public void SaveGame()
     {
-        SaveResource tempSave = new SaveResource(1, GenerateItemSaves(), GenerateVehicleSaves());
+        SaveResource tempSave;
+        if (!ResourceLoader.Exists(savePath))
+        {
+            MapSaveResource mapSaveResource = new MapSaveResource(gameManager.world.id, GenerateItemSaves(), GenerateVehicleSaves());
+            Array<MapSaveResource> maps = new Array<MapSaveResource>() { mapSaveResource };
+            tempSave = new SaveResource(0, gameManager.world.id, maps);
+        }
+        else
+        {
+            var load = ResourceLoader.Load<SaveResource>(savePath, "", ResourceLoader.CacheMode.Replace);
+            MapSaveResource mapSaveResource = new MapSaveResource(gameManager.world.id, GenerateItemSaves(), GenerateVehicleSaves());
+            load.Maps[gameManager.world.id] = mapSaveResource;
+            tempSave = load;
+        }
 
         currentSave = tempSave;
         Error error = ResourceSaver.Save(tempSave, savePath);
@@ -39,6 +52,10 @@ public partial class SaveManager : Node
         GD.Print(items.Count);
         foreach (Item item in items)
         {
+            if (item.id == 0)
+            {
+                continue;
+            }
             var itemSaveResource = new ItemSaveResource(item.id, item.GlobalPosition, item.GlobalRotation, item.condition);
             itemSaveResources.Add(itemSaveResource);
         }
@@ -60,17 +77,15 @@ public partial class SaveManager : Node
         return vehicleSaveResources;
     }
 
-    public Dictionary<string, int> GetVehicleParts(Vehicle vehicle)
+    public Array<VehiclePartSaveResource> GetVehicleParts(Vehicle vehicle)
     {
         var partMounts = vehicle.GetPartMounts();
-        GD.Print(partMounts.Count());
-        var parts = new Dictionary<string, int>();
+        var parts = new Array<VehiclePartSaveResource>();
         foreach (PartMount partMount in partMounts)
         {
             if (partMount.GetPartId() != 0) 
             {
-                GD.Print(partMount.Name);
-                parts[partMount.Name] = partMount.GetPartId();
+                parts.Add(new VehiclePartSaveResource(partMount.GetPartId(), partMount.GetPartCondition(), partMount.Name));
             }
         }
         return parts;
@@ -79,7 +94,15 @@ public partial class SaveManager : Node
     public void LoadGame()
     {
         var load = ResourceLoader.Load<SaveResource>(savePath, "", ResourceLoader.CacheMode.Replace);
-        // GD.Print(load.Items[0].id);
+        
+        foreach (ItemSaveResource item in load.Maps.Where(map => map.MapId == load.ActiveMap).First().Items)
+        {
+            gameManager.SpawnItem(0, item.Id, item.Condition, item.Position, item.Rotation);
+        }   
 
+        foreach (VehicleSaveResource vehicle in load.Maps.Where(map => map.MapId == load.ActiveMap).First().Vehicles)
+        {
+            gameManager.SpawnVehicle(vehicle.Id, vehicle.Position, vehicle.Rotation, vehicle.VehicleParts);
+        }
     }
 }

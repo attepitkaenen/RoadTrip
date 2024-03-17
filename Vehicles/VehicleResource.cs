@@ -4,7 +4,10 @@ using System;
 [GlobalClass]
 public partial class VehicleResource : Resource
 {
-    [Export] public int SaveId { get; set; }
+    [Export] public int Id { get; set; }
+    [Export] public string VehicleName { get; set; }
+    [Export] public string Description { get; set; }
+    [Export] public PackedScene VehicleBody { get; set; }
 
     // Make sure you provide a parameterless constructor.
     // In C#, a parameterless constructor is different from a
@@ -14,6 +17,6 @@ public partial class VehicleResource : Resource
     public VehicleResource() { }
     public VehicleResource(int id) 
     {
-        SaveId = id;
+        Id = id;
     }
 }

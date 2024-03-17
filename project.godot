@@ -35,6 +35,21 @@ project/assembly_name="MultiplayerProject"
 
 enabled=PackedStringArray()
 
+[file_customization]
+
+folder_colors={
+"res://ItemData/": "yellow",
+"res://Items/": "yellow",
+"res://Materials/": "blue",
+"res://Multiplayer/": "red",
+"res://Objects/": "red",
+"res://Player/": "purple",
+"res://Scenes/": "red",
+"res://Shaders/": "blue",
+"res://VehicleData/": "green",
+"res://Vehicles/": "green"
+}
+
 [input]
 
 up={
@@ -131,3 +146,7 @@ debug={
 [physics]
 
 3d/physics_engine="JoltPhysics3D"
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=1

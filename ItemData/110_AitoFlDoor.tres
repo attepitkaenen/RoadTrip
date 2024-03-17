@@ -6,9 +6,9 @@
 
 [resource]
 script = ExtResource("3_216wn")
-Equippable = false
+Id = 110
 ItemName = "AitoFLDoor"
-id = 110
+Equippable = false
 Description = ""
 ItemOnFloor = ExtResource("2_niasa")
 ItemInHand = ExtResource("1_o5xn3")

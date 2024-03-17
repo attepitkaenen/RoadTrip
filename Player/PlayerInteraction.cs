@@ -141,7 +141,7 @@ public partial class PlayerInteraction : Node3D
             if (itemResource.Equippable)
             {
                 GD.Print("Item picked");
-                SetHeldItem(itemResource.id, PickedItem.condition);
+                SetHeldItem(itemResource.Id, PickedItem.condition);
                 PickedItem.RpcId(1, nameof(PickedItem.QueueItemDestruction));
                 PickedItem = null;
             }

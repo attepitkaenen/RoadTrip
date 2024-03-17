@@ -3,7 +3,7 @@ using Godot;
 [GlobalClass]
 public partial class ItemResource : Resource
 {
-    [Export] public int id { get; set; }
+    [Export] public int Id { get; set; }
     [Export] public string ItemName { get; set; }
     [Export] public bool Equippable { get; set; }
     [Export] public string Description { get; set; }
