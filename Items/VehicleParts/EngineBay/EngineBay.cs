@@ -58,28 +58,20 @@ public partial class EngineBay : Node3D
     public override void _EnterTree()
     {
         _engineMount = GetNode<PartMount>("EngineMount");
-        _engineMount.PartChanged += PartChanged;
 
         _batteryMount = GetNode<PartMount>("BatteryMount");
-        _batteryMount.PartChanged += PartChanged;
 
         _starterMount = GetNode<PartMount>("StarterMount");
-        _starterMount.PartChanged += PartChanged;
 
         _radiatorMount = GetNode<PartMount>("RadiatorMount");
-        _radiatorMount.PartChanged += PartChanged;
 
         _alternatorMount = GetNode<PartMount>("AlternatorMount");
-        _alternatorMount.PartChanged += PartChanged;
 
         _fuelInjectorMount = GetNode<PartMount>("FuelInjectorMount");
-        _fuelInjectorMount.PartChanged += PartChanged;
 
         _intakeMount = GetNode<PartMount>("IntakeMount");
-        _intakeMount.PartChanged += PartChanged;
 
         _waterTankMount = GetNode<PartMount>("WaterTankMount");
-        _waterTankMount.PartChanged += PartChanged;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -90,60 +82,14 @@ public partial class EngineBay : Node3D
             _running = false;
         }
 
-        HandleEngine();
-
-        HandleAlternator();
-
-        HandleBattery();
-
-        HandleFuelInjector();
-
-        HandleFuelInjector();
-
-        HandleIntake();
-
-        HandleStarter();
-
-        HandleWaterTank();
-    }
-
-    public void PartChanged(int itemId, float condition, string partType)
-    {
-        switch (partType)
-        {
-            case "EngineDropped":
-                _engineId = itemId;
-                _engineCondition = condition;
-                break;
-            case "BatteryDropped":
-                _batteryId = itemId;
-                _batteryCondition = condition;
-                break;
-            case "StarterDropped":
-                _starterId = itemId;
-                _starterCondition = condition;
-                break;
-            case "AlternatorDropped":
-                _alternatorId = itemId;
-                _alternatorCondition = condition;
-                break;
-            case "RadiatorDropped":
-                _radiatorId = itemId;
-                _radiatorCondition = condition;
-                break;
-            case "IntakeDropped":
-                _intakeId = itemId;
-                _intakeCondition = condition;
-                break;
-            case "WaterTankDropped":
-                _waterTankId = itemId;
-                _waterTankCondition = condition;
-                break;
-            case "FuelInjectorDropped":
-                _fuelInjectorId = itemId;
-                _fuelInjectorCondition = condition;
-                break;
-        }
+        _engine = _engineMount.GetPart();
+        _battery = _batteryMount.GetPart();
+        _starter = _starterMount.GetPart();
+        _radiator = _radiatorMount.GetPart();
+        _alternator = _alternatorMount.GetPart();
+        _waterTank = _waterTankMount.GetPart();
+        _intake = _intakeMount.GetPart();
+        _fuelInjector = _fuelInjectorMount.GetPart();
     }
 
     // Gameplay logic
@@ -160,109 +106,5 @@ public partial class EngineBay : Node3D
             return 0;
         }
         return _engine.GetEnginePower();
-    }
-
-    // Engine
-    public void HandleEngine()
-    {
-        if (_engineId != 0 && _engine is null)
-        {
-            _engine = _engineMount.GetPart() as Engine;
-        }
-        else if (_engineId == 0)
-        {
-            _engine = null;
-        }
-    }
-
-    // Battery
-    public void HandleBattery()
-    {
-        if (_batteryId != 0 && _battery is null)
-        {
-            _battery = _batteryMount.GetPart() as Battery;
-        }
-        else if (_batteryId == 0)
-        {
-            _battery = null;
-        }
-    }
-
-    // Starter
-    public void HandleStarter()
-    {
-        if (_starterId != 0 && _starter is null)
-        {
-            _starter = _starterMount.GetPart() as Starter;
-        }
-        else if (_starterId == 0)
-        {
-            _starter = null;
-        }
-    }
-
-    // Alternator
-    public void HandleAlternator()
-    {
-        if (_alternatorId != 0 && _alternator is null)
-        {
-            _alternator = _alternatorMount.GetPart() as Alternator;
-        }
-        else if (_alternatorId == 0)
-        {
-            _alternator = null;
-        }
-    }
-
-    // Radiator
-    public void HandleRadiator()
-    {
-        if (_radiatorId != 0 && _radiator is null)
-        {
-            _radiator = _radiatorMount.GetPart() as Radiator;
-        }
-        else if (_radiatorId == 0)
-        {
-            _radiator = null;
-        }
-    }
-
-    // FuelInjector
-    public void HandleFuelInjector()
-    {
-        if (_fuelInjectorId != 0 && _fuelInjector is null)
-        {
-            _fuelInjector = _fuelInjectorMount.GetPart() as FuelInjector;
-        }
-        else if (_fuelInjectorId == 0)
-        {
-            _fuelInjector = null;
-        }
-    }
-
-    // Intake
-    public void HandleIntake()
-    {
-        if (_intakeId != 0 && _intake is null)
-        {
-            _intake = _intakeMount.GetPart() as Intake;
-        }
-        else if (_intakeId == 0)
-        {
-            _intake = null;
-        }
-    }
-
-    // WaterTank
-    public void HandleWaterTank()
-    {
-        if (_waterTankId != 0 && _waterTank is null)
-        {
-            _waterTank = _waterTankMount.GetPart() as WaterTank;
-        }
-        else if (_waterTankId == 0)
-        {
-            _waterTank = null;
-        }
     }
 }

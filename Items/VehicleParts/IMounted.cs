@@ -11,7 +11,7 @@ public interface IMounted
 
     public int GetId();
 
-    public void SetId(int itemId);
+    public void SetId(int id);
 
     public void SetMount(PartMount mount);
 

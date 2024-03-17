@@ -9,5 +9,5 @@ playerScene = ExtResource("2_bpip0")
 multiplayerSpawner = NodePath("MultiplayerSpawner")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Player/Player.tscn", "res://Scenes/World.tscn", "res://Player/Ragdoll/ragdoll.tscn")
+_spawnable_scenes = PackedStringArray("res://Player/Player.tscn", "res://Scenes/World.tscn")
 spawn_path = NodePath("..")

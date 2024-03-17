@@ -7,32 +7,17 @@ public partial class PartMount : Node3D
     GameManager gameManager;
     [Export] MultiplayerSynchronizer multiplayerSynchronizer;
 
-    [Signal] public delegate void PartInstalledEventHandler(int itemId, float condition, string partType);
+    [Signal] public delegate void PartInstalledEventHandler(int id, float condition, string partType);
     [Signal] public delegate void PartUninstalledEventHandler();
-    [Signal] public delegate void PartChangedEventHandler(int itemId, float condition, string partType);
+    [Signal] public delegate void PartChangedEventHandler(int id, float condition, string partType);
 
     [ExportGroup("Installable part properties")]
     IMounted _part;
     private Area3D _partArea;
-    [Export] private int _partId;
-    [Export] private float _partCondition;
-    [Export] public PartTypeEnum partType = PartTypeEnum.EngineDropped;
+    [Export] public int partId;
+    [Export] public float partCondition;
+    [Export] public ItemTypeEnum partType = ItemTypeEnum.Engine;
 
-    public enum PartTypeEnum
-    {
-        EngineDropped,
-        AlternatorDropped,
-        BatteryDropped,
-        RadiatorDropped,
-        FuelInjectorDropped,
-        IntakeDropped,
-        StarterDropped,
-        WaterTankDropped,
-        WindshieldDropped,
-        DoorDropped,
-        HatchDropped,
-        TireDropped
-    }
 
     public override void _Ready()
     {
@@ -41,13 +26,13 @@ public partial class PartMount : Node3D
         {
             multiplayerSynchronizer = GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
         }
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_partId");
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":_partCondition");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partId");
+        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partCondition");
 
         _partArea = GetNode<Area3D>("Area3D");
         _partArea.BodyEntered += PartEntered;
         _partArea.BodyExited += PartExited;
-        EmitSignal(SignalName.PartChanged, _partId, _partCondition, partType.ToString());
+        EmitSignal(SignalName.PartChanged, partId, partCondition, partType.ToString());
     }
 
     public override void _PhysicsProcess(double delta)
@@ -57,12 +42,12 @@ public partial class PartMount : Node3D
 
     public int GetPartId()
     {
-        return _partId;
+        return partId;
     }
 
     public float GetPartCondition()
     {
-        return _partCondition;
+        return partCondition;
     }
 
     public dynamic GetPart()
@@ -73,74 +58,78 @@ public partial class PartMount : Node3D
     // Make part eligible to be installed
     private void PartEntered(Node3D body)
     {
-        var type = body.GetType().ToString();
-        if (type == partType.ToString())
+        if (body is Item item)
         {
-            GD.Print("Correct type!");
-            var part = body as Installable;
-            if (part.canBeInstalled == false)
+            if (item.type == partType)
             {
-                part.InstallPart += InstallPart;
-                part.canBeInstalled = true;
+                GD.Print("Correct type!");
+                var part = body as Installable;
+                if (part.canBeInstalled == false)
+                {
+                    part.InstallPart += InstallPart;
+                    part.canBeInstalled = true;
+                }
             }
         }
     }
 
     private void PartExited(Node3D body)
     {
-        var type = body.GetType().ToString();
-        if (type == partType.ToString())
+        if (body is Item item)
         {
-            var part = body as Installable;
+            if (item.type == partType)
+            {
+                var part = body as Installable;
 
-            part.InstallPart -= InstallPart;
-            part.canBeInstalled = false;
+                part.InstallPart -= InstallPart;
+                part.canBeInstalled = false;
+            }
         }
     }
 
-    // Spawns installed part and sets its condition and itemId
-    public IMounted SpawnInstalledPart(int itemId, float condition, Vector3 partPosition, Vector3 partRotation)
+    // Spawns installed part and sets its condition and id
+    public IMounted SpawnInstalledPart(int id, float condition, Vector3 partPosition, Vector3 partRotation)
     {
-        var part = gameManager.GetItemResource(itemId).ItemInHand.Instantiate() as IMounted;
+        var part = gameManager.GetItemResource(id).ItemInHand.Instantiate() as IMounted;
         AddChild((dynamic)part, true);
         part.SetMount(this);
         part.SetCondition(condition);
-        part.SetId(itemId);
+        part.SetId(id);
         return part;
     }
 
     // Handles part removing
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void RemoveInstalledPart(int itemId, float condition, Vector3 position, Vector3 rotation)
+    public void RemoveInstalledPart(int id, float condition, Vector3 position, Vector3 rotation)
     {
-        if (_partId == 0) return;
-        _partId = 0;
-        _partCondition = 0;
+        if (partId == 0) return;
+        partId = 0;
+        partCondition = 0;
         EmitSignal(SignalName.PartChanged, 0, 0, partType.ToString());
 
         if (IsMultiplayerAuthority())
         {
-            gameManager.RpcId(1, nameof(gameManager.SpawnPart), itemId, condition, position, rotation);
+            gameManager.RpcId(1, nameof(gameManager.SpawnItem), 0, id, condition, position, rotation);
         }
         _part.QueueFree();
     }
 
-    private void InstallPart(int itemId, float condition)
+    private void InstallPart(int id, float condition)
     {
-        if (_partId == 0)
+        if (partId == 0)
         {
-            GD.Print("Installing part with id: " + itemId);
-            Rpc(nameof(SetPartIdAndCondition), itemId, condition);
+            GD.Print("Installing part with id: " + id);
+            Rpc(nameof(SetPartIdAndCondition), id, condition);
         }
     }
 
     public void HandlePart()
     {
-        if (_partId != 0 && _part is null)
+        if (partId != 0 && _part is null)
         {
-            _part = SpawnInstalledPart(_partId, _partCondition, Position, GlobalRotation);
+            _part = SpawnInstalledPart(partId, partCondition, Position, GlobalRotation);
         }
-        else if (_partId == 0 && _part is not null)
+        else if (partId == 0 && _part is not null)
         {
             _part = null;
         }
@@ -150,7 +139,7 @@ public partial class PartMount : Node3D
     public void SetPartIdAndCondition(int id, float condition)
     {
         EmitSignal(SignalName.PartChanged, id, condition, partType.ToString());
-        _partCondition = condition;
-        _partId = id;
+        partCondition = condition;
+        partId = id;
     }
 }

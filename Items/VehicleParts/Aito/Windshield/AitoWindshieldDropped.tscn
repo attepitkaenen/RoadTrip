@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cmscsj4q6x3ik"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Windshield/WindshieldDropped.cs" id="1_paknq"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_pfm67"]
 [ext_resource type="PackedScene" uid="uid://dg61crxx6fl7h" path="res://Items/VehicleParts/Aito/Windshield/aitoWindshield.blend" id="2_rvx7x"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_arpnq"]
@@ -9,9 +9,10 @@ size = Vector3(1.401, 0.851, 0.2)
 [node name="AitoWindshieldDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_paknq")
-_condition = 100.0
-ItemId = 116
+script = ExtResource("1_pfm67")
+id = 116
+condition = 100.0
+type = 8
 
 [node name="aitoWindshield" parent="." instance=ExtResource("2_rvx7x")]
 transform = Transform3D(-1.18, 0, -1.03159e-07, 0, 1.18, 0, 1.03159e-07, 0, -1.18, 0, -0.565727, -0.750358)

@@ -6,9 +6,9 @@
 
 [resource]
 script = ExtResource("3_cokpy")
-Equippable = false
+Id = 111
 ItemName = "AitoFRDoor"
-ItemId = 111
+Equippable = false
 Description = ""
 ItemOnFloor = ExtResource("2_wn1vr")
 ItemInHand = ExtResource("1_skfp3")

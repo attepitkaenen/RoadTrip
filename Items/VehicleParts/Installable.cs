@@ -3,22 +3,21 @@ using System;
 
 public partial class Installable : Item
 {
-    [Signal] public delegate void InstallPartEventHandler(int itemId, float condition);
-    [Export] private float _condition;
+    [Signal] public delegate void InstallPartEventHandler(int id, float condition);
     public bool canBeInstalled = false;
 
     public void Install()
     {
-        GD.Print("Starting " + Name + " install with Id: " + ItemId + " and condition: " + _condition);
+        GD.Print("Starting " + Name + " install with Id: " + id + " and condition: " + condition);
         if (canBeInstalled)
         {
-            EmitSignal(SignalName.InstallPart, ItemId, _condition);
+            EmitSignal(SignalName.InstallPart, id, condition);
             RpcId(1, nameof(QueueItemDestruction));
         }
     }
 
-    public void SetCondition(float condition)
+    public void SetCondition(float newCondition)
     {
-        _condition = condition;
+        condition = newCondition;
     }
 }

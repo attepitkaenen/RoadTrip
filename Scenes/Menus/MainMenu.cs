@@ -7,6 +7,7 @@ public partial class MainMenu : Menu
 {
     MultiplayerController multiplayerController;
     GameManager gameManager;
+    SaveManager saveManager;
 
     [Export] private LineEdit address;
     [Export] private LineEdit userName;
@@ -16,8 +17,9 @@ public partial class MainMenu : Menu
     public override void _Ready()
     {
         menuType = MenuHandler.MenuType.mainmenu;
-        multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
+        multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+        saveManager = GetTree().Root.GetNode<SaveManager>("SaveManager");
         userName.TextChanged += SaveUserName;
         multiplayerController.PlayerConnected += UpdateLobbyNames;
         Multiplayer.ConnectionFailed += ConnectionFailed;
@@ -62,6 +64,11 @@ public partial class MainMenu : Menu
     {
         ToggleHostAndJoinDisabled(true);
         multiplayerController.CreateGame();
+    }
+
+    void _on_load_pressed()
+    {
+        saveManager.LoadGame();
     }
 
     public void _on_join_pressed()

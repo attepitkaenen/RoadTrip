@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://c2o46mvvi0bgu"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Door/HatchDropped.cs" id="1_lc86j"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_noajw"]
 [ext_resource type="PackedScene" uid="uid://c7jbb51gmtoeo" path="res://Items/VehicleParts/Aito/Bonnet/aitoBonnet.blend" id="2_y8w0r"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fm2ju"]
@@ -21,9 +21,10 @@ size = Vector3(0.172949, 0.0639648, 0.29331)
 [node name="AitoBonnetDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_lc86j")
-_condition = 100.0
-ItemId = 114
+script = ExtResource("1_noajw")
+id = 114
+condition = 100.0
+type = 10
 
 [node name="aitoBonnet" parent="." instance=ExtResource("2_y8w0r")]
 transform = Transform3D(-1.18, 3.35852e-08, 9.75386e-08, 0, 1.11571, -0.38417, -1.03159e-07, -0.38417, -1.11571, 0, -0.61935, -0.949842)

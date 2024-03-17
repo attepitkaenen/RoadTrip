@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://d1lrao08ldrp"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Intake/IntakeDropped.cs" id="1_r53n5"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_qic0j"]
 [ext_resource type="PackedScene" uid="uid://bincyc6lx1u84" path="res://Items/VehicleParts/Intake/StockIntake/stockIntake.blend" id="2_lfinn"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kiume"]
@@ -12,12 +12,13 @@ size = Vector3(0.100513, 0.206152, 0.109937)
 [sub_resource type="BoxShape3D" id="BoxShape3D_y4rju"]
 size = Vector3(0.100513, 0.126514, 0.255756)
 
-[node name="StockFuelInjectorDropped" type="RigidBody3D"]
+[node name="StockIntakeDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_r53n5")
-_condition = 100.0
-ItemId = 107
+script = ExtResource("1_qic0j")
+id = 107
+condition = 100.0
+type = 5
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.039502, 0.0108638, 0.00668944)

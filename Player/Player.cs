@@ -89,7 +89,6 @@ public partial class Player : CharacterBody3D
 		}
 
 		menuHandler.OpenMenu(MenuHandler.MenuType.none);
-		nameTag.Visible = false;
 		camera.Current = true;
 		sensitivity = gameManager.Sensitivity;
 	}
@@ -137,6 +136,8 @@ public partial class Player : CharacterBody3D
 
 	public override void _Process(double delta)
 	{
+		nameTag.Text = userName;
+
 		if (movementState == MovementState.unconscious)
 		{
 			collisionShape3D.Disabled = true;
@@ -351,7 +352,6 @@ public partial class Player : CharacterBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SetPlayerState(long id, string name)
 	{
-		nameTag.Text = name;
 		userName = name;
 		Id = id;
 	}

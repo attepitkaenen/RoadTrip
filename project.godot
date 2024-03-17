@@ -19,12 +19,13 @@ config/icon="res://icon.png"
 
 GameManager="*res://Multiplayer/GameManager.tscn"
 MultiplayerController="*res://Multiplayer/MultiplayerController.cs"
+SaveManager="*res://Multiplayer/Saving/SaveManager.cs"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/vsync/vsync_mode=0
+window/vsync/vsync_mode=2
 
 [dotnet]
 
@@ -33,6 +34,21 @@ project/assembly_name="MultiplayerProject"
 [editor_plugins]
 
 enabled=PackedStringArray()
+
+[file_customization]
+
+folder_colors={
+"res://ItemData/": "yellow",
+"res://Items/": "yellow",
+"res://Materials/": "blue",
+"res://Multiplayer/": "red",
+"res://Objects/": "red",
+"res://Player/": "purple",
+"res://Scenes/": "red",
+"res://Shaders/": "blue",
+"res://VehicleData/": "green",
+"res://Vehicles/": "green"
+}
 
 [input]
 
@@ -130,3 +146,7 @@ debug={
 [physics]
 
 3d/physics_engine="JoltPhysics3D"
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=1

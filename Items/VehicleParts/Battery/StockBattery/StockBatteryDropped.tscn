@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://v251b5nk0v47"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Battery/BatteryDropped.cs" id="1_6j6t3"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_jehbk"]
 [ext_resource type="PackedScene" uid="uid://d3u3thn1c3452" path="res://Items/VehicleParts/Battery/StockBattery/battery.blend" id="2_rgkjf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_s8c8n"]
@@ -9,9 +9,10 @@ size = Vector3(0.2, 0.2, 0.3)
 [node name="StockBatteryDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_6j6t3")
-_condition = 100.0
-ItemId = 103
+script = ExtResource("1_jehbk")
+id = 103
+condition = 100.0
+type = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)

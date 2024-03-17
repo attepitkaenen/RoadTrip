@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://ee5filigiwj7"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Engine/EngineDropped.cs" id="1_hb4bc"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_fuig0"]
 [ext_resource type="PackedScene" uid="uid://bm6h1pyti3rlk" path="res://Items/VehicleParts/Engine/EngineI3/engine.blend" id="2_p2all"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7eo7n"]
@@ -25,9 +25,9 @@ size = Vector3(0.198035, 0.239541, 0.0605804)
 collision_layer = 8
 collision_mask = 31
 physics_material_override = SubResource("PhysicsMaterial_7eo7n")
-script = ExtResource("1_hb4bc")
-_condition = 100.0
-ItemId = 100
+script = ExtResource("1_fuig0")
+id = 100
+condition = 100.0
 
 [node name="Node3D" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)

@@ -8,6 +8,7 @@ public partial class LoadingScreen : Control
 {
     GameManager gameManager;
     MultiplayerController multiplayerController;
+    SaveManager saveManager;
     [Export] Label statusLabel;
     [Export] TextureRect icon;
     ResourceLoader.ThreadLoadStatus sceneLoadStatus = 0;
@@ -18,14 +19,16 @@ public partial class LoadingScreen : Control
         ProcessMode = ProcessModeEnum.Always;
         GetTree().Paused = true;
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+        saveManager = GetTree().Root.GetNode<SaveManager>("SaveManager");
         multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
         sceneName = "res://Scenes/World.tscn";
+        sceneName = "res://Scenes/Maps/Ilari/Ilari.tscn";
         ResourceLoader.LoadThreadedRequest(sceneName);
     }
 
     public override void _Process(double delta)
     {
-        icon.RotationDegrees += 0.1f;
+        icon.RotationDegrees += 0.5f;
         sceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(sceneName, progress);
         if (progress is not null && sceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded)
         {
@@ -42,11 +45,11 @@ public partial class LoadingScreen : Control
         if (sceneLoadStatus == ResourceLoader.ThreadLoadStatus.Loaded && Multiplayer.IsServer())
         {
             GD.Print("Loading done server");
-            var newScene = (ResourceLoader.LoadThreadedGet(sceneName) as PackedScene).Instantiate();
-            gameManager.AddChild(newScene, true);
-            gameManager.world = newScene as SceneManager;
+            var newScene = ResourceLoader.LoadThreadedGet(sceneName) as PackedScene;
+            gameManager.InstantiateMap(sceneName);
             multiplayerController.Rpc(nameof(multiplayerController.SetLoadingStatus), false);
             GetTree().Paused = false;
+            saveManager.LoadGame();
             Rpc(nameof(ServerLoaded));
         }
     }
@@ -54,6 +57,8 @@ public partial class LoadingScreen : Control
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void ServerLoaded()
     {
+        multiplayerController.isGameStarted = true;
+        multiplayerController.RpcId(1, nameof(multiplayerController.PlayerLoaded));
         GetTree().Paused = false;
         QueueFree();
     }

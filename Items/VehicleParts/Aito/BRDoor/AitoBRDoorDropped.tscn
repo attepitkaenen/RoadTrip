@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://bmog00v42t8ge"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Door/DoorDropped.cs" id="1_1lsr8"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_k5qp7"]
 [ext_resource type="PackedScene" uid="uid://c3wmt0vkfdx8h" path="res://Items/VehicleParts/Aito/BRDoor/aitoBRDoor.blend" id="2_0w6it"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lxwad"]
@@ -36,9 +36,10 @@ size = Vector3(0.1, 0.406834, 0.0786428)
 [node name="AitoBRDoorDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_1lsr8")
-_condition = 100.0
-ItemId = 112
+script = ExtResource("1_k5qp7")
+id = 112
+condition = 100.0
+type = 9
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.337097, -0.192466)

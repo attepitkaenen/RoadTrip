@@ -61,10 +61,13 @@ public partial class MultiplayerController : Control
 
 	private void ServerDisconnected()
 	{
+		GD.Print("Server disconnected");
 		Multiplayer.MultiplayerPeer = null;
 		gameManager.ResetWorld();
 		players.Clear();
 		isGameStarted = false;
+		menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
+		playerState = new PlayerState { Id = 1, Name = "Jorma", IsLoading = true };
 	}
 
 	private void ConnectionFailed()
@@ -97,14 +100,18 @@ public partial class MultiplayerController : Control
 
 	public void Disconnect()
 	{
-		Rpc(nameof(PeerDisconnected), Multiplayer.GetUniqueId());
+		if (!Multiplayer.IsServer())
+		{
+			Rpc(nameof(PeerDisconnected), Multiplayer.GetUniqueId());
+			Multiplayer.MultiplayerPeer.Close();
+		}
 		gameManager.ResetWorld();
 		players.Clear();
-		isGameStarted = false;
 	}
 
 	public void CloseConnection()
 	{
+		isGameStarted = false;
 		if (Multiplayer.IsServer())
 		{
 			_host.Destroy();
@@ -114,6 +121,7 @@ public partial class MultiplayerController : Control
 		{
 			Multiplayer.MultiplayerPeer.Close();
 		}
+		playerState = new PlayerState { Id = 1, Name = "Jorma", IsLoading = true };
 	}
 
 	public void JoinGame(string address)

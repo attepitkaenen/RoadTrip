@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://ds7uy52rlletb"]
+[gd_scene load_steps=5 format=3 uid="uid://ds7uy52rlletb"]
 
 [ext_resource type="Script" path="res://Items/VehicleParts/Engine/Engine.cs" id="1_a1ftg"]
-[ext_resource type="Resource" uid="uid://somdkvffi2fa" path="res://Items/VehicleParts/Engine/EngineI3/EngineI3.tres" id="2_tdggh"]
 [ext_resource type="PackedScene" uid="uid://bm6h1pyti3rlk" path="res://Items/VehicleParts/Engine/EngineI3/engine.blend" id="3_hq78h"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_md8aq"]
@@ -11,20 +10,19 @@ size = Vector3(0.2, 0.701367, 0.45)
 size = Vector3(0.275952, 0.31084, 0.525525)
 
 [node name="EngineI3" type="RigidBody3D"]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
 collision_layer = 8
 collision_mask = 8
 freeze = true
 script = ExtResource("1_a1ftg")
-stats = ExtResource("2_tdggh")
+horsepower = 2000.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.175684, 0)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, -0.175684, 0)
 shape = SubResource("BoxShape3D_md8aq")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00118407, -0.229053, 0.000787355)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.00118407, -0.229053, 0.000787355)
 shape = SubResource("BoxShape3D_m7i0c")
 
 [node name="engine" parent="." instance=ExtResource("3_hq78h")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+transform = Transform3D(-4.37114e-09, 0, -0.1, 0, 0.1, 0, 0.1, 0, -4.37114e-09, 0, 0, 0)

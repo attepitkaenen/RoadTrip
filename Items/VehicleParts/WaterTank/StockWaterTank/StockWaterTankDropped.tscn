@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dumbu12ex0tq0"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/WaterTank/WaterTankDropped.cs" id="1_5kels"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_5qkni"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_s8c8n"]
 size = Vector3(0.2, 0.4, 0.2)
@@ -20,9 +20,10 @@ height = 0.2
 [node name="StockWaterTankDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_5kels")
-_condition = 100.0
-ItemId = 106
+script = ExtResource("1_5qkni")
+id = 106
+condition = 100.0
+type = 7
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_s8c8n")

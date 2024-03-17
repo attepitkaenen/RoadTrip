@@ -38,6 +38,11 @@ grow_vertical = 2
 layout_mode = 2
 text = "Resume"
 
+[node name="Save" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Save Game
+"
+
 [node name="Respawn" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Respawn
@@ -59,6 +64,7 @@ text = "Quit
 "
 
 [connection signal="pressed" from="VBoxContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="VBoxContainer/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="VBoxContainer/Respawn" to="." method="_on_respawn_pressed"]
 [connection signal="pressed" from="VBoxContainer/Mainmenu" to="." method="_on_mainmenu_pressed"]
 [connection signal="pressed" from="VBoxContainer/Settings" to="." method="_on_settings_pressed"]

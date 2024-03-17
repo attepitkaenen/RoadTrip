@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="EngineResource" load_steps=2 format=3 uid="uid://somdkvffi2fa"]
-
-[ext_resource type="Script" path="res://Items/VehicleParts/Engine/EngineResource.cs" id="1_l181m"]
-
-[resource]
-script = ExtResource("1_l181m")
-Horsepower = 2500.0

@@ -5,12 +5,14 @@ public partial class InGameMenu : Menu
 {
     MultiplayerController multiplayerController;
     GameManager gameManager;
+    SaveManager saveManager;
 
     public override void _Ready()
     {
         menuType = MenuHandler.MenuType.ingamemenu;
-        multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
-        gameManager = GetNode<GameManager>("/root/GameManager");
+        multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
+        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+        saveManager = GetTree().Root.GetNode<SaveManager>("SaveManager");
     }
 
     public void _on_resume_pressed()
@@ -37,5 +39,10 @@ public partial class InGameMenu : Menu
     public void _on_respawn_pressed()
     {
         gameManager.Respawn();
+    }
+
+    public void _on_save_pressed()
+    {
+        saveManager.SaveGame();
     }
 }

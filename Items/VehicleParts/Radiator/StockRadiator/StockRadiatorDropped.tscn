@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://d2m4o4wnn7vc5"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/Radiator/RadiatorDropped.cs" id="1_ihww0"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_1dspq"]
 [ext_resource type="PackedScene" uid="uid://cnqemox7c8iit" path="res://Items/VehicleParts/Radiator/StockRadiator/radiator.blend" id="1_x2ncf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_s8c8n"]
@@ -9,9 +9,10 @@ size = Vector3(0.2, 0.333728, 0.522217)
 [node name="StockRadiatorDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_ihww0")
-_condition = 100.0
-ItemId = 102
+script = ExtResource("1_1dspq")
+id = 102
+condition = 100.0
+type = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.000982672, -0.00012207)

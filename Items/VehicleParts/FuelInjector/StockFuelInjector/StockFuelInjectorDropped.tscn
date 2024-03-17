@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dqou5oo4sgp12"]
 
-[ext_resource type="Script" path="res://Items/VehicleParts/FuelInjector/FuelInjectorDropped.cs" id="1_3nxe7"]
+[ext_resource type="Script" path="res://Items/VehicleParts/Installable.cs" id="1_0o3q6"]
 [ext_resource type="PackedScene" uid="uid://dq0gvgid81bpn" path="res://Items/VehicleParts/FuelInjector/StockFuelInjector/stockFuelInjector.blend" id="2_4j0ge"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0gwii"]
@@ -9,9 +9,10 @@ size = Vector3(0.2, 0.238379, 0.534729)
 [node name="StockFuelInjectorDropped" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 31
-script = ExtResource("1_3nxe7")
-_condition = 100.0
-ItemId = 104
+script = ExtResource("1_0o3q6")
+id = 104
+condition = 100.0
+type = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5786e-16, -0.0194562, -0.000631087)
