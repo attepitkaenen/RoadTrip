@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cjbdywgj0poit"]
+[gd_scene load_steps=6 format=3 uid="uid://cjbdywgj0poit"]
 
 [ext_resource type="PackedScene" uid="uid://d13jgiepvulkk" path="res://Scenes/Menus/MainMenu.tscn" id="1_qqe47"]
 [ext_resource type="Script" path="res://Scenes/Menus/MenuHandler.cs" id="1_qrxg7"]
 [ext_resource type="PackedScene" uid="uid://mrpdd3o6m8bx" path="res://Scenes/Menus/Settings.tscn" id="2_1xore"]
 [ext_resource type="PackedScene" uid="uid://cik1lqvbyjgdo" path="res://Scenes/Menus/InGameMenu.tscn" id="3_5ad0u"]
+[ext_resource type="PackedScene" uid="uid://x6ref82yld0w" path="res://Scenes/Menus/LoadingScreen.tscn" id="5_7t5bx"]
 
 [node name="MenuHandler" type="Control"]
 layout_mode = 3
@@ -14,7 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qrxg7")
 
-[node name="Control" parent="." instance=ExtResource("1_qqe47")]
+[node name="MainMenu" parent="." instance=ExtResource("1_qqe47")]
 layout_mode = 1
 
 [node name="Settings" parent="." instance=ExtResource("2_1xore")]
@@ -22,5 +23,9 @@ visible = false
 layout_mode = 1
 
 [node name="InGameMenu" parent="." instance=ExtResource("3_5ad0u")]
+visible = false
+layout_mode = 1
+
+[node name="LoadingScreen" parent="." instance=ExtResource("5_7t5bx")]
 visible = false
 layout_mode = 1

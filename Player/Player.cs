@@ -76,6 +76,7 @@ public partial class Player : CharacterBody3D
 
 	public override void _EnterTree()
 	{
+		GetTree().Paused = false;
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		menuHandler = GetTree().Root.GetNode<MenuHandler>("MenuHandler");
 		multiplayerSynchronizer = GetNode<MultiplayerSynchronizer>("PlayerSynchronizer");

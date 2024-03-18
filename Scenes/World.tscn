@@ -1,7 +1,7 @@
 [gd_scene load_steps=24 format=3 uid="uid://bpbhecm6eyko4"]
 
-[ext_resource type="Script" path="res://Scenes/Maps/Map.cs" id="1_i4vsh"]
-[ext_resource type="PackedScene" uid="uid://crbxy7tai54ii" path="res://Scenes/Maps/Ilari/Ilari.tscn" id="2_83hdv"]
+[ext_resource type="Script" path="res://Maps/Map.cs" id="1_i4vsh"]
+[ext_resource type="PackedScene" uid="uid://crbxy7tai54ii" path="res://Maps/Ilari/IlariEmpty.tscn" id="2_83hdv"]
 [ext_resource type="PackedScene" uid="uid://7eis7so5p5lh" path="res://Vehicles/Leluota Aito/Aito.tscn" id="4_ynoyo"]
 [ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="5_xddwy"]
 [ext_resource type="PackedScene" uid="uid://dqqqnhev4fhpv" path="res://Items/Weapons/Revolver/RevolverDropped.tscn" id="9_fswkx"]

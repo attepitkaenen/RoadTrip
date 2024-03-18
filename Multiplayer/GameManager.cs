@@ -8,6 +8,7 @@ public partial class GameManager : Node
 	[Export] private PackedScene playerScene;
 	[Export] public Array<ItemResource> itemList = new Array<ItemResource>();
 	[Export] public Array<VehicleResource> vehicleList = new Array<VehicleResource>();
+	[Export] public Array<MapResource> mapList = new Array<MapResource>();
 	[Export] public MultiplayerSpawner multiplayerSpawner;
 	public int saveId;
 	public MenuHandler menuHandler;
@@ -19,7 +20,7 @@ public partial class GameManager : Node
 	{
 		ProcessMode = ProcessModeEnum.Always;
 
-		// Load all itemResources and vehicleResources
+		// Load all items, vehicles and maps
 		foreach (string fileNameRemap in DirAccess.GetFilesAt("res://ItemData"))
 		{
 			var fileName = fileNameRemap.Replace(".remap", "");
@@ -32,6 +33,13 @@ public partial class GameManager : Node
 			var fileName = fileNameRemap.Replace(".remap", "");
 			var vehicle = GD.Load<VehicleResource>("res://VehicleData/" + fileName);
 			vehicleList.Add(vehicle);
+		}
+
+		foreach (string fileNameRemap in DirAccess.GetFilesAt("res://MapData"))
+		{
+			var fileName = fileNameRemap.Replace(".remap", "");
+			var map = GD.Load<MapResource>("res://MapData/" + fileName);
+			mapList.Add(map);
 		}
 
 
@@ -49,7 +57,6 @@ public partial class GameManager : Node
 			multiplayerController.CloseConnection();
 		}
 	}
-
 
 	public Dictionary<long, PlayerState> GetPlayerStates()
 	{
@@ -135,7 +142,7 @@ public partial class GameManager : Node
 		vehicle.GlobalRotation = rotation;
 
 		if (vehicleParts.Count < 1) return;
-		
+
 		var partMounts = vehicle.GetPartMounts();
 		foreach (PartMount partMount in partMounts)
 		{
@@ -146,7 +153,7 @@ public partial class GameManager : Node
 					partMount.partId = partSave.Id;
 					partMount.partCondition = partSave.Condition;
 				}
-			} 
+			}
 		}
 	}
 
@@ -172,14 +179,6 @@ public partial class GameManager : Node
 		{
 			destroyList.ForEach(node => node.QueueFree());
 		}
-	}
-
-	public void LoadGame()
-	{
-		GD.Print("Should go to loading screen");
-		var scene = ResourceLoader.Load<PackedScene>("res://Scenes/Menus/LoadingScreen.tscn").Instantiate<LoadingScreen>();
-		AddChild(scene, true);
-		menuHandler.OpenMenu(MenuHandler.MenuType.none);
 	}
 
 	public void StartGame()

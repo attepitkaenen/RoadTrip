@@ -1,66 +1,29 @@
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading;
 using Godot;
-using Godot.Collections;
 
-public partial class LoadingScreen : Control
+public partial class LoadingScreen : Menu
 {
     GameManager gameManager;
     MultiplayerController multiplayerController;
     SaveManager saveManager;
     [Export] Label statusLabel;
     [Export] TextureRect icon;
-    ResourceLoader.ThreadLoadStatus sceneLoadStatus = 0;
-    string sceneName = "";
-    Array progress = new Array();
+
     public override void _Ready()
     {
+        menuType = MenuHandler.MenuType.loading;
         ProcessMode = ProcessModeEnum.Always;
-        GetTree().Paused = true;
-        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         saveManager = GetTree().Root.GetNode<SaveManager>("SaveManager");
         multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
-        sceneName = "res://Scenes/World.tscn";
-        sceneName = "res://Scenes/Maps/Ilari/Ilari.tscn";
-        ResourceLoader.LoadThreadedRequest(sceneName);
     }
 
     public override void _Process(double delta)
     {
+        var progress = saveManager.progress;
         icon.RotationDegrees += 0.5f;
-        sceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(sceneName, progress);
-        if (progress is not null && sceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded)
+        if (multiplayerController.GetPlayerState().IsLoading && progress.Count > 0)
         {
             statusLabel.Text = Mathf.Round((float)progress[0] * 100).ToString() + "%";
         }
-
-        if (sceneLoadStatus == ResourceLoader.ThreadLoadStatus.Loaded && multiplayerController.GetPlayerStates()[Multiplayer.GetUniqueId()].IsLoading && !Multiplayer.IsServer())
-        {
-            GD.Print("Loading done client");
-            multiplayerController.Rpc(nameof(multiplayerController.SetLoadingStatus), false);
-            statusLabel.Text = "Waiting for server";
-        }
-
-        if (sceneLoadStatus == ResourceLoader.ThreadLoadStatus.Loaded && Multiplayer.IsServer())
-        {
-            GD.Print("Loading done server");
-            var newScene = ResourceLoader.LoadThreadedGet(sceneName) as PackedScene;
-            gameManager.InstantiateMap(sceneName);
-            multiplayerController.Rpc(nameof(multiplayerController.SetLoadingStatus), false);
-            GetTree().Paused = false;
-            saveManager.LoadGame();
-            Rpc(nameof(ServerLoaded));
-        }
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void ServerLoaded()
-    {
-        multiplayerController.isGameStarted = true;
-        multiplayerController.RpcId(1, nameof(multiplayerController.PlayerLoaded));
-        GetTree().Paused = false;
-        QueueFree();
     }
 }
 

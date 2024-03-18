@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://bkfckvp6lv6fp" path="res://Scenes/Menus/MainTheme.tres" id="1_o667a"]
 [ext_resource type="Script" path="res://Scenes/Menus/MainMenu.cs" id="2_jqt73"]
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("address", "userName", "playerList")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("address", "userName", "saveName", "playerList", "_saveList", "buttons", "singleplayerContainer", "multiplayerContainer", "lobbyContainer", "multiplayerButtons")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,9 +12,16 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_o667a")
 script = ExtResource("2_jqt73")
-address = NodePath("HBoxContainer/VBoxContainer2/IPEdit")
-userName = NodePath("HBoxContainer/VBoxContainer/NameEdit")
-playerList = NodePath("VBoxContainer2/MarginContainer/PlayerList")
+address = NodePath("CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/IPEdit")
+userName = NodePath("CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/NameEdit")
+saveName = NodePath("CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/SaveName")
+playerList = NodePath("CenterContainer/HBoxContainer/Lobby/VBoxContainer2/MarginContainer/PlayerList")
+_saveList = NodePath("CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/MenuButton")
+buttons = NodePath("CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons")
+singleplayerContainer = NodePath("CenterContainer/HBoxContainer/Singleplayer")
+multiplayerContainer = NodePath("CenterContainer/HBoxContainer/Multiplayer")
+lobbyContainer = NodePath("CenterContainer/HBoxContainer/Lobby")
+multiplayerButtons = NodePath("CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer")
 
 [node name="BgColor" type="ColorRect" parent="."]
 layout_mode = 1
@@ -25,121 +32,223 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.298039, 0.541176, 0.356863, 1)
 
-[node name="Buttons" type="VBoxContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -493.0
-offset_top = -64.0
-offset_right = -271.0
-offset_bottom = 142.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Start" type="Button" parent="Buttons"]
-layout_mode = 2
-text = "Start
-"
-
-[node name="Load" type="Button" parent="Buttons"]
-layout_mode = 2
-text = "Load
-"
-
-[node name="Host" type="Button" parent="Buttons"]
-layout_mode = 2
-text = "Host"
-
-[node name="Join" type="Button" parent="Buttons"]
-layout_mode = 2
-text = "Join"
-
-[node name="Settings" type="Button" parent="Buttons"]
-layout_mode = 2
-text = "Settings
-"
-
-[node name="Quit" type="Button" parent="Buttons"]
-layout_mode = 2
-text = "Quit
-"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -493.0
-offset_top = -134.0
-offset_right = -179.0
-offset_bottom = -76.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer"]
-layout_mode = 2
-text = "Name:
-"
-
-[node name="NameEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer2"]
-layout_mode = 2
-text = "IP:
-"
-
-[node name="IPEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer2"]
+[node name="Lobby" type="PanelContainer" parent="CenterContainer/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(400, 200)
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 242.0
-offset_top = -76.0
-offset_right = 382.0
-offset_bottom = 71.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="VBoxContainer2" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Lobby"]
+layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer2"]
+[node name="Label" type="Label" parent="CenterContainer/HBoxContainer/Lobby/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 text = "Lobby
 "
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/HBoxContainer/Lobby/VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="PlayerList" type="ItemList" parent="VBoxContainer2/MarginContainer"]
+[node name="PlayerList" type="ItemList" parent="CenterContainer/HBoxContainer/Lobby/VBoxContainer2/MarginContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_vertical = 8
 
-[connection signal="pressed" from="Buttons/Start" to="." method="_on_start_pressed"]
-[connection signal="pressed" from="Buttons/Load" to="." method="_on_load_pressed"]
-[connection signal="pressed" from="Buttons/Host" to="." method="_on_host_pressed"]
-[connection signal="pressed" from="Buttons/Join" to="." method="_on_join_pressed"]
-[connection signal="pressed" from="Buttons/Settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="Buttons/Quit" to="." method="_on_quit_pressed"]
+[node name="Main" type="PanelContainer" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/HBoxContainer/Main"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/HBoxContainer/Main/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Main/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Name:
+"
+
+[node name="NameEdit" type="LineEdit" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "IP:
+"
+
+[node name="IPEdit" type="LineEdit" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="Buttons" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Singleplayer" type="Button" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Singleplayer"
+
+[node name="Multiplayer" type="Button" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Multiplayer"
+
+[node name="Leave" type="Button" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+visible = false
+layout_mode = 2
+text = "Leave game"
+
+[node name="Settings" type="Button" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Settings
+"
+
+[node name="Quit" type="Button" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Quit
+"
+
+[node name="Singleplayer" type="PanelContainer" parent="CenterContainer/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/HBoxContainer/Singleplayer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Singleplayer/MarginContainer"]
+layout_mode = 2
+
+[node name="PlayMode" type="Label" parent="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Singleplayer"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveName" type="LineEdit" parent="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Save Name"
+
+[node name="Button" type="Button" parent="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "New game"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MenuButton" type="MenuButton" parent="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+text = "Save File
+"
+
+[node name="Button" type="Button" parent="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+text = "Load game"
+
+[node name="Multiplayer" type="PanelContainer" parent="CenterContainer/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/HBoxContainer/Multiplayer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer"]
+layout_mode = 2
+
+[node name="PlayMode" type="Label" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Multiplayer"
+horizontal_alignment = 1
+
+[node name="Host" type="Button" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Host "
+
+[node name="Join" type="Button" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Join"
+
+[node name="Hosted" type="HBoxContainer" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveName" type="LineEdit" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Save Name"
+
+[node name="NewGame" type="Button" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer"]
+layout_mode = 2
+text = "New game"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MenuButton" type="MenuButton" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer3"]
+layout_mode = 2
+text = "Save File
+"
+
+[node name="LoadGame" type="Button" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer3"]
+layout_mode = 2
+text = "Load game"
+
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons/Singleplayer" to="." method="_on_singleplayer_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons/Multiplayer" to="." method="_on_multiplayer_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Button" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]

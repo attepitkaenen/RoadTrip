@@ -23,12 +23,15 @@ public partial class Settings : Menu
 
     public void _on_back_button_pressed()
     {
+        GD.Print("Back button pressed");
         if (multiplayerController.GetGameStartedStatus())
         {
             menuHandler.OpenMenu(MenuHandler.MenuType.ingamemenu);
         }
         else
         {
+            GD.Print("Should go to main menu");
+
             menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
         }
     }
