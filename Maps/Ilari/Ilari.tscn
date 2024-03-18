@@ -1,0 +1,269 @@
+[gd_scene load_steps=24 format=3 uid="uid://ckm7pwgnmngal"]
+
+[ext_resource type="Script" path="res://Maps/Map.cs" id="1_n22ko"]
+[ext_resource type="PackedScene" uid="uid://crbxy7tai54ii" path="res://Maps/Ilari/IlariEmpty.tscn" id="2_uvm14"]
+[ext_resource type="PackedScene" uid="uid://btmag5dkf8psn" path="res://Items/Item.tscn" id="3_pfqch"]
+[ext_resource type="PackedScene" uid="uid://dqqqnhev4fhpv" path="res://Items/Weapons/Revolver/RevolverDropped.tscn" id="4_cok5k"]
+[ext_resource type="PackedScene" uid="uid://dx5pju4b5bjye" path="res://Items/Tools/ToolBox/ToolBoxDropped.tscn" id="5_as8c8"]
+[ext_resource type="PackedScene" uid="uid://ee5filigiwj7" path="res://Items/VehicleParts/Engine/EngineI3/EngineI3Dropped.tscn" id="6_clkcr"]
+[ext_resource type="PackedScene" uid="uid://7eis7so5p5lh" path="res://Vehicles/Leluota Aito/Aito.tscn" id="7_mvj3d"]
+[ext_resource type="PackedScene" uid="uid://d2m4o4wnn7vc5" path="res://Items/VehicleParts/Radiator/StockRadiator/StockRadiatorDropped.tscn" id="8_sv6fk"]
+[ext_resource type="PackedScene" uid="uid://v251b5nk0v47" path="res://Items/VehicleParts/Battery/StockBattery/StockBatteryDropped.tscn" id="9_swxi4"]
+[ext_resource type="PackedScene" uid="uid://dqou5oo4sgp12" path="res://Items/VehicleParts/FuelInjector/StockFuelInjector/StockFuelInjectorDropped.tscn" id="10_o45u5"]
+[ext_resource type="PackedScene" uid="uid://bbdseej3vgkp2" path="res://Items/VehicleParts/Alternator/StockAlternator/StockAlternatorDropped.tscn" id="11_v4fc5"]
+[ext_resource type="PackedScene" uid="uid://dumbu12ex0tq0" path="res://Items/VehicleParts/WaterTank/StockWaterTank/StockWaterTankDropped.tscn" id="12_d36q2"]
+[ext_resource type="PackedScene" uid="uid://d1lrao08ldrp" path="res://Items/VehicleParts/Intake/StockIntake/StockIntakeDropped.tscn" id="13_o3jgq"]
+[ext_resource type="PackedScene" uid="uid://cqmsky4dxvuqh" path="res://Items/VehicleParts/Starter/StockStarter/StockStarterDropped.tscn" id="14_kojty"]
+[ext_resource type="PackedScene" uid="uid://cxajf8p8axryv" path="res://Items/VehicleParts/Tire/StockTire/StockTireDropped.tscn" id="15_ous8s"]
+[ext_resource type="PackedScene" uid="uid://c2o46mvvi0bgu" path="res://Items/VehicleParts/Aito/Bonnet/AitoBonnetDropped.tscn" id="16_vuwvk"]
+[ext_resource type="PackedScene" uid="uid://ddq0gd58ycb7m" path="res://Items/VehicleParts/Aito/Boot/AitoBootDropped.tscn" id="17_tbri6"]
+[ext_resource type="PackedScene" uid="uid://cmscsj4q6x3ik" path="res://Items/VehicleParts/Aito/Windshield/AitoWindshieldDropped.tscn" id="18_2ehkq"]
+[ext_resource type="PackedScene" uid="uid://c0rxm7urfduwm" path="res://Vehicles/Leluota Aito/AitoBuilt.tscn" id="19_0ba8q"]
+[ext_resource type="PackedScene" uid="uid://bmog00v42t8ge" path="res://Items/VehicleParts/Aito/BRDoor/AitoBRDoorDropped.tscn" id="20_f1gbt"]
+[ext_resource type="PackedScene" uid="uid://c80j1g55ibdsn" path="res://Items/VehicleParts/Aito/FLDoor/AitoFLDoorDropped.tscn" id="21_4ugw1"]
+[ext_resource type="PackedScene" uid="uid://c33tfbwblv3kb" path="res://Items/VehicleParts/Aito/FRDoor/AitoFRDoorDropped.tscn" id="22_74l6g"]
+[ext_resource type="PackedScene" uid="uid://qiiml1cl4jf8" path="res://Items/VehicleParts/Aito/BLDoor/AitoBLDoorDropped.tscn" id="23_77v5f"]
+
+[node name="World" type="Node3D" groups=["World"]]
+script = ExtResource("1_n22ko")
+
+[node name="Ilari" parent="." instance=ExtResource("2_uvm14")]
+
+[node name="Items" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 818.018, 13.0611, 200.626)
+
+[node name="Item" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.98241, 1.8272, 1.06013)
+
+[node name="Item2" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8488, 1.52854, -5.29617)
+
+[node name="Item3" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8488, 1.80295, -5.29617)
+
+[node name="Item4" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8488, 2.09159, -5.29617)
+
+[node name="Item5" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8488, 2.34356, -5.29617)
+
+[node name="Item6" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8474, 2.59529, -5.90471)
+
+[node name="Item7" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8474, 2.85839, -5.90471)
+
+[node name="Item8" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1485, 4.58099, -6.1015)
+
+[node name="Item25" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.289, 2.62066, -5.78804)
+
+[node name="Item26" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2904, 2.96589, -5.78465)
+
+[node name="Item27" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2904, 3.2403, -5.78465)
+
+[node name="Item28" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2904, 3.52894, -5.78465)
+
+[node name="Item29" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2904, 3.78091, -5.78465)
+
+[node name="Item30" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.289, 4.03264, -5.78804)
+
+[node name="Item31" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1411, 4.29574, -1.26434)
+
+[node name="MeshInstance3D" parent="Items/Item31" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.15558, 0, -4.5237)
+
+[node name="Item32" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.289, 4.55407, -5.78804)
+
+[node name="Item33" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7956, 2.62066, -5.85418)
+
+[node name="Item34" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.797, 2.96589, -5.85079)
+
+[node name="Item35" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.797, 3.2403, -5.85079)
+
+[node name="Item36" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.797, 3.52894, -5.85079)
+
+[node name="Item37" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.797, 3.78091, -5.85079)
+
+[node name="Item38" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7956, 4.03264, -5.85418)
+
+[node name="Item39" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7956, 4.29574, -5.85418)
+
+[node name="Item40" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7956, 4.55407, -5.85418)
+
+[node name="Item41" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2855, 2.62066, -5.79401)
+
+[node name="Item42" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2869, 2.96589, -5.79062)
+
+[node name="Item43" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2869, 3.2403, -5.79062)
+
+[node name="Item44" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2869, 3.52894, -5.79062)
+
+[node name="Item45" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2869, 3.78091, -5.79062)
+
+[node name="Item46" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2855, 4.03264, -5.79401)
+
+[node name="Item47" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2855, 4.29574, -5.79401)
+
+[node name="Item48" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2855, 4.55407, -5.79401)
+
+[node name="Item9" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 0.860563, -4.14653)
+
+[node name="Item10" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 1.2058, -4.14653)
+
+[node name="Item11" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 1.48021, -4.14653)
+
+[node name="Item12" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 1.76885, -4.14653)
+
+[node name="Item13" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 2.02082, -4.14653)
+
+[node name="Item14" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 2.27255, -4.14653)
+
+[node name="Item15" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 2.79398, -4.14653)
+
+[node name="Item16" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00914186, 2.53565, -4.14653)
+
+[node name="Item17" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.266863, 0.860563, -4.14653)
+
+[node name="Item18" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.266863, 1.2058, -4.14653)
+
+[node name="Item19" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.266863, 1.48021, -4.14653)
+
+[node name="Item20" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.266863, 1.76885, -4.14653)
+
+[node name="Item21" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.266863, 2.02082, -4.14653)
+
+[node name="Item22" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.266863, 2.27255, -4.14653)
+
+[node name="Item23" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.266863, 2.79398, -4.14653)
+
+[node name="Item24" parent="Items" instance=ExtResource("3_pfqch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.266863, 2.53565, -4.14653)
+
+[node name="RevolverDropped" parent="." instance=ExtResource("4_cok5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 820.918, 20.2586, 195.776)
+
+[node name="RevolverDropped2" parent="." instance=ExtResource("4_cok5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 832.008, 15.0994, 200.346)
+
+[node name="RevolverDropped3" parent="." instance=ExtResource("4_cok5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 821.058, 14.2957, 205.856)
+
+[node name="RevolverDropped4" parent="." instance=ExtResource("4_cok5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 819.498, 14.2957, 205.856)
+
+[node name="ToolBoxDropped" parent="." instance=ExtResource("5_as8c8")]
+transform = Transform3D(0.202992, 0, -0.97918, 0, 1, 0, 0.97918, 0, 0.202992, 830.118, 16.2849, 194.066)
+
+[node name="ToolBoxDropped2" parent="." instance=ExtResource("5_as8c8")]
+transform = Transform3D(-0.388995, 0, -0.92124, 0, 1, 0, 0.92124, 0, -0.388995, 830.598, 16.2849, 194.066)
+
+[node name="ToolBoxDropped3" parent="." instance=ExtResource("5_as8c8")]
+transform = Transform3D(-0.0102448, 0, -0.999947, 0, 1, 0, 0.999947, 0, -0.0102448, 830.368, 16.6145, 194.506)
+
+[node name="ToolBoxDropped4" parent="." instance=ExtResource("5_as8c8")]
+transform = Transform3D(-0.999974, 0, -0.00706863, 0, 1, 0, 0.00706863, 0, -0.999974, 829.648, 16.2963, 194.166)
+
+[node name="Engine" parent="." instance=ExtResource("6_clkcr")]
+transform = Transform3D(0.143026, -0.989719, 0, 0.989719, 0.143026, 0, 0, 0, 1, 829.688, 15.5416, 193.566)
+
+[node name="Aito2" parent="." instance=ExtResource("7_mvj3d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 834.178, 14.4776, 195.896)
+
+[node name="StockRadiatorDropped" parent="." instance=ExtResource("8_sv6fk")]
+transform = Transform3D(-0.0231191, 0.156581, -0.987395, 0.989275, 0.146066, 0, 0.144225, -0.976804, -0.158279, 829.498, 15.2191, 194.146)
+
+[node name="StockBatteryDropped" parent="." instance=ExtResource("9_swxi4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 832.098, 15.3296, 194.136)
+
+[node name="StockFuelInjectorDropped" parent="." instance=ExtResource("10_o45u5")]
+transform = Transform3D(-0.0441539, -0.943631, 0.328042, 0.998907, -0.0467403, 0, 0.0153328, 0.327684, 0.944663, 830.778, 15.2904, 194.036)
+
+[node name="StockAlternatorDropped" parent="." instance=ExtResource("11_v4fc5")]
+transform = Transform3D(1, 0, 0, 0, -0.00534071, -0.999986, 0, 0.999986, -0.00534071, 830.408, 15.2804, 193.316)
+
+[node name="StockWaterTankDropped" parent="." instance=ExtResource("12_d36q2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 829.578, 14.4088, 193.926)
+
+[node name="StockFuelInjectorDropped2" parent="." instance=ExtResource("13_o3jgq")]
+transform = Transform3D(0.628058, 0, -0.778166, 0, 1, 0, 0.778166, 0, 0.628058, 831.448, 15.2892, 193.736)
+
+[node name="StockStarterDropped" parent="." instance=ExtResource("14_kojty")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 831.108, 15.333, 193.746)
+
+[node name="StockTireDropped" parent="." instance=ExtResource("15_ous8s")]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 831.468, 14.5226, 193.906)
+
+[node name="StockTireDropped2" parent="." instance=ExtResource("15_ous8s")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 831.458, 14.2405, 193.856)
+
+[node name="StockTireDropped3" parent="." instance=ExtResource("15_ous8s")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 832.138, 14.2416, 193.576)
+
+[node name="StockTireDropped4" parent="." instance=ExtResource("15_ous8s")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 832.168, 14.477, 193.646)
+
+[node name="AitoBonnet" parent="." instance=ExtResource("16_vuwvk")]
+transform = Transform3D(0.0426081, 0, 0.999092, 0, 1, 0, -0.999092, 0, 0.0426081, 830.168, 14.6465, 196.486)
+
+[node name="AitoBootDropped" parent="." instance=ExtResource("17_tbri6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 837.118, 15.1256, 195.836)
+
+[node name="AitoWindshieldDropped" parent="." instance=ExtResource("18_2ehkq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 836.188, 14.7795, 197.586)
+
+[node name="Aito" parent="." instance=ExtResource("19_0ba8q")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 840.778, 14.3202, 195.926)
+
+[node name="AitoBRDoorDropped" parent="." instance=ExtResource("20_f1gbt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 829.208, 13.7795, 198.566)
+
+[node name="AitoFLDoorDropped" parent="." instance=ExtResource("21_4ugw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 829.428, 13.7795, 197.706)
+
+[node name="AitoFRDoorDropped" parent="." instance=ExtResource("22_74l6g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 829.598, 13.7795, 196.776)
+
+[node name="AitoBLDoorDropped" parent="." instance=ExtResource("23_77v5f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 829.698, 13.7795, 198.576)
+
+[editable path="Items/Item31"]

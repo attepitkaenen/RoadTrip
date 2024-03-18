@@ -40,14 +40,16 @@ enabled=PackedStringArray()
 folder_colors={
 "res://ItemData/": "yellow",
 "res://Items/": "yellow",
+"res://MapData/": "green",
+"res://Maps/": "green",
 "res://Materials/": "blue",
 "res://Multiplayer/": "red",
 "res://Objects/": "red",
 "res://Player/": "purple",
 "res://Scenes/": "red",
 "res://Shaders/": "blue",
-"res://VehicleData/": "green",
-"res://Vehicles/": "green"
+"res://VehicleData/": "pink",
+"res://Vehicles/": "pink"
 }
 
 [input]

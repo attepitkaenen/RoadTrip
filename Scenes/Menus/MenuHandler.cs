@@ -13,11 +13,13 @@ public partial class MenuHandler : Control
         none,
         mainmenu,
         settings,
-        ingamemenu
+        ingamemenu,
+        loading
     }
 
     public override void _Ready()
     {
+        ProcessMode = ProcessModeEnum.Always;
         multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
     }
 
@@ -43,6 +45,10 @@ public partial class MenuHandler : Control
             if (menu.menuType == menuType)
             {
                 menu.Visible = true;
+                if (menuType == MenuType.mainmenu)
+                {
+                    ((MainMenu)menu).ResetMenu();
+                }
             }
             else
             {
@@ -53,6 +59,7 @@ public partial class MenuHandler : Control
 
     public void OpenMenu(MenuType menuType)
     {
+        GD.Print("Switching menus");
         currentMenu = menuType;
 
         List<Menu> menus = GetChildren().Select(menu => menu as Menu).ToList();
@@ -75,7 +82,10 @@ public partial class MenuHandler : Control
                 SwitchMenus(menus, MenuType.ingamemenu);
                 Input.MouseMode = Input.MouseModeEnum.Visible;
                 break;
-
+            case MenuType.loading:
+                SwitchMenus(menus, MenuType.loading);
+                Input.MouseMode = Input.MouseModeEnum.Captured;
+                break;
         }
     }
 }

@@ -10,11 +10,10 @@ public partial class MultiplayerController : Control
 	[Signal] public delegate void PlayerDisconnectedEventHandler(long peerId);
 
 	[Export] private int port = 25565;
-	private int maxConnections = 20;
+	public int maxConnections = 20;
 	private string defaultServerIp = "127.0.0.1";
 
 	PlayerState playerState = new PlayerState { Id = 1, Name = "Jorma", IsLoading = true };
-	int playersLoaded = 0;
 	public bool isGameStarted = false;
 
 	Dictionary<long, PlayerState> players = new Dictionary<long, PlayerState>();
@@ -52,6 +51,11 @@ public partial class MultiplayerController : Control
 	public Dictionary<long, PlayerState> GetPlayerStates()
 	{
 		return players;
+	}
+
+	public PlayerState GetPlayerState()
+	{
+		return playerState;
 	}
 
 	public void UpdateUserName(string newUsername)
@@ -165,28 +169,6 @@ public partial class MultiplayerController : Control
 		Multiplayer.MultiplayerPeer = null;
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void LoadGame()
-	{
-		GD.Print("Loading game");
-		gameManager.LoadGame();
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void PlayerLoaded()
-	{
-		if (Multiplayer.IsServer())
-		{
-			playersLoaded += 1;
-			if (playersLoaded == players.Count())
-			{
-				GD.Print("Starting game");
-				gameManager.StartGame();
-				playersLoaded = 0;
-			}
-		}
-	}
-
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void RegisterPlayer(long id, string name, bool isLoading)
 	{
@@ -212,5 +194,18 @@ public partial class MultiplayerController : Control
 	{
 		// GD.Print($"On player {Multiplayer.GetUniqueId()} the status for loading player {Multiplayer.GetRemoteSenderId()} is set to {status}");
 		players[Multiplayer.GetRemoteSenderId()].IsLoading = status;
+
+		foreach (var player in players)
+		{
+			if (player.Value.IsLoading) return;
+		}
+
+		isGameStarted = true;
+
+		if (Multiplayer.IsServer())
+		{
+			GD.Print("Starting game");
+			gameManager.StartGame();
+		}
 	}
 }
