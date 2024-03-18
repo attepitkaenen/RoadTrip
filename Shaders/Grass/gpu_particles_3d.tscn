@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://cul573nyacchv"]
+
+[ext_resource type="Shader" uid="uid://d3vh6ux0ryvw0" path="res://Shaders/Grass/foliage_shader_G4alpha10.tres" id="1_nicfe"]
+[ext_resource type="Texture2D" uid="uid://dviivc0iwq0bo" path="res://Shaders/Grass/IlariBMP.bmp" id="2_jaupv"]
+[ext_resource type="ArrayMesh" uid="uid://cg4i5825icqpi" path="res://Shaders/Grass/grassMesh.res" id="3_5mm3v"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b6umy"]
+shader = ExtResource("1_nicfe")
+shader_parameter/instance_rows = 224.0
+shader_parameter/instance_rot_randomize = 2.5
+shader_parameter/instance_spacing = 0.485
+shader_parameter/instance_scale_x = 1.2
+shader_parameter/instance_scale_y = 1.0
+shader_parameter/instance_scale_z = 1.2
+shader_parameter/instance_scale_randomize = 1.0
+shader_parameter/instance_pos_randomize = 2.0
+shader_parameter/instance_scale_min = 0.5
+shader_parameter/instance_scale_max = 0.59
+shader_parameter/_coverage_altitude = 10.0
+shader_parameter/_coverage_range = 1000.0
+shader_parameter/_slope_coverage = 0.595
+shader_parameter/clumping_strength = 20.0
+shader_parameter/terrain_normal_basis = null
+shader_parameter/instance_orient_to_normal = false
+shader_parameter/instance_orientation_influence = 1.0
+shader_parameter/__terrain_amplitude = 197.545
+shader_parameter/map_heightmap_size = Vector2(8000, 8000)
+shader_parameter/map_normalmap_size = Vector2(2000, 2000)
+shader_parameter/map_heightmap = ExtResource("2_jaupv")
+
+[node name="GPUParticles3D" type="GPUParticles3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 819.978, 17.2948, 268.365)
+visible = false
+amount = 50000
+lifetime = 0.01
+explosiveness = 1.0
+interpolate = false
+fract_delta = false
+visibility_aabb = AABB(-14.2854, -14.2432, -12.2984, 28.5707, 28.4864, 24.5967)
+process_material = SubResource("ShaderMaterial_b6umy")
+draw_pass_1 = ExtResource("3_5mm3v")
