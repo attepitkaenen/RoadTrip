@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 
 public partial class MainMenu : Menu
@@ -19,6 +20,8 @@ public partial class MainMenu : Menu
     [Export] private PanelContainer multiplayerContainer;
     [Export] private PanelContainer lobbyContainer;
     [Export] private VBoxContainer multiplayerButtons;
+    [Export] private MenuButton menuButton;
+    private string _pickedSave;
 
     public override void _Ready()
     {
@@ -30,6 +33,7 @@ public partial class MainMenu : Menu
         multiplayerController.PlayerConnected += UpdateLobbyNames;
         Multiplayer.ConnectionFailed += ConnectionFailed;
         Multiplayer.ServerDisconnected += ConnectionFailed;
+        menuButton.GetPopup().IdPressed += SaveChosen;
 
         var saves = saveManager.GetSaves();
         foreach (string saveName in saves)
@@ -78,6 +82,12 @@ public partial class MainMenu : Menu
         multiplayerController.UpdateUserName(newText);
     }
 
+    private void SaveChosen(long id)
+    {
+        _pickedSave = menuButton.GetPopup().GetItemText((int)id);
+        GD.Print(_pickedSave);
+    }
+
     public void _on_singleplayer_pressed()
     {
         multiplayerController.maxConnections = 1;
@@ -121,6 +131,11 @@ public partial class MainMenu : Menu
         saveManager.LoadGame(saveName.Text);
     }
 
+    public void _on_menu_button_pressed()
+    {
+
+    }
+
     public void ToggleHostAndJoinDisabled(bool state)
     {
         buttons.GetNode<Button>("Singleplayer").Visible = state;
@@ -139,6 +154,18 @@ public partial class MainMenu : Menu
         multiplayerContainer.Visible = state;
         multiplayerButtons.GetNode<Button>("Host").Visible = state;
         multiplayerButtons.GetNode<Button>("Join").Visible = state;
+    }
+
+    public void ResetMenu()
+    {
+        multiplayerContainer.Visible = false;
+        singleplayerContainer.Visible = false;
+        buttons.GetNode<Button>("Singleplayer").Visible = true;
+        buttons.GetNode<Button>("Multiplayer").Visible = true;
+        buttons.GetNode<Button>("Leave").Visible = false;
+        multiplayerButtons.GetNode<HBoxContainer>("Hosted").Visible = false;
+        multiplayerButtons.GetNode<Button>("Host").Visible = true;
+        multiplayerButtons.GetNode<Button>("Join").Visible = true;
     }
 
     public void _on_quit_pressed()

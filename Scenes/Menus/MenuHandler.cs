@@ -45,6 +45,10 @@ public partial class MenuHandler : Control
             if (menu.menuType == menuType)
             {
                 menu.Visible = true;
+                if (menuType == MenuType.mainmenu)
+                {
+                    ((MainMenu)menu).ResetMenu();
+                }
             }
             else
             {

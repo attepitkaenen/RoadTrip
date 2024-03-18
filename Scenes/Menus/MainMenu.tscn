@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://bkfckvp6lv6fp" path="res://Scenes/Menus/MainTheme.tres" id="1_o667a"]
 [ext_resource type="Script" path="res://Scenes/Menus/MainMenu.cs" id="2_jqt73"]
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("address", "userName", "saveName", "playerList", "_saveList", "buttons", "singleplayerContainer", "multiplayerContainer", "lobbyContainer", "multiplayerButtons")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("address", "userName", "saveName", "playerList", "_saveList", "buttons", "singleplayerContainer", "multiplayerContainer", "lobbyContainer", "multiplayerButtons", "menuButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +14,7 @@ theme = ExtResource("1_o667a")
 script = ExtResource("2_jqt73")
 address = NodePath("CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/IPEdit")
 userName = NodePath("CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/NameEdit")
-saveName = NodePath("CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/SaveName")
+saveName = NodePath("CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer/SaveName")
 playerList = NodePath("CenterContainer/HBoxContainer/Lobby/VBoxContainer2/MarginContainer/PlayerList")
 _saveList = NodePath("CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/MenuButton")
 buttons = NodePath("CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons")
@@ -22,6 +22,7 @@ singleplayerContainer = NodePath("CenterContainer/HBoxContainer/Singleplayer")
 multiplayerContainer = NodePath("CenterContainer/HBoxContainer/Multiplayer")
 lobbyContainer = NodePath("CenterContainer/HBoxContainer/Lobby")
 multiplayerButtons = NodePath("CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer")
+menuButton = NodePath("CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer3/MenuButton")
 
 [node name="BgColor" type="ColorRect" parent="."]
 layout_mode = 1
@@ -225,6 +226,7 @@ size_flags_horizontal = 3
 
 [node name="SaveName" type="LineEdit" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer"]
 layout_mode = 2
+text = "test"
 placeholder_text = "Save Name"
 
 [node name="NewGame" type="Button" parent="CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer"]
