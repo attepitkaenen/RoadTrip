@@ -68,6 +68,11 @@ public partial class GameManager : Node
 		return GetPlayerStates().Keys.ToList().IndexOf(id);
 	}
 
+	public Array<Player> GetPlayers()
+	{
+		return GetTree().GetNodesInGroup("Player").Select(node => node as Player) as Array<Player>;
+	}
+
 	public void Respawn()
 	{
 		GD.Print($"Respawning {Multiplayer.GetUniqueId()}");
