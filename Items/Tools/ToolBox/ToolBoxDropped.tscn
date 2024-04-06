@@ -11,7 +11,7 @@ size = Vector3(0.0476761, 0.213455, 0.449135)
 
 [node name="ToolBoxDropped" type="RigidBody3D" groups=["Items"]]
 collision_layer = 8
-collision_mask = 31
+collision_mask = 95
 script = ExtResource("1_v18cb")
 id = 3
 condition = 100.0

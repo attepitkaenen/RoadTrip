@@ -1,0 +1,14 @@
+[gd_resource type="VisualShader" load_steps=2 format=3 uid="uid://rtsakgoaw7or"]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_fft2g"]
+input_name = "vertex"
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+
+
+"
+nodes/fragment/2/node = SubResource("VisualShaderNodeInput_fft2g")
+nodes/fragment/2/position = Vector2(-548.394, 447.764)

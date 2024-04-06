@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://ckm7pwgnmngal"]
+[gd_scene load_steps=23 format=3 uid="uid://ckm7pwgnmngal"]
 
 [ext_resource type="Script" path="res://Maps/Map.cs" id="1_n22ko"]
 [ext_resource type="PackedScene" uid="uid://crbxy7tai54ii" path="res://Maps/Ilari/IlariEmpty.tscn" id="2_uvm14"]
@@ -18,7 +18,6 @@
 [ext_resource type="PackedScene" uid="uid://c2o46mvvi0bgu" path="res://Items/VehicleParts/Aito/Bonnet/AitoBonnetDropped.tscn" id="16_vuwvk"]
 [ext_resource type="PackedScene" uid="uid://ddq0gd58ycb7m" path="res://Items/VehicleParts/Aito/Boot/AitoBootDropped.tscn" id="17_tbri6"]
 [ext_resource type="PackedScene" uid="uid://cmscsj4q6x3ik" path="res://Items/VehicleParts/Aito/Windshield/AitoWindshieldDropped.tscn" id="18_2ehkq"]
-[ext_resource type="PackedScene" uid="uid://c0rxm7urfduwm" path="res://Vehicles/Leluota Aito/AitoBuilt.tscn" id="19_0ba8q"]
 [ext_resource type="PackedScene" uid="uid://bmog00v42t8ge" path="res://Items/VehicleParts/Aito/BRDoor/AitoBRDoorDropped.tscn" id="20_f1gbt"]
 [ext_resource type="PackedScene" uid="uid://c80j1g55ibdsn" path="res://Items/VehicleParts/Aito/FLDoor/AitoFLDoorDropped.tscn" id="21_4ugw1"]
 [ext_resource type="PackedScene" uid="uid://c33tfbwblv3kb" path="res://Items/VehicleParts/Aito/FRDoor/AitoFRDoorDropped.tscn" id="22_74l6g"]
@@ -250,9 +249,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 837.118, 15.1256, 195.836)
 
 [node name="AitoWindshieldDropped" parent="." instance=ExtResource("18_2ehkq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 836.188, 14.7795, 197.586)
-
-[node name="Aito" parent="." instance=ExtResource("19_0ba8q")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 840.778, 14.3202, 195.926)
 
 [node name="AitoBRDoorDropped" parent="." instance=ExtResource("20_f1gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 829.208, 13.7795, 198.566)

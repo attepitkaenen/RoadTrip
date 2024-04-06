@@ -26,6 +26,12 @@ public partial class Item : RigidBody3D
 
 	public override void _Ready()
 	{
+		SetCollisionMaskValue(1, true);
+		SetCollisionMaskValue(2, true);
+		SetCollisionMaskValue(3, true);
+		SetCollisionMaskValue(4, true);
+		SetCollisionMaskValue(5, true);
+		SetCollisionMaskValue(7, true);
 		AddToGroup("Items");
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		ContactMonitor = true;
