@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://btkmb4l0tsy30"]
+
+[ext_resource type="Script" path="res://Vehicles/Seat/Seat.cs" id="1_ai2jm"]
+[ext_resource type="PackedScene" uid="uid://le4i8w38eb5" path="res://Items/VehicleParts/Aito/FrontSeat/AitoFrontseat.blend" id="1_u2oik"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mrljt"]
+size = Vector3(0.3, 0.1, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qcgp1"]
+size = Vector3(0.5, 0.1, 0.3)
+
+[node name="Seat" type="RigidBody3D" groups=["Seat"]]
+collision_layer = 128
+collision_mask = 11
+freeze = true
+script = ExtResource("1_ai2jm")
+
+[node name="SeatPosition" type="Marker3D" parent="."]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0.6, 0.0516977)
+
+[node name="AitoFrontseat" parent="." instance=ExtResource("1_u2oik")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0.0650152)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(-8.74228e-08, 0, -2, 0, 2, 0, 2, 0, -8.74228e-08, 0, 0, 0.109458)
+shape = SubResource("BoxShape3D_mrljt")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(-1.46366e-08, -8.61888e-08, -2, -1.97177, 0.334846, 0, 0.334846, 1.97177, -8.74228e-08, 0, 0.528436, -0.174473)
+shape = SubResource("BoxShape3D_qcgp1")

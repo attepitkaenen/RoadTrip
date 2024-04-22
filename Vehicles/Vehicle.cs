@@ -49,13 +49,13 @@ public partial class Vehicle : VehicleBody3D
 
 		enginePower = engineBay.GetHorsePower();
 
-		if (_driverSeat.GetSeatedPlayerId() < 1)
+		if (_driverSeat is not null && _driverSeat.GetSeatedPlayerId() < 1)
 		{
 			Brake = 10;
 			EngineForce = 0;
 		}
 
-		if (LinearVelocity.Length() < 0.1f && !_driverSeat.occupied && false) // REMOVE FALSE WHEN DONE
+		if (LinearVelocity.Length() < 0.1f && _driverSeat is not null &&  !_driverSeat.occupied)
 		{
 			_multiplayerSynchronizer.ReplicationInterval = 1f;
 			_multiplayerSynchronizer.DeltaInterval = 1f;

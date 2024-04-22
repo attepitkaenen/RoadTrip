@@ -14,5 +14,6 @@ public enum ItemTypeEnum
     Hatch,
     Tire,
     Weapon,
-    Tool
+    Tool,
+    Seat
 }
