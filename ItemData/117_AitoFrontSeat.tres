@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=4 format=3 uid="uid://tqvkjp63e130"]
+
+[ext_resource type="PackedScene" uid="uid://btkmb4l0tsy30" path="res://Items/VehicleParts/Aito/FrontSeat/AitoFrontSeat.tscn" id="1_66v7m"]
+[ext_resource type="PackedScene" uid="uid://c6fxoxlitv3wi" path="res://Items/VehicleParts/Aito/FrontSeat/AitoFrontSeatDropped.tscn" id="2_ljucl"]
+[ext_resource type="Script" path="res://Items/ItemResource.cs" id="3_t3fm5"]
+
+[resource]
+script = ExtResource("3_t3fm5")
+Id = 117
+ItemName = "AitoFrontSeat"
+Equippable = false
+Description = ""
+ItemOnFloor = ExtResource("2_ljucl")
+ItemInHand = ExtResource("1_66v7m")

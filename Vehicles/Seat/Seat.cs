@@ -2,9 +2,9 @@ using Godot;
 using System;
 using System.Linq;
 
-public partial class Seat : RigidBody3D
+public partial class Seat : CarPart
 {
-	Vehicle _vehicle;
+	public Vehicle vehicle;
 	public Marker3D seatPosition;
 	private Player _seatedPlayer;
 	private long _seatedPlayerId = 0;
@@ -15,7 +15,6 @@ public partial class Seat : RigidBody3D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_vehicle = GetParentOrNull<Vehicle>();
 		seatPosition = GetNode<Marker3D>("SeatPosition");
 	}
 
@@ -38,7 +37,7 @@ public partial class Seat : RigidBody3D
 
 	public Vehicle GetVehicle()
 	{
-		return _vehicle;
+		return vehicle;
 	}
 
 	public Vector3 GetPosition()

@@ -5,7 +5,7 @@ using Godot;
 public partial class PartMount : Node3D
 {
     GameManager gameManager;
-    [Export] MultiplayerSynchronizer multiplayerSynchronizer;
+    MultiplayerSynchronizer multiplayerSynchronizer;
 
     [Signal] public delegate void PartInstalledEventHandler(int id, float condition, string partType);
     [Signal] public delegate void PartUninstalledEventHandler();
@@ -88,7 +88,7 @@ public partial class PartMount : Node3D
     }
 
     // Spawns installed part and sets its condition and id
-    public IMounted SpawnInstalledPart(int id, float condition, Vector3 partPosition, Vector3 partRotation)
+    public virtual IMounted SpawnInstalledPart(int id, float condition, Vector3 partPosition, Vector3 partRotation)
     {
         var part = gameManager.GetItemResource(id).ItemInHand.Instantiate() as IMounted;
         AddChild((dynamic)part, true);

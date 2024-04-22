@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://ckm7pwgnmngal"]
+[gd_scene load_steps=24 format=3 uid="uid://ckm7pwgnmngal"]
 
 [ext_resource type="Script" path="res://Maps/Map.cs" id="1_n22ko"]
 [ext_resource type="PackedScene" uid="uid://crbxy7tai54ii" path="res://Maps/Ilari/IlariEmpty.tscn" id="2_uvm14"]
@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://c80j1g55ibdsn" path="res://Items/VehicleParts/Aito/FLDoor/AitoFLDoorDropped.tscn" id="21_4ugw1"]
 [ext_resource type="PackedScene" uid="uid://c33tfbwblv3kb" path="res://Items/VehicleParts/Aito/FRDoor/AitoFRDoorDropped.tscn" id="22_74l6g"]
 [ext_resource type="PackedScene" uid="uid://qiiml1cl4jf8" path="res://Items/VehicleParts/Aito/BLDoor/AitoBLDoorDropped.tscn" id="23_77v5f"]
+[ext_resource type="PackedScene" uid="uid://c6fxoxlitv3wi" path="res://Items/VehicleParts/Aito/FrontSeat/AitoFrontSeatDropped.tscn" id="23_wa7sw"]
 
 [node name="World" type="Node3D" groups=["World"]]
 script = ExtResource("1_n22ko")
@@ -261,5 +262,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 829.598, 13.7795, 196.776)
 
 [node name="AitoBLDoorDropped" parent="." instance=ExtResource("23_77v5f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 829.698, 13.7795, 198.576)
+
+[node name="AitoFrontSeat" parent="." instance=ExtResource("23_wa7sw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 832.142, 14.4846, 197.358)
 
 [editable path="Items/Item31"]
