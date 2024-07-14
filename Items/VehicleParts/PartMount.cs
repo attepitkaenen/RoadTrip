@@ -5,7 +5,6 @@ using Godot;
 public partial class PartMount : Node3D
 {
     GameManager gameManager;
-    MultiplayerSynchronizer multiplayerSynchronizer;
 
     [Signal] public delegate void PartInstalledEventHandler(int id, float condition, string partType);
     [Signal] public delegate void PartUninstalledEventHandler();
@@ -22,12 +21,12 @@ public partial class PartMount : Node3D
     public override void _Ready()
     {
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-        if (multiplayerSynchronizer is null)
-        {
-            multiplayerSynchronizer = GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
-        }
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partId");
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partCondition");
+        // if (multiplayerSynchronizer is null)
+        // {
+        //     multiplayerSynchronizer = GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+        // }
+        // multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partId");
+        // multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partCondition");
 
         _partArea = GetNode<Area3D>("Area3D");
         _partArea.BodyEntered += PartEntered;

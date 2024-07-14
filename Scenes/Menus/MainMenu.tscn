@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://bkfckvp6lv6fp" path="res://Scenes/Menus/MainTheme.tres" id="1_o667a"]
 [ext_resource type="Script" path="res://Scenes/Menus/MainMenu.cs" id="2_jqt73"]
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("address", "userName", "saveName", "playerList", "_saveList", "buttons", "singleplayerContainer", "multiplayerContainer", "lobbyContainer", "multiplayerButtons", "menuButton")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("ipAddress", "userName", "saveName", "playerList", "_saveList", "buttons", "singleplayerContainer", "multiplayerContainer", "lobbyContainer", "multiplayerButtons", "menuButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_o667a")
 script = ExtResource("2_jqt73")
-address = NodePath("CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/IPEdit")
+ipAddress = NodePath("CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/IPEdit")
 userName = NodePath("CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/NameEdit")
 saveName = NodePath("CenterContainer/HBoxContainer/Multiplayer/MarginContainer/VBoxContainer/Hosted/VBoxContainer/SaveName")
 playerList = NodePath("CenterContainer/HBoxContainer/Lobby/VBoxContainer2/MarginContainer/PlayerList")
@@ -94,7 +94,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Name" type="Label" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Name:
 "
@@ -106,13 +106,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="IP" type="Label" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 text = "IP:
 "
 
 [node name="IPEdit" type="LineEdit" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
+text = "127.0.0.1"
 
 [node name="Buttons" type="VBoxContainer" parent="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -248,6 +249,7 @@ text = "Load game"
 
 [connection signal="pressed" from="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons/Singleplayer" to="." method="_on_singleplayer_pressed"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons/Multiplayer" to="." method="_on_multiplayer_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons/Leave" to="." method="_on_leave_pressed"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/Main/MarginContainer/VBoxContainer/Buttons/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/Singleplayer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Button" to="." method="_on_start_pressed"]

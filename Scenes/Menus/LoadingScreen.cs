@@ -3,7 +3,7 @@ using Godot;
 public partial class LoadingScreen : Menu
 {
     GameManager gameManager;
-    MultiplayerController multiplayerController;
+    RiptideClient riptideClient;
     SaveManager saveManager;
     [Export] Label statusLabel;
     [Export] TextureRect icon;
@@ -13,14 +13,14 @@ public partial class LoadingScreen : Menu
         menuType = MenuHandler.MenuType.loading;
         ProcessMode = ProcessModeEnum.Always;
         saveManager = GetTree().Root.GetNode<SaveManager>("SaveManager");
-        multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
+        riptideClient = GetTree().Root.GetNode<RiptideClient>("RiptideClient");
     }
 
     public override void _Process(double delta)
     {
         var progress = saveManager.progress;
         icon.RotationDegrees += 0.5f;
-        if (multiplayerController.GetPlayerState().IsLoading && progress.Count > 0)
+        if (riptideClient.IsLoading() && progress.Count > 0)
         {
             statusLabel.Text = Mathf.Round((float)progress[0] * 100).ToString() + "%";
         }

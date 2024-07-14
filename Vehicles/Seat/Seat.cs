@@ -7,7 +7,7 @@ public partial class Seat : CarPart
 	public Vehicle vehicle;
 	public Marker3D seatPosition;
 	private Player _seatedPlayer;
-	private long _seatedPlayerId = 0;
+	private ushort _seatedPlayerId = 0;
 	public bool occupied = false;
 	[Export] public bool isDriverSeat = false;
 	[Signal] public delegate void PlayerSeatedEventHandler(int playerId);
@@ -55,11 +55,11 @@ public partial class Seat : CarPart
 		return _seatedPlayerId;
 	}
 
-	public Player GetPlayer(long Id)
+	public Player GetPlayer(ushort id)
 	{
 		var players = GetTree().GetNodesInGroup("Player");
 		if (players.Count() < 1) return null;
-		return players.First(player => player.Name == Id.ToString()) as Player;
+		return players.First(player => player.Name == id.ToString()) as Player;
 	}
 
 	public void MovePassenger(Player player)
@@ -68,7 +68,7 @@ public partial class Seat : CarPart
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void Sit(long playerId)
+	public void Sit(ushort playerId)
 	{
 		GD.Print("Sit");
 		if (_seatedPlayerId == 0)

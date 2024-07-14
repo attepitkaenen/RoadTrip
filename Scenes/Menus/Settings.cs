@@ -4,16 +4,17 @@ using System;
 public partial class Settings : Menu
 {
     [Export] private LineEdit sensitivity;
-    MultiplayerController multiplayerController;
+
     GameManager gameManager;
+    RiptideClient riptideClient;
 
     public override void _Ready()
     {
         menuType = MenuHandler.MenuType.settings;
         sensitivity.TextChanged += ChangeSensitivity;
-        multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
-        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 
+        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+        riptideClient = GetTree().Root.GetNode<RiptideClient>("RiptideClient");
     }
 
     private void ChangeSensitivity(string newText)
@@ -24,15 +25,15 @@ public partial class Settings : Menu
     public void _on_back_button_pressed()
     {
         GD.Print("Back button pressed");
-        if (multiplayerController.GetGameStartedStatus())
+        if (gameManager.isGameStarted)
         {
-            menuHandler.OpenMenu(MenuHandler.MenuType.ingamemenu);
+            MenuHandler.OpenMenu(MenuHandler.MenuType.ingamemenu);
         }
         else
         {
             GD.Print("Should go to main menu");
 
-            menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
+            MenuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
         }
     }
 

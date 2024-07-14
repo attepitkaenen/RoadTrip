@@ -5,8 +5,10 @@ using System.Linq;
 
 public partial class MenuHandler : Control
 {
-    MultiplayerController multiplayerController;
-    public MenuType currentMenu = MenuType.mainmenu;
+    GameManager gameManager;
+
+    public static MenuType currentMenu = MenuType.mainmenu;
+    private static List<Menu> menus;
 
     public enum MenuType
     {
@@ -20,12 +22,15 @@ public partial class MenuHandler : Control
     public override void _Ready()
     {
         ProcessMode = ProcessModeEnum.Always;
-        multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
+
+        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+
+        menus = GetChildren().Select(menu => menu as Menu).ToList();
     }
 
     public override void _Input(InputEvent @event)
     {
-        if (multiplayerController.GetGameStartedStatus())
+        if (gameManager.isGameStarted)
         {
             if (currentMenu == MenuType.none && Input.IsActionJustPressed("menu"))
             {
@@ -38,7 +43,7 @@ public partial class MenuHandler : Control
         }
     }
 
-    private void SwitchMenus(List<Menu> menus, MenuType menuType)
+    private static void SwitchMenus(List<Menu> menus, MenuType menuType)
     {
         foreach (Menu menu in menus)
         {
@@ -57,12 +62,11 @@ public partial class MenuHandler : Control
         }
     }
 
-    public void OpenMenu(MenuType menuType)
+    public static void OpenMenu(MenuType menuType)
     {
-        GD.Print("Switching menus");
+        GD.Print($"Switching to menu: {menuType.ToString()}");
         currentMenu = menuType;
 
-        List<Menu> menus = GetChildren().Select(menu => menu as Menu).ToList();
 
         switch (currentMenu)
         {

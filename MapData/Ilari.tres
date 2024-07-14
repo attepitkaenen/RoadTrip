@@ -6,6 +6,6 @@
 
 [resource]
 script = ExtResource("1_p8jln")
-MapId = 0
+Id = 0
 Map = ExtResource("1_dcru0")
 EmptyMap = ExtResource("1_dwi0j")

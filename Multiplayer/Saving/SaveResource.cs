@@ -9,6 +9,7 @@ public partial class SaveResource : Resource
     [Export] public string SaveName { get; set; }
     [Export] public int ActiveMap { get; set; }
     [Export] public Array<MapSaveResource> Maps { get; set; }
+    [Export] public Array<PlayerSaveResource> Players { get; set; }
 
     // Make sure you provide a parameterless constructor.
     // In C#, a parameterless constructor is different from a
@@ -16,11 +17,12 @@ public partial class SaveResource : Resource
     // Without a parameterless constructor, Godot will have problems
     // creating and editing your resource via the inspector.
     public SaveResource() { }
-    public SaveResource(int id, string saveName, int activeMap, Array<MapSaveResource> maps) 
+    public SaveResource(int id, string saveName, int activeMap, Array<MapSaveResource> maps, Array<PlayerSaveResource> players) 
     {
         Id = id;
         SaveName = saveName;
         ActiveMap = activeMap;
         Maps = maps;
+        Players = players;
     }
 }

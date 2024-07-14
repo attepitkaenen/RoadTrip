@@ -9,7 +9,6 @@ public partial class Door : Item, IMounted
     int _id;
     HingeJoint3D _hinge;
     Vehicle _vehicle;
-    MultiplayerSynchronizer _multiplayerSynchronizer;
     bool _isClosed = true;
     PartMount _mount;
 
@@ -21,13 +20,13 @@ public partial class Door : Item, IMounted
     {
         _hinge = GetParent().GetNode<HingeJoint3D>("HingeJoint3D");
         _vehicle = GetParent().GetParent().GetParent<Vehicle>();
-        _multiplayerSynchronizer = _vehicle.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+        // _multiplayerSynchronizer = _vehicle.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
 
-        _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncPosition");
-        _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncBasis");
-        _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncRotation");
-        _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncLinearVelocity");
-        _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncAngularVelocity");
+        // _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncPosition");
+        // _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncBasis");
+        // _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncRotation");
+        // _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncLinearVelocity");
+        // _multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":syncAngularVelocity");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -140,10 +139,10 @@ public partial class Door : Item, IMounted
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void UnSyncPart()
     {
-        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncPosition");
-        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncBasis");
-        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncRotation");
-        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncLinearVelocity");
-        _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncAngularVelocity");
+        // _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncPosition");
+        // _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncBasis");
+        // _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncRotation");
+        // _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncLinearVelocity");
+        // _multiplayerSynchronizer.ReplicationConfig.RemoveProperty(GetPath() + ":syncAngularVelocity");
     }
 }

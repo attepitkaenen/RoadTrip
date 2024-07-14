@@ -1,20 +1,29 @@
 using Godot;
 using Godot.Collections;
 using System.Linq;
+using System.Runtime.Serialization;
 
 public partial class GameManager : Node
 {
-	[Signal] public delegate void GameStartedEventHandler(long id);
+	// Signals
+	[Signal] public delegate void GameStartedEventHandler(ushort id);
+
+	// 
 	[Export] private PackedScene playerScene;
 	[Export] public Array<ItemResource> itemList = new Array<ItemResource>();
 	[Export] public Array<VehicleResource> vehicleList = new Array<VehicleResource>();
-	[Export] public Array<MapResource> mapList = new Array<MapResource>();
-	[Export] public MultiplayerSpawner multiplayerSpawner;
+	public static Array<MapResource> mapList = new Array<MapResource>();
+
+	// Save
 	public int saveId;
+
 	public MenuHandler menuHandler;
+	RiptideClient riptideClient;
+	RiptideServer riptideServer;
+
 	public Map world;
-	private MultiplayerController multiplayerController;
 	public float Sensitivity = 0.001f;
+	public bool isGameStarted = false;
 
 	public override void _Ready()
 	{
@@ -43,27 +52,78 @@ public partial class GameManager : Node
 		}
 
 
-		multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
 		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
-
-		Callable spawnCallable = new Callable(this, MethodName.SpawnNode);
-		multiplayerSpawner.SpawnFunction = spawnCallable;
+		riptideServer = GetTree().Root.GetNode<RiptideServer>("RiptideServer");
+		riptideClient = GetTree().Root.GetNode<RiptideClient>("RiptideClient");
 	}
 
-	public override void _Process(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
-		if (GetChildren().Count < 2 && multiplayerController.isGameStarted)
+		StartGame();
+	}
+
+	public void StartGame()
+	{
+		if (!isGameStarted & riptideClient.IsHost() && !riptideClient.IsLoading())
 		{
-			multiplayerController.CloseConnection();
+			GD.Print("Starting game: host");
+			SpawnPlayers();
+			isGameStarted = true;
+			MenuHandler.OpenMenu(MenuHandler.MenuType.none);
+		}
+		else if (!isGameStarted && !riptideClient.IsHost() && !riptideClient.IsLoading() && !riptideClient.IsServerLoading())
+		{
+			GD.Print("Starting game: client");
+			SpawnPlayers();
+			isGameStarted = true;
+			MenuHandler.OpenMenu(MenuHandler.MenuType.none);
 		}
 	}
 
-	public Dictionary<long, PlayerState> GetPlayerStates()
+	public void SpawnPlayers()
 	{
-		return multiplayerController.GetPlayerStates();
+		var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
+		foreach (var playerState in riptideClient.GetPlayerStates())
+		{
+			foreach (var player in GetTree().GetNodesInGroup("Player"))
+			{
+				if (int.Parse((player as Player).Name) == playerState.Key)
+				{
+					GD.Print("Player: " + (player as Player).Name + " has already been spawned");
+					return;
+				}
+			}
+
+			var newPlayer = playerScene.Instantiate<Player>();
+			newPlayer.Name = playerState.Key.ToString();
+			newPlayer.id = playerState.Key;
+			newPlayer.userName = playerState.Value.Name;
+
+			if (riptideClient.GetId() == playerState.Key)
+			{
+				newPlayer.isLocal = true;
+			}
+
+			GD.Print($"Spawning player {playerState.Value.Name} with id: {playerState.Key}");
+			AddChild(newPlayer, true);
+			var random = new RandomNumberGenerator();
+			var randomSpawnPoint = spawnPoints[random.RandiRange(0, spawnPoints.Count() - 1)] as Node3D;
+			newPlayer.GlobalPosition = randomSpawnPoint.GlobalPosition;
+			riptideClient.AddPlayerInstance(playerState.Key, newPlayer);
+
+			if (riptideClient.IsHost())
+			{
+				riptideServer.AddPlayerInstance(playerState.Key, newPlayer);
+			}
+		}
 	}
 
-	public int GetPlayerIndex(long id)
+	public Dictionary<ushort, PlayerState> GetPlayerStates()
+	{
+		return riptideClient.GetPlayerStates();
+	}
+
+	public int GetPlayerIndex(ushort id)
 	{
 		return GetPlayerStates().Keys.ToList().IndexOf(id);
 	}
@@ -77,15 +137,15 @@ public partial class GameManager : Node
 	{
 		GD.Print($"Respawning {Multiplayer.GetUniqueId()}");
 		var player = GetTree().GetNodesInGroup("Player").ToList().Find(player => player.Name == $"{Multiplayer.GetUniqueId()}") as Player;
-		int playerIndex = GetPlayerIndex(player.Id);
+		// int playerIndex = GetPlayerIndex(player.Id);
 		var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
-		foreach (Node3D spawnPoint in spawnPoints)
-		{
-			if (int.Parse(spawnPoint.Name) == playerIndex)
-			{
-				player.Rpc(nameof(player.MovePlayer), spawnPoint.GlobalPosition, Vector3.Zero);
-			}
-		}
+		// foreach (Node3D spawnPoint in spawnPoints)
+		// {
+		// 	if (int.Parse(spawnPoint.Name) == playerIndex)
+		// 	{
+		// 		player.Rpc(nameof(player.MovePlayer), spawnPoint.GlobalPosition, Vector3.Zero);
+		// 	}
+		// }
 	}
 
 	public ItemResource GetItemResource(int id)
@@ -106,24 +166,25 @@ public partial class GameManager : Node
 		return null;
 	}
 
-	public void RemovePlayer(long id)
+	public void RemovePlayer(ushort id)
 	{
-		var players = GetTree().GetNodesInGroup("Player");
-		if (players.Count > 0)
-		{
-			var player = players.FirstOrDefault(i => (i as Player).Id == id);
-			if (player is not null)
-			{
-				player.QueueFree();
-			}
-		}
+		// var players = GetTree().GetNodesInGroup("Player");
+		// if (players.Count > 0)
+		// {
+		// 	var player = players.FirstOrDefault(i => (i as Player).Id == id);
+		// 	if (player is not null)
+		// 	{
+		// 		player.QueueFree();
+		// 	}
+		// }
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SpawnItem(int playerId, int id, float condition, Vector3 position, Vector3 rotation)
 	{
-		var scene = GetItemResource(id).ItemOnFloor.ResourcePath;
-		var item = multiplayerSpawner.Spawn(scene) as Item;
+		var scene = GetItemResource(id).ItemOnFloor;
+		var item = scene.Instantiate() as Item;
+		AddChild(item);
 
 		item.GlobalPosition = position;
 		item.GlobalRotation = rotation;
@@ -140,8 +201,9 @@ public partial class GameManager : Node
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SpawnVehicle(int id, Vector3 position, Vector3 rotation, Array<VehiclePartSaveResource> vehicleParts)
 	{
-		var scene = GetVehicleResource(id).VehicleBody.ResourcePath;
-		var vehicle = multiplayerSpawner.Spawn(scene) as Vehicle;
+		var scene = GetVehicleResource(id).VehicleBody;
+		var vehicle = scene.Instantiate() as Vehicle;
+		AddChild(vehicle);
 
 		vehicle.GlobalPosition = position;
 		vehicle.GlobalRotation = rotation;
@@ -163,11 +225,11 @@ public partial class GameManager : Node
 	}
 
 
-	public void InstantiateMap(string mapPath)
+	public void InstantiateMap(PackedScene scene)
 	{
-		var map = multiplayerSpawner.Spawn(mapPath) as Map;
+		var map = scene.Instantiate() as Map;
 		world = map;
-		GD.Print("Setting world to " + world);
+		AddChild(map);
 	}
 
 	Node SpawnNode(string nodePath)
@@ -175,58 +237,15 @@ public partial class GameManager : Node
 		return (ResourceLoader.Load(nodePath) as PackedScene).Instantiate();
 	}
 
-	public void ResetWorld()
+	public void ResetGameState()
 	{
-		GD.Print("Resetting world");
+		GD.Print("Resetting game");
+		isGameStarted = false;
 		world = null;
-		var destroyList = GetChildren().Where(node => node is not MultiplayerSpawner).ToList();
+		var destroyList = GetChildren().ToList();
 		if (destroyList.Count > 0)
 		{
 			destroyList.ForEach(node => node.QueueFree());
-		}
-	}
-
-	public void StartGame()
-	{
-		if (Multiplayer.IsServer())
-		{
-			foreach (var playerState in GetPlayerStates().Values)
-			{
-				SpawnPlayer(playerState);
-			}
-		}
-		EmitSignal(SignalName.GameStarted);
-	}
-
-	public void SpawnPlayer(PlayerState playerState)
-	{
-		foreach (var player in GetTree().GetNodesInGroup("Player"))
-		{
-			if (int.Parse((player as Player).Name) == playerState.Id)
-			{
-				GD.Print("Player: " + (player as Player).Name + " has already been spawned");
-				return;
-			}
-		}
-		GD.Print("World is " + world);
-		if (world is not null && Multiplayer.IsServer())
-		{
-			Player currentPlayer = playerScene.Instantiate<Player>();
-			currentPlayer.Name = playerState.Id.ToString();
-
-			GD.Print($"Spawning player {playerState.Name} with id: {playerState.Id}");
-			AddChild(currentPlayer, true);
-
-			int playerIndex = GetPlayerStates().Values.ToList().IndexOf(playerState);
-			var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
-			foreach (Node3D spawnPoint in spawnPoints)
-			{
-				if (int.Parse(spawnPoint.Name) == playerIndex)
-				{
-					currentPlayer.Rpc(nameof(currentPlayer.MovePlayer), spawnPoint.GlobalPosition, Vector3.Zero);
-				}
-			}
-			currentPlayer.Rpc(nameof(currentPlayer.SetPlayerState), playerState.Id, playerState.Name);
 		}
 	}
 }

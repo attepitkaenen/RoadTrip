@@ -7,11 +7,12 @@ using Godot;
 
 public partial class Player : CharacterBody3D
 {
-	public long Id;
+	public ushort id;
+	public bool isLocal = false;
 	public string userName;
 	GameManager gameManager;
 	MenuHandler menuHandler;
-	MultiplayerSynchronizer multiplayerSynchronizer;
+	RiptideClient riptideClient;
 
 	[ExportGroup("Required Nodes")]
 	[Export] public PlayerInteraction playerInteraction;
@@ -76,31 +77,22 @@ public partial class Player : CharacterBody3D
 
 	public override void _EnterTree()
 	{
-		GetTree().Paused = false;
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		menuHandler = GetTree().Root.GetNode<MenuHandler>("MenuHandler");
-		multiplayerSynchronizer = GetNode<MultiplayerSynchronizer>("PlayerSynchronizer");
 
-		SetMultiplayerAuthority(int.Parse(Name));
 
-		if (!IsMultiplayerAuthority())
+		if (!isLocal)
 		{
 			camera.Current = false;
 			return;
 		}
 
-		menuHandler.OpenMenu(MenuHandler.MenuType.none);
 		camera.Current = true;
 		sensitivity = gameManager.Sensitivity;
 	}
 
 	public override void _Ready()
 	{
-		if (GetMultiplayerAuthority() == Id)
-		{
-			menuHandler.OpenMenu(MenuHandler.MenuType.none);
-		}
-
 		AddDebugLine(fpsDebug);
 		AddDebugLine(movementStateDebug);
 		AddDebugLine(speedDebug);
@@ -109,7 +101,7 @@ public partial class Player : CharacterBody3D
 
 	public override void _Input(InputEvent @event)
 	{
-		if (!IsMultiplayerAuthority() || menuHandler.currentMenu != MenuHandler.MenuType.none) return;
+		if (!isLocal || MenuHandler.currentMenu != MenuHandler.MenuType.none) return;
 
 		if (@event is InputEventMouseMotion && movementState != MovementState.unconscious)
 		{
@@ -149,7 +141,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		//Lerp movement for other players
-		if (!IsMultiplayerAuthority())
+		if (!isLocal)
 		{
 			if (movementState == MovementState.seated)
 			{
@@ -338,7 +330,7 @@ public partial class Player : CharacterBody3D
 		if (newSeat is Seat && Input.IsActionJustPressed("equip") && movementState != MovementState.seated && !newSeat.occupied)
 		{
 			_seat = newSeat;
-			_seat.Rpc(nameof(_seat.Sit), Id);
+			_seat.Rpc(nameof(_seat.Sit), id);
 			movementState = MovementState.seated;
 		}
 		else if (Input.IsActionJustPressed("equip") && movementState == MovementState.seated)
@@ -351,10 +343,10 @@ public partial class Player : CharacterBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SetPlayerState(long id, string name)
+	public void SetPlayerState(ushort id, string name)
 	{
 		userName = name;
-		Id = id;
+		this.id = id;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -367,7 +359,7 @@ public partial class Player : CharacterBody3D
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void Hit(int damage, string boneName, Vector3 bulletDirection)
 	{
-		if(!IsMultiplayerAuthority()) return;
+		if (!isLocal) return;
 		GD.Print($"Player {Name} was hit for {damage}");
 		Health -= damage;
 

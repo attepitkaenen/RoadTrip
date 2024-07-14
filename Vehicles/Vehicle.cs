@@ -6,7 +6,6 @@ using Godot.Collections;
 public partial class Vehicle : VehicleBody3D
 {
 	[Export] public int id;
-	[Export] private MultiplayerSynchronizer _multiplayerSynchronizer;
 	[Export] public EngineBay engineBay;
 	[Export] public float breakForce = 50;
 	[Export] private Area3D _itemArea;
@@ -55,16 +54,16 @@ public partial class Vehicle : VehicleBody3D
 			EngineForce = 0;
 		}
 
-		if (LinearVelocity.Length() < 0.1f && _driverSeat is not null &&  !_driverSeat.occupied)
-		{
-			_multiplayerSynchronizer.ReplicationInterval = 1f;
-			_multiplayerSynchronizer.DeltaInterval = 1f;
-		}
-		else
-		{
-			_multiplayerSynchronizer.ReplicationInterval = 0.016f;
-			_multiplayerSynchronizer.DeltaInterval = 0.016f;
-		}
+		// if (LinearVelocity.Length() < 0.1f && _driverSeat is not null &&  !_driverSeat.occupied)
+		// {
+		// 	_multiplayerSynchronizer.ReplicationInterval = 1f;
+		// 	_multiplayerSynchronizer.DeltaInterval = 1f;
+		// }
+		// else
+		// {
+		// 	_multiplayerSynchronizer.ReplicationInterval = 0.016f;
+		// 	_multiplayerSynchronizer.DeltaInterval = 0.016f;
+		// }
 
 		syncLinearVelocity = LinearVelocity;
 		syncAngularVelocity = AngularVelocity;

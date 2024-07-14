@@ -1,4 +1,5 @@
 using Godot;
+using Riptide;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -6,11 +7,12 @@ using System.Linq;
 
 public partial class MainMenu : Menu
 {
-    MultiplayerController multiplayerController;
     GameManager gameManager;
     SaveManager saveManager;
+    RiptideServer riptideServer;
+    RiptideClient riptideClient;
 
-    [Export] private LineEdit address;
+    [Export] private LineEdit ipAddress;
     [Export] private LineEdit userName;
     [Export] private LineEdit saveName;
     [Export] private ItemList playerList;
@@ -26,13 +28,11 @@ public partial class MainMenu : Menu
     public override void _Ready()
     {
         menuType = MenuHandler.MenuType.mainmenu;
-        multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         saveManager = GetTree().Root.GetNode<SaveManager>("SaveManager");
-        userName.TextChanged += SaveUserName;
-        multiplayerController.PlayerConnected += UpdateLobbyNames;
-        Multiplayer.ConnectionFailed += ConnectionFailed;
-        Multiplayer.ServerDisconnected += ConnectionFailed;
+        riptideServer = GetTree().Root.GetNode<RiptideServer>("RiptideServer");
+        riptideClient = GetTree().Root.GetNode<RiptideClient>("RiptideClient");
+
         menuButton.GetPopup().IdPressed += SaveChosen;
 
         var saves = saveManager.GetSaves();
@@ -41,18 +41,20 @@ public partial class MainMenu : Menu
             GD.Print(saveName);
             _saveList.GetPopup().AddCheckItem(saveName);
         }
+
+
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (multiplayerController.GetPlayerStates().Count > 0)
-        {
-            lobbyContainer.Visible = true;
-        }
-        else
-        {
-            lobbyContainer.Visible = false;
-        }
+        // if (multiplayerController.GetPlayerStates().Count > 0)
+        // {
+        //     lobbyContainer.Visible = true;
+        // }
+        // else
+        // {
+        //     lobbyContainer.Visible = false;
+        // }
 
     }
 
@@ -65,21 +67,16 @@ public partial class MainMenu : Menu
     public void UpdateLobbyNames(long peerId, PlayerState peerName)
     {
         playerList.Clear();
-        while (playerList.ItemCount < multiplayerController.GetPlayerStates().Count)
-        {
-            playerList.AddItem("");
-        }
-        var index = 0;
-        foreach (var (id, playerState) in multiplayerController.GetPlayerStates())
-        {
-            playerList.SetItemText(index, playerState.Name);
-            index++;
-        }
-    }
-
-    private void SaveUserName(string newText)
-    {
-        multiplayerController.UpdateUserName(newText);
+        // while (playerList.ItemCount < multiplayerController.GetPlayerStates().Count)
+        // {
+        //     playerList.AddItem("");
+        // }
+        // var index = 0;
+        // foreach (var (id, playerState) in multiplayerController.GetPlayerStates())
+        // {
+        //     playerList.SetItemText(index, playerState.Name);
+        //     index++;
+        // }
     }
 
     private void SaveChosen(long id)
@@ -90,14 +87,12 @@ public partial class MainMenu : Menu
 
     public void _on_singleplayer_pressed()
     {
-        multiplayerController.maxConnections = 1;
         singleplayerContainer.Visible = !singleplayerContainer.Visible;
         multiplayerContainer.Visible = false;
     }
 
     public void _on_multiplayer_pressed()
     {
-        multiplayerController.maxConnections = 20;
         multiplayerContainer.Visible = !multiplayerContainer.Visible;
         singleplayerContainer.Visible = false;
     }
@@ -105,29 +100,57 @@ public partial class MainMenu : Menu
     public void _on_settings_pressed()
     {
         GD.Print("Settings pressed");
-        menuHandler.OpenMenu(MenuHandler.MenuType.settings);
+        MenuHandler.OpenMenu(MenuHandler.MenuType.settings);
+    }
+
+    public void _on_leave_pressed()
+    {
+        riptideClient.Disconnect();
+
+        if (riptideClient.IsHost())
+        {
+            riptideServer.StopServer();
+        }
     }
 
     public void _on_host_pressed()
     {
         ToggleHostAndJoinDisabled(false);
-        multiplayerController.CreateGame();
+
+        riptideServer.Host(10);
+
+        if (userName.Text == "")
+        {
+            riptideClient.Connect(ipAddress.Text, 25565, "Jorma", true);
+        }
+        else
+        {
+            riptideClient.Connect(ipAddress.Text, 25565, userName.Text, true);
+        }
     }
 
     public void _on_join_pressed()
     {
-        multiplayerController.JoinGame(address.Text);
         ToggleJoined(false);
+
+        if (userName.Text == "")
+        {
+            riptideClient.Connect(ipAddress.Text, 25565, "Jorma");
+        }
+        else
+        {
+            riptideClient.Connect(ipAddress.Text, 25565, userName.Text);
+        }
     }
+
+
     public void _on_new_game_pressed()
     {
-        menuHandler.OpenMenu(MenuHandler.MenuType.loading);
         saveManager.LoadGame(saveName.Text);
     }
 
     public void _on_load_game_pressed()
     {
-        menuHandler.OpenMenu(MenuHandler.MenuType.loading);
         saveManager.LoadGame(saveName.Text);
     }
 
@@ -136,6 +159,7 @@ public partial class MainMenu : Menu
 
     }
 
+    // Toggle if player has hosted a game successfully
     public void ToggleHostAndJoinDisabled(bool state)
     {
         buttons.GetNode<Button>("Singleplayer").Visible = state;
@@ -146,6 +170,7 @@ public partial class MainMenu : Menu
         multiplayerButtons.GetNode<Button>("Join").Visible = state;
     }
 
+    // Toggle if player has joined a game successfully
     public void ToggleJoined(bool state)
     {
         buttons.GetNode<Button>("Singleplayer").Visible = state;
@@ -156,8 +181,10 @@ public partial class MainMenu : Menu
         multiplayerButtons.GetNode<Button>("Join").Visible = state;
     }
 
+    // Toggle this if connection lost or left game
     public void ResetMenu()
     {
+        GD.Print("Resetting menu");
         multiplayerContainer.Visible = false;
         singleplayerContainer.Visible = false;
         buttons.GetNode<Button>("Singleplayer").Visible = true;

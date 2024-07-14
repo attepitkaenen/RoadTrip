@@ -18,7 +18,8 @@ config/icon="res://icon.png"
 [autoload]
 
 GameManager="*res://Multiplayer/GameManager.tscn"
-MultiplayerController="*res://Multiplayer/MultiplayerController.cs"
+RiptideServer="*res://Multiplayer/RiptideServer.cs"
+RiptideClient="*res://Multiplayer/RiptideClient.cs"
 SaveManager="*res://Multiplayer/Saving/SaveManager.cs"
 
 [display]

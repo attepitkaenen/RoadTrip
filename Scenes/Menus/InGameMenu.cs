@@ -3,32 +3,39 @@ using System;
 
 public partial class InGameMenu : Menu
 {
-    MultiplayerController multiplayerController;
+    RiptideClient riptideClient;
+    RiptideServer riptideServer;
     GameManager gameManager;
     SaveManager saveManager;
 
     public override void _Ready()
     {
         menuType = MenuHandler.MenuType.ingamemenu;
-        multiplayerController = GetTree().Root.GetNode<MultiplayerController>("MultiplayerController");
+        riptideClient = GetTree().Root.GetNode<RiptideClient>("RiptideClient");
+        riptideServer = GetTree().Root.GetNode<RiptideServer>("RiptideServer");
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
         saveManager = GetTree().Root.GetNode<SaveManager>("SaveManager");
     }
 
     public void _on_resume_pressed()
     {
-        menuHandler.OpenMenu(MenuHandler.MenuType.none);
+        MenuHandler.OpenMenu(MenuHandler.MenuType.none);
     }
 
     public void _on_mainmenu_pressed()
     {
-        menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
-        multiplayerController.Disconnect();
+        MenuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
+        riptideClient.Disconnect();
+
+        if (riptideClient.IsHost())
+        {
+            riptideServer.StopServer();
+        }
     }
 
     public void _on_settings_pressed()
     {
-        menuHandler.OpenMenu(MenuHandler.MenuType.settings);
+        MenuHandler.OpenMenu(MenuHandler.MenuType.settings);
     }
 
     public void _on_quit_pressed()
