@@ -6,13 +6,14 @@ using Riptide.Utils;
 public enum ServerToClientId : ushort
 {
 	updatePlayerStates = 1,
-	startLoad
+	startLoad,
+	playerMovement
 }
 
 public partial class RiptideServer : Node
 {
 	// PlayerStates
-	public Dictionary<ushort, Player> playerInstances = new Dictionary<ushort, Player>();
+	static Dictionary<ushort, Player> playerInstances = new Dictionary<ushort, Player>();
 	static Dictionary<ushort, PlayerState> playerStates = new Dictionary<ushort, PlayerState>();
 
 	private ushort _port = 25565;
@@ -101,7 +102,7 @@ public partial class RiptideServer : Node
 		_server.SendToAll(message);
 	}
 
-	[MessageHandler((ushort)ClientToServerId.sendName)]
+	[MessageHandler((ushort)ClientToServerId.name)]
 	private static void NewPlayerNameMessageHandler(ushort fromClientId, Message message)
 	{
 		if (playerStates.TryGetValue(fromClientId, out _)) return;
@@ -109,13 +110,24 @@ public partial class RiptideServer : Node
 		var newPlayer = new PlayerState { Id = fromClientId, Name = message.GetString(), IsLoading = true };
 		playerStates.Add(fromClientId, newPlayer);
 
-		Message newMessage = Message.Create(MessageSendMode.Reliable, (ushort)ServerToClientId.updatePlayerStates);
+		Message newMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.updatePlayerStates);
 		newMessage.AddPlayerStates(playerStates);
 		foreach (var playerState in playerStates)
 		{
 			GD.Print($"Sending Player id: {playerState.Key}, Player name: {playerState.Value.Name}, isLoading: {playerState.Value.IsLoading}");
 		}
 		_server.SendToAll(newMessage);
+	}
+
+	[MessageHandler((ushort)ClientToServerId.input)]
+	private static void ServerHandleMovement(ushort fromClientId, Message message)
+	{
+		if (playerInstances.TryGetValue(fromClientId, out Player player))
+		{
+			var bools = message.GetBools(7);
+			var rotation = message.GetVector3();
+			player.SetInput(bools, rotation);
+		}
 	}
 
 	private void ResetSession()

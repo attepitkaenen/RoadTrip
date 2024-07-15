@@ -8,8 +8,9 @@ using Riptide.Utils;
 
 public enum ClientToServerId : ushort
 {
-	sendName = 1,
-	sendIsLoadingStatus
+	name = 1,
+	isLoadingStatus,
+	input
 }
 
 public partial class RiptideClient : Node
@@ -17,7 +18,7 @@ public partial class RiptideClient : Node
 	public string UserName { get; set; }
 	private bool isHost = false;
 	static Dictionary<ushort, PlayerState> playerStates = new Dictionary<ushort, PlayerState>();
-	public Dictionary<ushort, Player> playerInstances = new Dictionary<ushort, Player>();
+	static Dictionary<ushort, Player> playerInstances = new Dictionary<ushort, Player>();
 
 	private ushort _port = 25565;
 	private string _ip = "127.0.0.1";
@@ -125,7 +126,7 @@ public partial class RiptideClient : Node
 
 	public void ConnectionSuccess(object sender, EventArgs e)
 	{
-		Message message = Message.Create(MessageSendMode.Reliable, (ushort)ClientToServerId.sendName);
+		Message message = Message.Create(MessageSendMode.Reliable, ClientToServerId.name);
 		message.AddString(UserName);
 		_client.Send(message);
 	}
@@ -159,10 +160,19 @@ public partial class RiptideClient : Node
 	private static void UpdatePlayerStatesMessageHandler(Message message)
 	{
 		var states = message.GetPlayerStates();
-		foreach (var state in states)
-		{
-			GD.Print($"Player of Id: {state.Key} loading status is: {state.Value.IsLoading}");
-		}
 		playerStates = states;
+	}
+
+	[MessageHandler((ushort)ServerToClientId.playerMovement)]
+	private static void PlayerMovementMessageHandler(Message message)
+	{
+		var id = message.GetUShort();
+		var position = message.GetVector3();
+		var rotation = message.GetVector3();
+
+		if (playerInstances.TryGetValue(id, out Player player))
+		{
+			player.Move(position, rotation);
+		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using Godot;
+using Riptide;
 
 public partial class Player : CharacterBody3D
 {
@@ -13,6 +14,7 @@ public partial class Player : CharacterBody3D
 	GameManager gameManager;
 	MenuHandler menuHandler;
 	RiptideClient riptideClient;
+	RiptideServer riptideServer;
 
 	[ExportGroup("Required Nodes")]
 	[Export] public PlayerInteraction playerInteraction;
@@ -44,8 +46,6 @@ public partial class Player : CharacterBody3D
 	public bool isGrounded { get; set; } = false;
 
 
-
-
 	public float strength = 20f;
 	private int Health = 10;
 
@@ -72,13 +72,20 @@ public partial class Player : CharacterBody3D
 	public Vector3 spawnLocation = new Vector3(0, 3, 0);
 
 
+
+
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+	private bool[] inputs = new bool[7];
+	private Vector3 proxyGlobalRotation;
+
 
 	public override void _EnterTree()
 	{
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		menuHandler = GetTree().Root.GetNode<MenuHandler>("MenuHandler");
+		riptideClient = GetTree().Root.GetNode<RiptideClient>("RiptideClient");
+		riptideServer = GetTree().Root.GetNode<RiptideServer>("RiptideServer");
 
 
 		if (!isLocal)
@@ -97,6 +104,8 @@ public partial class Player : CharacterBody3D
 		AddDebugLine(movementStateDebug);
 		AddDebugLine(speedDebug);
 		AddDebugLine(holdingItemDebug);
+
+		nameTag.Text = userName;
 	}
 
 	public override void _Input(InputEvent @event)
@@ -129,149 +138,160 @@ public partial class Player : CharacterBody3D
 
 	public override void _Process(double delta)
 	{
-		nameTag.Text = userName;
 
-		if (movementState == MovementState.unconscious)
+		// if (movementState == MovementState.unconscious)
+		// {
+		// 	collisionShape3D.Disabled = true;
+		// }
+		// else
+		// {
+		// 	collisionShape3D.Disabled = false;
+		// }
+
+		// //Lerp movement for other players
+		// if (!isLocal)
+		// {
+		// 	if (movementState == MovementState.seated)
+		// 	{
+		// 		Velocity = Vector3.Zero;
+		// 		return;
+		// 	}
+		// 	var newState = Transform;
+		// 	newState.Origin = GlobalPosition.Lerp(syncPosition, 0.2f);
+		// 	var a = newState.Basis.GetRotationQuaternion().Normalized();
+		// 	var b = syncBasis.GetRotationQuaternion().Normalized();
+		// 	var c = a.Slerp(b, 0.5f);
+		// 	newState.Basis = new Basis(c);
+		// 	Transform = newState;
+		// 	return;
+		// };
+
+		// if (movementState == MovementState.unconscious)
+		// {
+		// 	camera.Current = false;
+		// 	if (Input.IsActionJustPressed("jump"))
+		// 	{
+		// 		Health = 10;
+		// 		movementState = MovementState.idle;
+		// 		GlobalPosition = ragdoll.GetUpPosition();
+		// 		ragdoll.Rpc(nameof(ragdoll.Deactivate));
+		// 	}
+		// 	return;
+		// }
+
+		// camera.Current = true;
+
+
+		// // sync properties to lerp movement for other players
+		// syncPosition = GlobalPosition;
+		// // syncRotation = GlobalRotation;
+		// syncBasis = GlobalBasis;
+
+		// float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
+
+		// HandleSeat();
+
+		// HandleDebugUpdate(delta);
+
+		// // Stop movement if seated and handle driving
+		// if (movementState == MovementState.seated)
+		// {
+		// 	Velocity = Vector3.Zero;
+		// 	if (_seat.isDriverSeat)
+		// 	{
+		// 		Vehicle vehicle = _seat.GetVehicle();
+		// 		vehicle.RpcId(1, nameof(vehicle.Drive), Input.GetActionStrength("left") - Input.GetActionStrength("right"), Input.GetActionStrength("up") - Input.GetActionStrength("down"), Input.IsActionPressed("jump"), delta);
+		// 	}
+		// 	return;
+		// }
+
+
+		// // Makes head and body same rotation when not seated
+		// playerInteraction.GlobalRotation = GlobalRotation;
+
+		// // Handle movementState changes
+		// if (Health <= 0)
+		// {
+		// 	movementState = MovementState.unconscious;
+		// }
+		// if (Input.IsActionJustPressed("jump") && isGrounded)
+		// {
+		// 	velocity.Y = jumpVelocity;
+		// 	movementState = MovementState.jumping;
+		// }
+		// else if (!isGrounded && Velocity.Y < 0)
+		// {
+		// 	movementState = MovementState.falling;
+		// }
+		// else if (Input.IsActionPressed("crouch") && isGrounded)
+		// {
+		// 	movementState = MovementState.crouching;
+		// }
+		// else if (Input.IsActionPressed("sprint") && floatMachine.GetCrouchHeight() > 0.8f && currentSpeed > 0.1f && isGrounded)
+		// {
+		// 	movementState = MovementState.running;
+		// }
+		// else if (currentSpeed > 0.1f && isGrounded)
+		// {
+		// 	movementState = MovementState.walking;
+		// }
+		// else if (isGrounded)
+		// {
+		// 	movementState = MovementState.idle;
+		// }
+
+		if (riptideServer.IsServerRunning())
 		{
-			collisionShape3D.Disabled = true;
+			ServerHandleMovement(delta);
 		}
-		else
-		{
-			collisionShape3D.Disabled = false;
-		}
+	}
 
-		//Lerp movement for other players
-		if (!isLocal)
-		{
-			if (movementState == MovementState.seated)
-			{
-				Velocity = Vector3.Zero;
-				return;
-			}
-			var newState = Transform;
-			newState.Origin = GlobalPosition.Lerp(syncPosition, 0.2f);
-			var a = newState.Basis.GetRotationQuaternion().Normalized();
-			var b = syncBasis.GetRotationQuaternion().Normalized();
-			var c = a.Slerp(b, 0.5f);
-			newState.Basis = new Basis(c);
-			Transform = newState;
-			return;
-		};
-
-		if (movementState == MovementState.unconscious)
-		{
-			camera.Current = false;
-			if (Input.IsActionJustPressed("jump"))
-			{
-				Health = 10;
-				movementState = MovementState.idle;
-				GlobalPosition = ragdoll.GetUpPosition();
-				ragdoll.Rpc(nameof(ragdoll.Deactivate));
-			}
-			return;
-		}
-
-		camera.Current = true;
-
+	private void ServerHandleMovement(double delta)
+	{
 		// Movement logic
 		Vector3 velocity = Velocity;
 
 		// Gravity
 		velocity.Y -= gravity * (float)delta;
 
-		// sync properties to lerp movement for other players
-		syncPosition = GlobalPosition;
-		// syncRotation = GlobalRotation;
-		syncBasis = GlobalBasis;
-
 		float correctedSpeed = speed * floatMachine.GetCrouchHeight();
-		float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
 
-		HandleSeat();
-
-		HandleDebugUpdate(delta);
-
-		// Stop movement if seated and handle driving
-		if (movementState == MovementState.seated)
-		{
-			Velocity = Vector3.Zero;
-			if (_seat.isDriverSeat)
-			{
-				Vehicle vehicle = _seat.GetVehicle();
-				vehicle.RpcId(1, nameof(vehicle.Drive), Input.GetActionStrength("left") - Input.GetActionStrength("right"), Input.GetActionStrength("up") - Input.GetActionStrength("down"), Input.IsActionPressed("jump"), delta);
-			}
-			return;
-		}
-
-
-		// Makes head and body same rotation when not seated
-		playerInteraction.GlobalRotation = GlobalRotation;
-
-		// Handle movementState changes
-		if (Health <= 0)
-		{
-			movementState = MovementState.unconscious;
-		}
-		if (Input.IsActionJustPressed("jump") && isGrounded)
-		{
-			velocity.Y = jumpVelocity;
-			movementState = MovementState.jumping;
-		}
-		else if (!isGrounded && Velocity.Y < 0)
-		{
-			movementState = MovementState.falling;
-		}
-		else if (Input.IsActionPressed("crouch") && isGrounded)
-		{
-			movementState = MovementState.crouching;
-		}
-		else if (Input.IsActionPressed("sprint") && floatMachine.GetCrouchHeight() > 0.8f && currentSpeed > 0.1f && isGrounded)
-		{
-			movementState = MovementState.running;
-		}
-		else if (currentSpeed > 0.1f && isGrounded)
-		{
-			movementState = MovementState.walking;
-		}
-		else if (isGrounded)
-		{
-			movementState = MovementState.idle;
-		}
-
-		// Handle crouch height seperately so that you can crouch while airborne
-		if (Input.IsActionPressed("crouch"))
+		if (inputs[6] && !inputs[5])
 		{
 			floatMachine.SetFloatOffset(0.2f);
 		}
-
-		// Handle property changes depenging on the movementState
-		switch (movementState)
+		
+		if (inputs[5] && !inputs[6] && isGrounded)
 		{
-			case MovementState.idle:
-				floatMachine.SetFloatOffset(0.7f);
-				break;
-			case MovementState.walking:
-				floatMachine.SetFloatOffset(0.7f);
-				break;
-			case MovementState.running:
-				correctedSpeed *= runningMultiplier;
-				break;
-			case MovementState.jumping:
-				correctedSpeed *= 1.5f;
-				isGrounded = false;
-				break;
-			case MovementState.falling:
-				correctedSpeed *= 1.5f;
-				break;
-			case MovementState.crouching:
-				floatMachine.SetFloatOffset(0.2f);
-				break;
+			correctedSpeed *= 1.5f;
 		}
 
+		if (!inputs[6])
+		{
+			floatMachine.SetFloatOffset(0.7f);
+		}
+
+		if (inputs[4] && isGrounded)
+		{
+			velocity.Y = jumpVelocity;
+		}
 
 		// Get the input direction and handle the movement/deceleration.
-		Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
+
+		Vector2 inputDir = Vector2.Zero;
+
+		if (inputs[0])
+			inputDir.Y -= 1;
+		if (inputs[1])
+			inputDir.Y += 1;
+		if (inputs[2])
+			inputDir.X -= 1;
+		if (inputs[3])
+			inputDir.X += 1;
+
+
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+
 		if (direction != Vector3.Zero && isGrounded)
 		{
 			velocity.X = Mathf.Lerp(velocity.X, direction.X * correctedSpeed, (float)delta * acceleration);
@@ -290,6 +310,35 @@ public partial class Player : CharacterBody3D
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		SendMovement();
+	}
+
+	public void Move(Vector3 position, Vector3 rotation)
+	{
+		GlobalPosition = position;
+		if (!isLocal && !riptideClient.IsHost())
+		{
+			GlobalRotation = rotation;
+		}
+	}
+
+	private void SendMovement()
+	{
+		Message message = Message.Create(MessageSendMode.Unreliable, ServerToClientId.playerMovement);
+		message.AddUShort(id);
+		message.AddVector3(GlobalPosition);
+		message.AddVector3(GlobalRotation);
+		riptideServer.SendMessageToAll(message);
+	}
+
+	public void SetInput(bool[] inputs, Vector3 globalRotation)
+	{
+		this.inputs = inputs;
+		GlobalRotation = globalRotation;
 	}
 
 	public void AddDebugLine(Label label)
@@ -347,13 +396,6 @@ public partial class Player : CharacterBody3D
 	{
 		userName = name;
 		this.id = id;
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void MovePlayer(Vector3 position, Vector3 rotation)
-	{
-		GlobalPosition = position;
-		GlobalRotation = rotation;
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]

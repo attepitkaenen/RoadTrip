@@ -20,7 +20,7 @@ public partial class Ragdoll : Node3D
         _player = GetParent<Player>();
         HeadIK.Start();
         HandIK.Start();
-        if (IsMultiplayerAuthority())
+        if (_player.isLocal)
         {
             SetBoneCollision(false);
             head.Visible = false;

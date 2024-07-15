@@ -64,7 +64,7 @@ public partial class Seat : CarPart
 
 	public void MovePassenger(Player player)
 	{
-		player.MovePlayer(GetPosition(), GetRotation());
+		// player.MovePlayer(GetPosition(), GetRotation());
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

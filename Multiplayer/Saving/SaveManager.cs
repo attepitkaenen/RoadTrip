@@ -53,7 +53,7 @@ public partial class SaveManager : Node
 		{
 			GD.Print("Loading done client");
 
-			Message message = Message.Create(MessageSendMode.Reliable, ClientToServerId.sendIsLoadingStatus);
+			Message message = Message.Create(MessageSendMode.Reliable, ClientToServerId.isLoadingStatus);
 			message.AddBool(false);
 			riptideClient.SendMessage(message);
 			
@@ -66,7 +66,7 @@ public partial class SaveManager : Node
 		{
 			GD.Print("Loading done server");
 
-			Message message = Message.Create(MessageSendMode.Reliable, ClientToServerId.sendIsLoadingStatus);
+			Message message = Message.Create(MessageSendMode.Reliable, ClientToServerId.isLoadingStatus);
 			message.AddBool(false);
 			riptideClient.SendMessage(message);
 
@@ -76,7 +76,7 @@ public partial class SaveManager : Node
 		}
 	}
 
-	[MessageHandler((ushort)ClientToServerId.sendIsLoadingStatus)]
+	[MessageHandler((ushort)ClientToServerId.isLoadingStatus)]
 	private static void SendIsLoadingStatusMessageHandler(ushort clientId, Message message)
 	{
 		RiptideServer.SetPlayerLoadingStatus(clientId, message.GetBool());
