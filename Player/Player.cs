@@ -24,6 +24,7 @@ public partial class Player : CharacterBody3D
 	[Export] private Label3D nameTag;
 	[Export] public CollisionShape3D collisionShape3D;
 	[Export] Ragdoll ragdoll;
+	public Node3D rotationPoint;
 
 
 	[ExportGroup("Debug Nodes")]
@@ -106,6 +107,8 @@ public partial class Player : CharacterBody3D
 		AddDebugLine(holdingItemDebug);
 
 		nameTag.Text = userName;
+
+		rotationPoint = playerInteraction.GetNode<Node3D>("RotationPoint");
 	}
 
 	public override void _Input(InputEvent @event)
@@ -117,7 +120,7 @@ public partial class Player : CharacterBody3D
 			if (!playerInteraction.IsMovingItem() || !Input.IsActionPressed("interact"))
 			{
 				InputEventMouseMotion mouseMotion = @event as InputEventMouseMotion;
-				var rotationPoint = playerInteraction.GetNode<Node3D>("RotationPoint");
+				
 				rotationPoint.RotateX(-mouseMotion.Relative.Y * sensitivity);
 
 				Vector3 rotationPointRotation = rotationPoint.Rotation;
@@ -317,12 +320,13 @@ public partial class Player : CharacterBody3D
 		SendMovement();
 	}
 
-	public void Move(Vector3 position, Vector3 rotation)
+	public void Move(Vector3 position, Vector3 rotation, Vector3 headRotation)
 	{
 		GlobalPosition = position;
 		if (!isLocal && !riptideClient.IsHost())
 		{
 			GlobalRotation = rotation;
+			rotationPoint.Rotation = headRotation;
 		}
 	}
 
@@ -332,13 +336,15 @@ public partial class Player : CharacterBody3D
 		message.AddUShort(id);
 		message.AddVector3(GlobalPosition);
 		message.AddVector3(GlobalRotation);
+		message.AddVector3(rotationPoint.Rotation);
 		riptideServer.SendMessageToAll(message);
 	}
 
-	public void SetInput(bool[] inputs, Vector3 globalRotation)
+	public void SetInput(bool[] inputs, Vector3 globalRotation, Vector3 headRotation)
 	{
 		this.inputs = inputs;
 		GlobalRotation = globalRotation;
+		rotationPoint.Rotation = headRotation;
 	}
 
 	public void AddDebugLine(Label label)

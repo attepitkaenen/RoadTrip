@@ -169,10 +169,11 @@ public partial class RiptideClient : Node
 		var id = message.GetUShort();
 		var position = message.GetVector3();
 		var rotation = message.GetVector3();
+		var headRotation = message.GetVector3();
 
 		if (playerInstances.TryGetValue(id, out Player player))
 		{
-			player.Move(position, rotation);
+			player.Move(position, rotation, headRotation);
 		}
 	}
 }

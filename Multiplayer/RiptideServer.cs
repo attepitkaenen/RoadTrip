@@ -126,7 +126,8 @@ public partial class RiptideServer : Node
 		{
 			var bools = message.GetBools(7);
 			var rotation = message.GetVector3();
-			player.SetInput(bools, rotation);
+			var headRotation = message.GetVector3();
+			player.SetInput(bools, rotation, headRotation);
 		}
 	}
 

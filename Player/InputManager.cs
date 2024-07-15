@@ -54,6 +54,7 @@ public partial class InputManager : Node
 		Message message = Message.Create(MessageSendMode.Unreliable, ClientToServerId.input);
 		message.AddBools(inputs, false);
 		message.AddVector3(player.GlobalRotation);
+		message.AddVector3(player.rotationPoint.Rotation);
 		riptideClient.SendMessage(message);
 	}
 }
