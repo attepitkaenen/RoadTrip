@@ -1,5 +1,7 @@
 using Godot;
 using Godot.Collections;
+using Riptide;
+using System.Formats.Asn1;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -23,7 +25,8 @@ public partial class GameManager : Node
 
 	public Map world;
 	public float Sensitivity = 0.001f;
-	public bool isGameStarted = false;
+	public static bool isGameStarted = false;
+	public static int activeMapId = -1;
 
 	public override void _Ready()
 	{
@@ -67,44 +70,44 @@ public partial class GameManager : Node
 		if (!isGameStarted & riptideClient.IsHost() && !riptideClient.IsLoading())
 		{
 			GD.Print("Starting game: host");
-			SpawnPlayers();
 			isGameStarted = true;
 			MenuHandler.OpenMenu(MenuHandler.MenuType.none);
 		}
 		else if (!isGameStarted && !riptideClient.IsHost() && !riptideClient.IsLoading() && !riptideClient.IsServerLoading())
 		{
 			GD.Print("Starting game: client");
-			SpawnPlayers();
 			isGameStarted = true;
 			MenuHandler.OpenMenu(MenuHandler.MenuType.none);
 		}
+
+		if (riptideClient.GetPlayersToSpawn().Count != 0 && isGameStarted)
+		{
+			GD.Print("Spawning players");
+			SpawnPlayers(riptideClient.GetPlayersToSpawn());
+		}
 	}
 
-	public void SpawnPlayers()
+	public void SpawnPlayers(Dictionary<ushort, PlayerState> playerStates)
 	{
 		var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
-		foreach (var playerState in riptideClient.GetPlayerStates())
+
+		foreach (var playerState in playerStates)
 		{
-			foreach (var player in GetTree().GetNodesInGroup("Player"))
+			GD.Print(playerStates.Count());
+			GD.Print($"Spawning player {playerState.Value.Name} with id: {playerState.Key}");
+
+			if (riptideClient.GetPlayerInstances().Keys.Contains(playerState.Key))
 			{
-				if (int.Parse((player as Player).Name) == playerState.Key)
-				{
-					GD.Print("Player: " + (player as Player).Name + " has already been spawned");
-					return;
-				}
+				GD.Print("Player: " + playerState.Key + " has already been spawned: " + riptideClient.IsHost());
+				return;
 			}
 
 			var newPlayer = playerScene.Instantiate<Player>();
 			newPlayer.Name = playerState.Key.ToString();
-			newPlayer.id = playerState.Key;
-			newPlayer.userName = playerState.Value.Name;
 
-			if (riptideClient.GetId() == playerState.Key)
-			{
-				newPlayer.isLocal = true;
-			}
+			var isLocal = riptideClient.GetId() == playerState.Key ? true : false;
+			newPlayer.SetPlayerProperties(playerState.Key, playerState.Value.Name, isLocal);
 
-			GD.Print($"Spawning player {playerState.Value.Name} with id: {playerState.Key}");
 			AddChild(newPlayer, true);
 			var random = new RandomNumberGenerator();
 			var randomSpawnPoint = spawnPoints[random.RandiRange(0, spawnPoints.Count() - 1)] as Node3D;
@@ -228,6 +231,7 @@ public partial class GameManager : Node
 	public void InstantiateMap(PackedScene scene)
 	{
 		var map = scene.Instantiate() as Map;
+		activeMapId = map.id;
 		world = map;
 		AddChild(map);
 	}

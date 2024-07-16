@@ -8,9 +8,9 @@ using Riptide;
 
 public partial class Player : CharacterBody3D
 {
-	public ushort id;
-	public bool isLocal = false;
-	public string userName;
+	public ushort id { get; private set; }
+	public bool isLocal { get; private set; } = false;
+	public string userName { get; private set; }
 	GameManager gameManager;
 	MenuHandler menuHandler;
 	RiptideClient riptideClient;
@@ -80,6 +80,12 @@ public partial class Player : CharacterBody3D
 	private bool[] inputs = new bool[7];
 	private Vector3 proxyGlobalRotation;
 
+	public void SetPlayerProperties(ushort id, string userName, bool isLocal)
+	{
+		this.id = id;
+		this.userName = userName;
+		this.isLocal = isLocal;
+	}
 
 	public override void _EnterTree()
 	{

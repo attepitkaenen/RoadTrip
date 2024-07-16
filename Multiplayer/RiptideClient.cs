@@ -16,7 +16,7 @@ public enum ClientToServerId : ushort
 public partial class RiptideClient : Node
 {
 	public string UserName { get; set; }
-	private bool isHost = false;
+	private static bool isHost = false;
 	static Dictionary<ushort, PlayerState> playerStates = new Dictionary<ushort, PlayerState>();
 	static Dictionary<ushort, Player> playerInstances = new Dictionary<ushort, Player>();
 
@@ -44,6 +44,20 @@ public partial class RiptideClient : Node
 	public override void _PhysicsProcess(double delta)
 	{
 		_client.Update();
+	}
+
+	public Dictionary<ushort, PlayerState> GetPlayersToSpawn()
+	{
+		var playersToSpawn = new Dictionary<ushort, PlayerState>();
+		foreach(var playerState in playerStates)
+		{
+			if (!playerInstances.Keys.Contains(playerState.Key))
+			{
+				// GD.Print($"PlayerInstances does not contain the player: {playerState.Key}");
+				playersToSpawn.Add(playerState.Key, playerState.Value);
+			}
+		}
+		return playersToSpawn;
 	}
 
 	public Dictionary<ushort, PlayerState> GetPlayerStates()
@@ -111,7 +125,7 @@ public partial class RiptideClient : Node
 
 	public void Connect(string ip, ushort port, string userName, bool isHost = false)
 	{
-		this.isHost = isHost;
+		RiptideClient.isHost = isHost;
 		UserName = userName;
 		_client.Connect($"{_ip}:{_port}");
 	}
@@ -160,6 +174,14 @@ public partial class RiptideClient : Node
 	private static void UpdatePlayerStatesMessageHandler(Message message)
 	{
 		var states = message.GetPlayerStates();
+
+		GD.Print("IsHost: " + isHost + " Received new playerStates");
+
+		foreach (var state in states)
+		{
+			GD.Print(state.Key + state.Value.Name);
+		}
+
 		playerStates = states;
 	}
 

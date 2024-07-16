@@ -30,7 +30,7 @@ public partial class MenuHandler : Control
 
     public override void _Input(InputEvent @event)
     {
-        if (gameManager.isGameStarted)
+        if (GameManager.isGameStarted)
         {
             if (currentMenu == MenuType.none && Input.IsActionJustPressed("menu"))
             {

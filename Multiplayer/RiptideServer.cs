@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Godot.Collections;
 using Riptide;
@@ -20,9 +21,10 @@ public partial class RiptideServer : Node
 	private ushort _maxClientCount = 10;
 	private static Server _server;
 
-	GameManager gameManager;
+	static GameManager gameManager;
 	RiptideClient riptideClient;
 	MenuHandler menuHandler;
+	SaveManager saveManager;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -32,6 +34,7 @@ public partial class RiptideServer : Node
 		riptideClient = GetTree().Root.GetNode<RiptideClient>("RiptideClient");
 		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
 		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
+		saveManager = GetNode<SaveManager>("/root/SaveManager");
 
 		_server = new Server();
 		_server.ClientDisconnected += PlayerLeft;
@@ -89,6 +92,10 @@ public partial class RiptideServer : Node
 	private void PlayerLeft(object sender, ServerDisconnectedEventArgs e)
 	{
 		playerStates.Remove(e.Client.Id);
+		if (playerInstances.TryGetValue(e.Client.Id, out var player))
+		{
+			player.QueueFree();
+		}
 	}
 
 	public void Host(ushort playerCount)
@@ -111,12 +118,25 @@ public partial class RiptideServer : Node
 		playerStates.Add(fromClientId, newPlayer);
 
 		Message newMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.updatePlayerStates);
+
 		newMessage.AddPlayerStates(playerStates);
 		foreach (var playerState in playerStates)
 		{
 			GD.Print($"Sending Player id: {playerState.Key}, Player name: {playerState.Value.Name}, isLoading: {playerState.Value.IsLoading}");
 		}
 		_server.SendToAll(newMessage);
+
+		if (GameManager.isGameStarted)
+		{
+			MakePlayerLoad(fromClientId);
+		}
+	}
+
+	private static void MakePlayerLoad(ushort clientId)
+	{
+		var loadMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.startLoad);
+		loadMessage.AddUShort((ushort)GameManager.activeMapId);
+		_server.Send(loadMessage, clientId);
 	}
 
 	[MessageHandler((ushort)ClientToServerId.input)]

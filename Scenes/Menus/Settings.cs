@@ -25,7 +25,7 @@ public partial class Settings : Menu
     public void _on_back_button_pressed()
     {
         GD.Print("Back button pressed");
-        if (gameManager.isGameStarted)
+        if (GameManager.isGameStarted)
         {
             MenuHandler.OpenMenu(MenuHandler.MenuType.ingamemenu);
         }

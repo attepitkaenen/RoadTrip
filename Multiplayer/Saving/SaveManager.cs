@@ -9,7 +9,7 @@ public partial class SaveManager : Node
 	static RiptideServer riptideServer;
 	static RiptideClient riptideClient;
 	MenuHandler menuHandler;
-	SaveResource currentSave;
+	public static SaveResource currentSave;
 	Array<SaveResource> saves = new Array<SaveResource>();
 	ResourceLoader.ThreadLoadStatus sceneLoadStatus = 0;
 
@@ -56,7 +56,7 @@ public partial class SaveManager : Node
 			Message message = Message.Create(MessageSendMode.Reliable, ClientToServerId.isLoadingStatus);
 			message.AddBool(false);
 			riptideClient.SendMessage(message);
-			
+
 			var newMap = ResourceLoader.LoadThreadedGet(sceneToLoad) as PackedScene;
 			gameManager.InstantiateMap(newMap);
 			sceneToLoad = string.Empty;
@@ -216,7 +216,7 @@ public partial class SaveManager : Node
 			scenePath = GameManager.mapList.ToList().Find(map => map.Id == currentSave.ActiveMap).EmptyMap.ResourcePath;
 			SpawnEntities();
 
-			message.AddInt(currentSave.ActiveMap);
+			message.AddUShort((ushort)currentSave.ActiveMap);
 		}
 		else
 		{
@@ -230,7 +230,7 @@ public partial class SaveManager : Node
 			currentSave = new SaveResource(newId, saveName, newId, new Array<MapSaveResource>(), new Array<PlayerSaveResource>());
 			scenePath = GameManager.mapList.ToList().Find(map => map.Id == 0).Map.ResourcePath;
 
-			message.AddInt(0);
+			message.AddUShort(0);
 		}
 
 		riptideServer.SendMessageToAll(message);
@@ -239,8 +239,13 @@ public partial class SaveManager : Node
 	[MessageHandler((ushort)ServerToClientId.startLoad)]
 	private static void StartLoadMessageHandler(Message message)
 	{
+		StartLoad(message.GetUShort());
+	}
+
+	public static void StartLoad(ushort mapId)
+	{
+		GD.Print("Start load message received");
 		MenuHandler.OpenMenu(MenuHandler.MenuType.loading);
-		int mapId = message.GetInt();
 		sceneToLoad = GameManager.mapList.ToList().Find(map => map.Id == mapId).Map.ResourcePath;
 		ResourceLoader.LoadThreadedRequest(sceneToLoad);
 	}
