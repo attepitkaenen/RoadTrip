@@ -19,10 +19,12 @@ public partial class FloatMachine : Node
 
 	public override void _PhysicsProcess(double delta)
 	{
-		floatOffset = Mathf.Lerp(floatOffset, lerpFloatOffset, 0.05f);
-
 		// Handle Floating
-		player.Velocity += FloatPlayer();
+		if (player.isLocal)
+		{
+			floatOffset = Mathf.Lerp(floatOffset, lerpFloatOffset, 0.05f);
+			player.Velocity += FloatPlayer();
+		}
 	}
 
 	public Vector3 FloatPlayer()
@@ -34,18 +36,25 @@ public partial class FloatMachine : Node
 			CapsuleShape3D playerCollider = player.collisionShape3D.Shape as CapsuleShape3D;
 			floatHeight = -distance + floatOffset + (playerCollider.Height / 2);
 
-			if (floatHeight > 0 && player.movementState != Player.MovementState.jumping)
+			if (player.Velocity.Y > 0 && player.stateHandler.movementState == StateHandler.MovementState.jumping)
 			{
-				player.isGrounded = true;
-				return (Vector3.Up * floatForce * player.gravity * floatHeight) - (Vector3.Down * -player.Velocity.Y * dampingSpringStrength);
-			}
-			else if (floatHeight > -0.3 && player.movementState != Player.MovementState.jumping && player.isGrounded)
-			{
-				return Vector3.Up * 0.5f * player.gravity * floatHeight;
+				player.isGrounded = false;
 			}
 			else
 			{
-				player.isGrounded = false;
+				if (floatHeight > 0)
+				{
+					player.isGrounded = true;
+					return (Vector3.Up * floatForce * player.gravity * floatHeight) - (Vector3.Down * -player.Velocity.Y * dampingSpringStrength);
+				}
+				else if (floatHeight > -0.3 && player.isGrounded)
+				{
+					return Vector3.Up * 0.5f * player.gravity * floatHeight;
+				}
+				else
+				{
+					player.isGrounded = false;
+				}
 			}
 		}
 		else

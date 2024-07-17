@@ -107,7 +107,7 @@ public partial class MainMenu : Menu
     {
         riptideClient.Disconnect();
 
-        if (riptideClient.IsHost())
+        if (RiptideClient.IsHost())
         {
             riptideServer.StopServer();
         }

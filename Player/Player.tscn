@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://cdryhy8tvvlgn"]
+[gd_scene load_steps=45 format=3 uid="uid://cdryhy8tvvlgn"]
 
 [ext_resource type="Script" path="res://Player/Player.cs" id="1_3rtis"]
 [ext_resource type="PackedScene" uid="uid://pq0y4e57w1q4" path="res://Player/Ragdoll/Ragdoll.tscn" id="2_1rdjd"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Player/PlayerAnimationHandler.cs" id="4_3tp1d"]
 [ext_resource type="Script" path="res://Player/PlayerInteraction.cs" id="4_go53m"]
 [ext_resource type="Script" path="res://Player/InputManager.cs" id="6_8yes0"]
+[ext_resource type="Script" path="res://Player/StateHandler.cs" id="7_adh4d"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_001vp"]
 properties/0/path = NodePath(".:syncPosition")
@@ -2409,9 +2410,9 @@ joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.321254)
 body_offset = Transform3D(1, 1.96384e-08, 0, 0, 0, -1, -1.96384e-08, 1, 0, 0, 0.321254, 0)
 
 [node name="Physical Bone arm_l" parent="Ragdoll/character/Armature/Skeleton3D" index="6"]
-transform = Transform3D(-0.948683, -0.00576939, -0.316101, -0.314785, -0.0754058, 0.946158, -0.0293074, 0.99713, 0.0697203, 0.405657, 1.05526, -0.0485219)
-joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000433347, 0.0150826, 0.480058)
-body_offset = Transform3D(0.999974, -1.3452e-05, -3.01516e-07, -1.83936e-07, 2.35438e-06, -0.999998, 3.91155e-08, 0.999994, 4.99189e-07, 0.000433683, 0.480057, -0.0150828)
+transform = Transform3D(-0.948683, -0.00576918, -0.316101, -0.314785, -0.0754058, 0.946158, -0.0293074, 0.99713, 0.0697203, 0.405657, 1.05526, -0.0485253)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000432927, 0.0150862, 0.480057)
+body_offset = Transform3D(0.999974, -1.36532e-05, -3.01516e-07, -1.83936e-07, 2.42144e-06, -0.999998, 3.91155e-08, 0.999994, 4.99189e-07, 0.000433266, 0.480056, -0.0150863)
 
 [node name="Physical Bone chest" parent="Ragdoll/character/Armature/Skeleton3D" index="7"]
 transform = Transform3D(1, 1.96384e-08, 0, 0, 0, -1, -1.96384e-08, 1, 0, 0, 1.34475, 0)
@@ -2452,49 +2453,49 @@ transform = Transform3D(0.979431, 0, 0.201779, 0, 1, 0, -0.201779, 0, 0.979431, 
 mesh = SubResource("BoxMesh_po5g1")
 
 [node name="Physical Bone forearm_l" parent="Ragdoll/character/Armature/Skeleton3D" index="8"]
-transform = Transform3D(-0.998708, 0.0122541, -0.0493225, -0.0467739, 0.158079, 0.986318, 0.0198815, 0.987361, -0.157301, 0.574018, 0.263055, -0.0127337)
+transform = Transform3D(-0.998708, 0.0122541, -0.0493225, -0.0467739, 0.158079, 0.986318, 0.0198816, 0.987361, -0.157301, 0.574018, 0.263055, -0.0127337)
 joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.90042e-06, 3.90447e-06, 0.343688)
-body_offset = Transform3D(1, -2.33389e-06, -2.98559e-06, -3.32249e-07, -3.27826e-07, -1, 3.55765e-07, 1.00001, -9.98378e-07, -3.8743e-06, 0.343688, -3.56138e-06)
+body_offset = Transform3D(1, -2.33389e-06, -2.98559e-06, -3.20375e-07, -3.27826e-07, -1, 4.30271e-07, 1.00001, -9.98378e-07, -3.8743e-06, 0.343688, -3.56138e-06)
 
 [node name="Physical Bone palm2_l" parent="Ragdoll/character/Armature/Skeleton3D" index="9"]
-transform = Transform3D(-0.980583, 0.137722, -0.13895, -0.194975, -0.747608, 0.633768, -0.022368, 0.6488, 0.760785, 0.590964, -0.0759662, 0.0413909)
-joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.28217e-05, -9.47186e-05, -4.39287e-06)
-body_offset = Transform3D(1.00001, 0.000557072, -6.24638e-06, -0.0043524, 0.999413, 6.73831e-05, -0.00432758, 0.000583351, 0.999881, 1.28746e-05, 9.46075e-05, 4.39212e-06)
+transform = Transform3D(-0.980583, 0.137514, -0.13895, -0.194975, -0.747425, 0.633768, -0.022368, 0.648812, 0.760785, 0.590965, -0.0759735, 0.041399)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.39306e-05, -0.000105416, -5.83936e-06)
+body_offset = Transform3D(1.00001, 0.0007248, -6.24638e-06, -0.0043524, 0.999255, 6.73831e-05, -0.00432758, 0.000737816, 0.999881, 1.40071e-05, 0.000105277, 5.85616e-06)
 
 [node name="Physical Bone arm_r" parent="Ragdoll/character/Armature/Skeleton3D" index="10"]
-transform = Transform3D(-0.94833, 0.00575118, 0.313713, 0.314547, -0.0754086, 0.935717, 0.0292939, 0.997083, 0.0722169, -0.407319, 1.0561, -0.0315182)
-joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00144877, -0.00337759, 0.483659)
-body_offset = Transform3D(0.999564, 2.84594e-05, -0.000948879, 0.000114771, 1.40592e-05, -0.989538, 6.52485e-06, 0.999947, 0.00326352, 0.00190717, 0.478599, 0.00179899)
+transform = Transform3D(-0.94833, 0.00575118, 0.313713, 0.314547, -0.0754086, 0.935717, 0.0292939, 0.997083, 0.0722169, -0.407319, 1.0561, -0.0315185)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00144877, -0.00337722, 0.483659)
+body_offset = Transform3D(0.999564, 2.84594e-05, -0.000948879, 0.000114771, 1.40592e-05, -0.989538, 6.52485e-06, 0.999947, 0.00326352, 0.00190717, 0.478599, 0.00179862)
 
 [node name="Physical Bone forearm_r" parent="Ragdoll/character/Armature/Skeleton3D" index="11"]
 transform = Transform3D(-0.998707, -0.0122523, 0.0493241, 0.0467747, 0.158088, 0.986313, -0.0198816, 0.987379, -0.157331, -0.574006, 0.241035, 0.015358)
-joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00159533, -0.0242395, 0.369824)
-body_offset = Transform3D(0.999999, 6.50063e-07, 1.79536e-06, -4.75207e-07, -6.4522e-06, -1, -2.81259e-07, 1.00003, -3.16203e-05, -0.00159597, 0.369824, 0.0242519)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00159534, -0.0242394, 0.369824)
+body_offset = Transform3D(0.999999, 6.50063e-07, 1.77231e-06, -4.75207e-07, -6.4522e-06, -1, -2.81259e-07, 1.00003, -3.17693e-05, -0.00159597, 0.369824, 0.0242519)
 
 [node name="Physical Bone palm2_r" parent="Ragdoll/character/Armature/Skeleton3D" index="12"]
-transform = Transform3D(-0.980594, -0.136861, 0.137058, 0.195487, -0.739725, 0.624955, 0.0162008, 0.639639, 0.752128, -0.590959, -0.0758683, 0.0413063)
+transform = Transform3D(-0.980593, -0.136861, 0.137058, 0.195486, -0.739725, 0.624955, 0.0161997, 0.639639, 0.752128, -0.590959, -0.0758683, 0.0413063)
 joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.38729e-07, 3.47572e-05, -2.77346e-06)
-body_offset = Transform3D(1.00002, -9.20519e-06, -1.6354e-06, -3.01208e-05, 0.987451, 0.00130811, -4.16609e-05, -0.00127015, 0.987445, -2.38419e-07, -3.43174e-05, 2.78279e-06)
+body_offset = Transform3D(1.00002, -9.20519e-06, -1.6354e-06, -3.0146e-05, 0.987451, 0.00130811, -4.29563e-05, -0.00127015, 0.987445, -2.38419e-07, -3.43174e-05, 2.78279e-06)
 
 [node name="Physical Bone thigh_l" parent="Ragdoll/character/Armature/Skeleton3D" index="13"]
-transform = Transform3D(0.000405192, 0.998862, -0.0478998, -0.00830593, 0.047906, 0.998791, 0.999837, 7.28247e-05, 0.00833485, 0.288604, -0.73613, -0.00296515)
+transform = Transform3D(0.000405192, 0.998862, -0.0478998, -0.00830593, 0.047906, 0.998791, 0.999837, 7.28256e-05, 0.00833485, 0.288604, -0.73613, -0.00296515)
 joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.41499e-05, -1.2445e-05, 0.358648)
-body_offset = Transform3D(0.999871, 7.96403e-05, 1.89245e-05, 7.38539e-07, -4.88845e-06, -0.999974, 6.96673e-10, 1.00001, -1.52995e-06, 1.73606e-05, 0.358639, 1.29938e-05)
+body_offset = Transform3D(0.999871, 7.96412e-05, 1.89245e-05, 7.38539e-07, -4.88846e-06, -0.999974, 6.96673e-10, 1.00001, -1.52995e-06, 1.73606e-05, 0.358639, 1.29938e-05)
 
 [node name="Physical Bone calf_l" parent="Ragdoll/character/Armature/Skeleton3D" index="14"]
-transform = Transform3D(0.00628519, 0.997904, -0.064404, -0.0959302, 0.0647106, 0.993281, 0.995366, 0.000537025, 0.0961384, 0.32109, -1.33052, -0.0302222)
-joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00138866, -6.55139e-06, 0.23794)
-body_offset = Transform3D(0.999998, 0.000604609, 2.68221e-07, -2.25008e-06, -5.83271e-05, -0.999999, -5.75757e-06, 1, 1.20749e-08, -0.00138871, 0.23794, 6.55651e-06)
+transform = Transform3D(0.00628519, 0.997904, -0.064404, -0.0959302, 0.0647106, 0.993281, 0.995366, 0.000537037, 0.0961384, 0.32109, -1.33052, -0.0302221)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00138855, -6.55139e-06, 0.23794)
+body_offset = Transform3D(0.999998, 0.000604622, 2.68221e-07, -2.25008e-06, -5.83283e-05, -0.999999, -5.75757e-06, 1, 1.20749e-08, -0.00138861, 0.23794, 6.55651e-06)
 
 [node name="Physical Bone thigh_r" parent="Ragdoll/character/Armature/Skeleton3D" index="15"]
-transform = Transform3D(0.000405144, -0.998882, 0.0479033, 0.00830606, 0.0479175, 0.998791, -0.999837, 9.9168e-05, 0.00831582, -0.288608, -0.73613, -0.00296541)
-joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.70636e-05, -1.58188e-05, 0.358649)
-body_offset = Transform3D(0.999871, -0.000105895, 1.06171e-07, -8.70787e-07, -1.56899e-05, -0.999974, 5.34824e-08, 1.00003, -5.08496e-06, -1.71012e-05, 0.358639, 1.7643e-05)
+transform = Transform3D(0.000405144, -0.998882, 0.0479033, 0.00830606, 0.0479175, 0.998791, -0.999837, 9.9168e-05, 0.00831583, -0.288608, -0.73613, -0.00296539)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7083e-05, -1.58188e-05, 0.358649)
+body_offset = Transform3D(0.999871, -0.000105895, 9.96515e-08, -8.70787e-07, -1.56899e-05, -0.999974, 5.34824e-08, 1.00003, -5.08496e-06, -1.71182e-05, 0.358639, 1.7643e-05)
 
 [node name="Physical Bone calf_r" parent="Ragdoll/character/Armature/Skeleton3D" index="16"]
-transform = Transform3D(0.00629128, -0.997903, 0.0644039, 0.0959323, 0.0647101, 0.993279, -0.995368, 0.00236501, 0.0961379, -0.321086, -1.33053, -0.0288329)
+transform = Transform3D(0.00629131, -0.997903, 0.0644039, 0.0959323, 0.0647101, 0.993279, -0.995368, 0.00236501, 0.0961379, -0.321086, -1.33053, -0.0288329)
 joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.00481e-06, -1.67338e-06, 0.237816)
-body_offset = Transform3D(1, -0.00242417, 3.72529e-08, -5.96046e-08, -0.000233574, -0.999997, -1.80604e-07, 0.999999, 1.87001e-08, 4.99189e-06, 0.237815, 1.66893e-06)
+body_offset = Transform3D(1, -0.00242417, 3.72529e-08, -5.96046e-08, -0.000233574, -0.999997, -2.0994e-07, 0.999999, 1.87001e-08, 4.99189e-06, 0.237815, 1.66893e-06)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0982929, 0)
@@ -2651,5 +2652,8 @@ size_flags_vertical = 4
 
 [node name="InputManager" type="Node" parent="."]
 script = ExtResource("6_8yes0")
+
+[node name="StateHandler" type="Node" parent="."]
+script = ExtResource("7_adh4d")
 
 [editable path="Ragdoll"]

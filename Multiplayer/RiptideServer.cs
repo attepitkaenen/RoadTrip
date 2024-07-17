@@ -6,156 +6,201 @@ using Riptide.Utils;
 
 public enum ServerToClientId : ushort
 {
-	updatePlayerStates = 1,
-	startLoad,
-	playerMovement
+    sync = 1,
+    updatePlayerStates,
+    startLoad,
+    playerMovement,
 }
 
 public partial class RiptideServer : Node
 {
-	// PlayerStates
-	static Dictionary<ushort, Player> playerInstances = new Dictionary<ushort, Player>();
-	static Dictionary<ushort, PlayerState> playerStates = new Dictionary<ushort, PlayerState>();
+    // PlayerStates
+    static Dictionary<ushort, Player> playerInstances = new Dictionary<ushort, Player>();
+    static Dictionary<ushort, PlayerState> playerStates = new Dictionary<ushort, PlayerState>();
 
-	private ushort _port = 25565;
-	private ushort _maxClientCount = 10;
-	private static Server _server;
 
-	static GameManager gameManager;
-	RiptideClient riptideClient;
-	MenuHandler menuHandler;
-	SaveManager saveManager;
+    private ushort _port = 25565;
+    private ushort _maxClientCount = 10;
+    private static Server _server;
+    public ushort currentTick { get; private set; } = 0;
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-		RiptideLogger.Initialize(GD.Print, GD.Print, GD.Print, GD.PrintErr, false);
+    static GameManager gameManager;
+    RiptideClient riptideClient;
+    MenuHandler menuHandler;
+    SaveManager saveManager;
 
-		riptideClient = GetTree().Root.GetNode<RiptideClient>("RiptideClient");
-		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
-		saveManager = GetNode<SaveManager>("/root/SaveManager");
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
+    {
+        RiptideLogger.Initialize(GD.Print, GD.Print, GD.Print, GD.PrintErr, false);
 
-		_server = new Server();
-		_server.ClientDisconnected += PlayerLeft;
-	}
+        riptideClient = GetTree().Root.GetNode<RiptideClient>("RiptideClient");
+        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+        menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
+        saveManager = GetNode<SaveManager>("/root/SaveManager");
 
-	public Dictionary<ushort, PlayerState> GetPlayerStates()
-	{
-		return playerStates;
-	}
+        _server = new Server();
+        _server.ClientDisconnected += PlayerLeft;
+    }
 
-	public Dictionary<ushort, Player> GetPlayerInstances()
-	{
-		return playerInstances;
-	}
+    public override void _PhysicsProcess(double delta)
+    {
+        _server.Update();
 
-	public void AddPlayerInstance(ushort id, Player player)
-	{
-		playerInstances.Add(id, player);
-	}
+        if (currentTick % 200 == 0)
+        {
+            SendSync();
+        }
 
-	public static void SetPlayerLoadingStatus(ushort clientId, bool newStatus)
-	{
-		playerStates[clientId].IsLoading = newStatus;
-		Message message = Message.Create(MessageSendMode.Reliable, ServerToClientId.updatePlayerStates);
-		message.AddPlayerStates(playerStates);
-		_server.SendToAll(message);
-	}
+        currentTick++;
+    }
 
-	public void SetMaxPlayerCount(ushort maxClientCount)
-	{
-		_maxClientCount = maxClientCount;
-	}
+    private void SendSync()
+    {
+        Message message = Message.Create(MessageSendMode.Unreliable, ServerToClientId.sync);
+        message.Add(currentTick);
 
-	public bool IsServerRunning()
-	{
-		return _server.IsRunning;
-	}
+        _server.SendToAll(message);
+    }
 
-	public override void _PhysicsProcess(double delta)
-	{
-		_server.Update();
-	}
+    public Dictionary<ushort, PlayerState> GetPlayerStates()
+    {
+        return playerStates;
+    }
 
-	public void StartServer()
-	{
-		_server.Start(_port, _maxClientCount);
-	}
+    public Dictionary<ushort, Player> GetPlayerInstances()
+    {
+        return playerInstances;
+    }
 
-	public void StopServer()
-	{
-		_server.Stop();
-		ResetSession();
-	}
+    public void AddPlayerInstance(ushort id, Player player)
+    {
+        playerInstances.Add(id, player);
+    }
 
-	private void PlayerLeft(object sender, ServerDisconnectedEventArgs e)
-	{
-		playerStates.Remove(e.Client.Id);
-		if (playerInstances.TryGetValue(e.Client.Id, out var player))
-		{
-			player.QueueFree();
-		}
-	}
+    public static void SetPlayerLoadingStatus(ushort clientId, bool newStatus)
+    {
+        playerStates[clientId].IsLoading = newStatus;
+        Message message = Message.Create(MessageSendMode.Reliable, ServerToClientId.updatePlayerStates);
+        message.AddPlayerStates(playerStates);
+        _server.SendToAll(message);
+    }
 
-	public void Host(ushort playerCount)
-	{
-		SetMaxPlayerCount(playerCount);
-		StartServer();
-	}
+    public void SetMaxPlayerCount(ushort maxClientCount)
+    {
+        _maxClientCount = maxClientCount;
+    }
 
-	public void SendMessageToAll(Message message)
-	{
-		_server.SendToAll(message);
-	}
+    public static bool IsServerRunning()
+    {
+        if (_server != null)
+        {
+            return _server.IsRunning;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-	[MessageHandler((ushort)ClientToServerId.name)]
-	private static void NewPlayerNameMessageHandler(ushort fromClientId, Message message)
-	{
-		if (playerStates.TryGetValue(fromClientId, out _)) return;
 
-		var newPlayer = new PlayerState { Id = fromClientId, Name = message.GetString(), IsLoading = true };
-		playerStates.Add(fromClientId, newPlayer);
+    public void StartServer()
+    {
+        _server.Start(_port, _maxClientCount);
+    }
 
-		Message newMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.updatePlayerStates);
+    public void StopServer()
+    {
+        _server.Stop();
+        ResetSession();
+    }
 
-		newMessage.AddPlayerStates(playerStates);
-		foreach (var playerState in playerStates)
-		{
-			GD.Print($"Sending Player id: {playerState.Key}, Player name: {playerState.Value.Name}, isLoading: {playerState.Value.IsLoading}");
-		}
-		_server.SendToAll(newMessage);
+    private void PlayerLeft(object sender, ServerDisconnectedEventArgs e)
+    {
+        playerStates.Remove(e.Client.Id);
+        if (playerInstances.TryGetValue(e.Client.Id, out var player))
+        {
+            player.QueueFree();
+        }
+    }
 
-		if (GameManager.isGameStarted)
-		{
-			MakePlayerLoad(fromClientId);
-		}
-	}
+    public void Host(ushort playerCount)
+    {
+        SetMaxPlayerCount(playerCount);
+        StartServer();
+    }
 
-	private static void MakePlayerLoad(ushort clientId)
-	{
-		var loadMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.startLoad);
-		loadMessage.AddUShort((ushort)GameManager.activeMapId);
-		_server.Send(loadMessage, clientId);
-	}
+    public void SendMessageToAll(Message message)
+    {
+        _server.SendToAll(message);
+    }
 
-	[MessageHandler((ushort)ClientToServerId.input)]
-	private static void ServerHandleMovement(ushort fromClientId, Message message)
-	{
-		if (playerInstances.TryGetValue(fromClientId, out Player player))
-		{
-			var bools = message.GetBools(7);
-			var rotation = message.GetVector3();
-			var headRotation = message.GetVector3();
-			player.SetInput(bools, rotation, headRotation);
-		}
-	}
+    [MessageHandler((ushort)ClientToServerId.movement)]
+    private static void MovementMessageHandler(ushort fromClientId, Message message)
+    {
+		var movementStateId = message.GetUShort();
+		var velocity = message.GetVector3();
+        var position = message.GetVector3();
+        var rotation = message.GetVector3();
+        var headRotation = message.GetVector3();
 
-	private void ResetSession()
-	{
-		gameManager.ResetGameState();
-		playerStates = new Dictionary<ushort, PlayerState>();
-		playerInstances = new Dictionary<ushort, Player>();
-		MenuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
-	}
+		if (fromClientId == RiptideClient.GetId()) return;
+
+        if (playerInstances.TryGetValue(fromClientId, out Player player))
+        {
+			player.stateHandler.SetMovementState(movementStateId);
+            player.HandleMovementUpdate(velocity, position, rotation, headRotation);
+        }
+    }
+
+    [MessageHandler((ushort)ClientToServerId.name)]
+    private static void NewPlayerNameMessageHandler(ushort fromClientId, Message message)
+    {
+        if (playerStates.TryGetValue(fromClientId, out _)) return;
+
+        var newPlayer = new PlayerState { Id = fromClientId, Name = message.GetString(), IsLoading = true };
+        playerStates.Add(fromClientId, newPlayer);
+
+        Message newMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.updatePlayerStates);
+
+        newMessage.AddPlayerStates(playerStates);
+        foreach (var playerState in playerStates)
+        {
+            GD.Print($"Sending Player id: {playerState.Key}, Player name: {playerState.Value.Name}, isLoading: {playerState.Value.IsLoading}");
+        }
+        _server.SendToAll(newMessage);
+
+        if (GameManager.isGameStarted)
+        {
+            MakePlayerLoad(fromClientId);
+        }
+    }
+
+    private static void MakePlayerLoad(ushort clientId)
+    {
+        var loadMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.startLoad);
+        loadMessage.AddUShort((ushort)GameManager.activeMapId);
+        _server.Send(loadMessage, clientId);
+    }
+
+    [MessageHandler((ushort)ClientToServerId.input)]
+    private static void ServerHandleMovement(ushort fromClientId, Message message)
+    {
+        if (playerInstances.TryGetValue(fromClientId, out Player player))
+        {
+            var bools = message.GetBools(7);
+            var rotation = message.GetVector3();
+            var headRotation = message.GetVector3();
+
+			// use this for vehicle driving
+        }
+    }
+
+    private void ResetSession()
+    {
+        gameManager.ResetGameState();
+        playerStates = new Dictionary<ushort, PlayerState>();
+        playerInstances = new Dictionary<ushort, Player>();
+        MenuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
+    }
 }

@@ -9,12 +9,18 @@ public partial class PlayerAnimationHandler : AnimationTree
     public override void _PhysicsProcess(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
-        if (_player.movementState == Player.MovementState.unconscious) return;
-		Rpc(nameof(HandleRpcAnimations), _player.movementState.ToString(), _player.isGrounded, _player.Velocity, _player.GlobalBasis, _playerInteraction.IsHolding());
+        if (_player.stateHandler.movementState == StateHandler.MovementState.unconscious) return;
+        if (_player.isLocal)
+        {
+		    HandleRpcAnimations(_player.stateHandler.movementState.ToString(), _player.Velocity, _player.GlobalBasis, _playerInteraction.IsHolding());
+        }
+        else
+        {
+		    HandleRpcAnimations(_player.stateHandler.movementState.ToString(), _player.syncVelocity, _player.GlobalBasis, _playerInteraction.IsHolding());
+        }
     }
 
-    [Rpc(CallLocal = true)]
-    public void HandleRpcAnimations(string state, bool isGroundedRpc, Vector3 velocity, Basis basis, bool isHolding)
+    public void HandleRpcAnimations(string state, Vector3 velocity, Basis basis, bool isHolding)
     {
         Set("parameters/HoldingBlend/blend_amount", isHolding);
 
@@ -25,7 +31,7 @@ public partial class PlayerAnimationHandler : AnimationTree
             Set("parameters/StateMachine/conditions/sit", true);
             return;
         }
-        else if (state == "jumping" || !isGroundedRpc)
+        else if (state == "jumping")
         {
             Set("parameters/StateMachine/conditions/walk", false);
             Set("parameters/StateMachine/conditions/sit", false);

@@ -27,7 +27,7 @@ public partial class InGameMenu : Menu
         MenuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
         riptideClient.Disconnect();
 
-        if (riptideClient.IsHost())
+        if (RiptideClient.IsHost())
         {
             riptideServer.StopServer();
         }
