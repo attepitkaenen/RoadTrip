@@ -33,6 +33,14 @@ public partial class Door : Item, IMounted
     public override void _PhysicsProcess(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
+
+        AngularDamp = 50;
+
+        if (playerHolding != null)
+        {
+            Move(playerHolding.playerInteraction.syncHandPosition, playerHolding.playerInteraction.syncHandBasis);
+        }
+
         syncPosition = Position;
         syncRotation = Rotation;
         syncBasis = Basis;
@@ -49,7 +57,7 @@ public partial class Door : Item, IMounted
             angle = RotationDegrees.Y;
         }
 
-        if (playerHolding == 0 && angle > -5 && angle < 5)
+        if (playerHolding == null && angle > -5 && angle < 5)
         {
             Position = Vector3.Zero;
             Rotation = Vector3.Zero;
@@ -65,19 +73,12 @@ public partial class Door : Item, IMounted
         }
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    public override void Move(Vector3 handPosition, Basis handBasis, int playerId)
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+    public override void Move(Vector3 handPosition, Basis handBasis)
     {
-        if (playerHolding == 0)
-        {
-            playerHolding = playerId;
-        }
-        else if (playerHolding == playerId)
-        {
-            Vector3 moveForce = (handPosition - GlobalPosition) * 20;
+        Vector3 moveForce = (handPosition - GlobalPosition) * 20;
 
-            LinearVelocity = moveForce;
-        }
+        LinearVelocity = moveForce;
     }
 
     public override void _IntegrateForces(PhysicsDirectBodyState3D state)

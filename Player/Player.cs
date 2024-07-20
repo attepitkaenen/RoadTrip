@@ -7,7 +7,7 @@ using Godot;
 
 public partial class Player : CharacterBody3D
 {
-    public int id;
+    public int id = -1;
     public string userName;
     public bool isLocal = false;
     GameManager gameManager;
@@ -66,11 +66,12 @@ public partial class Player : CharacterBody3D
     }
 
     // Sync properties
-    private short Health = 100;
+    private short Health = 10;
     public Vector3 syncVelocity;
     public Vector3 syncPosition;
     public float syncRotation;
-    public float syncHeadRotation;
+    public float syncHeadRotationX;
+    public float syncHeadRotationY;
     private ushort syncMovementStateId;
     private ushort syncHeldItemId;
 
@@ -111,9 +112,6 @@ public partial class Player : CharacterBody3D
                 rotationPointRotation.X = Mathf.Clamp(rotationPointRotation.X, Mathf.DegToRad(-85f), Mathf.DegToRad(85f));
                 rotationPoint.Rotation = rotationPointRotation;
 
-                // Sync head rotation
-                syncHeadRotation = rotationPoint.Rotation.X;
-
                 if (movementState == MovementState.seated)
                 {
                     playerInteraction.RotateY(-mouseMotion.Relative.X * sensitivity);
@@ -128,6 +126,12 @@ public partial class Player : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
+        if (Multiplayer.IsServer())
+        {
+            Rpc(nameof(SyncPlayerState), id, userName);
+        }
+
+        // Activate local player
         if (id == Multiplayer.GetUniqueId() && !isLocal)
         {
             GD.Print($"Local player of id: {id} is ready!");
@@ -138,19 +142,20 @@ public partial class Player : CharacterBody3D
             playerManager.RpcId(1, nameof(playerManager.LocalPlayerReady), id);
         }
 
+        // Sync properties to other players
         if (isLocal)
         {
             var rotation = (short)(GlobalRotation.Y * 100);
-            var headRotation = (short)(rotationPoint.Rotation.X * 100);
-            Rpc(nameof(SetSyncProperties), Velocity, GlobalPosition, rotation, headRotation, (ushort)movementState, 0);
+            var headRotationX = (short)(rotationPoint.Rotation.X * 100);
+            var headRotationY = (short)(playerInteraction.Rotation.Y * 100);
+            Rpc(nameof(SyncProperties), Velocity, GlobalPosition, rotation, headRotationX, headRotationY, (ushort)movementState, playerInteraction.heldItemId);
         }
     }
 
 
     public override void _Process(double delta)
     {
-        nameTag.Text = userName;
-
+        // Toggle collision of player depending on MovementState
         if (movementState == MovementState.unconscious)
         {
             collisionShape3D.Disabled = true;
@@ -163,15 +168,19 @@ public partial class Player : CharacterBody3D
         // Handle property syncing and Lerping for non local players
         if (!isLocal)
         {
+            movementState = (MovementState)syncMovementStateId;
+            rotationPoint.Rotation = new Vector3(Mathf.LerpAngle(rotationPoint.Rotation.X, syncHeadRotationX, 0.2f), 0, 0);
+            playerInteraction.Rotation = new Vector3(0,  Mathf.LerpAngle(playerInteraction.Rotation.Y, syncHeadRotationY, 0.2f), 0);
+            playerInteraction.heldItemId = syncHeldItemId;
+
             if (movementState == MovementState.seated)
             {
                 Velocity = Vector3.Zero;
                 return;
             }
+
             GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.2f);
             GlobalRotation = new Vector3(0, Mathf.LerpAngle(GlobalRotation.Y, syncRotation, 0.2f), 0);
-            rotationPoint.Rotation = new Vector3(Mathf.LerpAngle(rotationPoint.Rotation.X, syncHeadRotation, 0.2f), 0, 0);
-            movementState = (MovementState)syncMovementStateId;
             return;
         };
 
@@ -183,7 +192,6 @@ public partial class Player : CharacterBody3D
                 Health = 10;
                 movementState = MovementState.idle;
                 GlobalPosition = ragdoll.GetUpPosition();
-                ragdoll.Rpc(nameof(ragdoll.Deactivate));
             }
             return;
         }
@@ -310,15 +318,42 @@ public partial class Player : CharacterBody3D
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
-    public void SetSyncProperties(Vector3 velocity, Vector3 position, float rotationTimes100, short headRotationTimes100, ushort movementStateId, ushort heldItemId)
+    public void SyncProperties(Vector3 velocity, Vector3 position, short rotationTimes100, short headRotationTimes100X, short headRotationTimes100Y, ushort movementStateId, ushort heldItemId)
     {
         if (isLocal) return;
         syncVelocity = velocity;
         syncPosition = position;
         syncRotation = ((float)rotationTimes100) / 100;
-        syncHeadRotation = ((float)headRotationTimes100) / 100;
+        syncHeadRotationX = ((float)headRotationTimes100X) / 100;
+        syncHeadRotationY = ((float)headRotationTimes100Y) / 100;
         syncMovementStateId = movementStateId;
         syncHeldItemId = heldItemId;
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+    public void SyncPlayerState(int id, string userName)
+    {
+        this.id = id;
+        this.userName = userName;
+        nameTag.Text = userName;
+    }
+
+    public void HandleSeat()
+    {
+        var newSeat = floatMachine.GetSeat();
+        if (newSeat is Seat && Input.IsActionJustPressed("equip") && movementState != MovementState.seated && !newSeat.occupied)
+        {
+            _seat = newSeat;
+            _seat.Rpc(nameof(_seat.Sit), id);
+            movementState = MovementState.seated;
+        }
+        else if (Input.IsActionJustPressed("equip") && movementState == MovementState.seated)
+        {
+            _seat.Rpc(nameof(_seat.Stand));
+            _seat = null;
+            GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
+            movementState = MovementState.idle;
+        }
     }
 
     public void AddDebugLine(Label label)
@@ -353,23 +388,6 @@ public partial class Player : CharacterBody3D
         // }
     }
 
-    public void HandleSeat()
-    {
-        var newSeat = floatMachine.GetSeat();
-        if (newSeat is Seat && Input.IsActionJustPressed("equip") && movementState != MovementState.seated && !newSeat.occupied)
-        {
-            _seat = newSeat;
-            _seat.Rpc(nameof(_seat.Sit), id);
-            movementState = MovementState.seated;
-        }
-        else if (Input.IsActionJustPressed("equip") && movementState == MovementState.seated)
-        {
-            _seat.Rpc(nameof(_seat.Stand));
-            _seat = null;
-            GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
-            movementState = MovementState.idle;
-        }
-    }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SetPlayerState(int id, string name)
@@ -381,7 +399,7 @@ public partial class Player : CharacterBody3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     public void MovePlayer(Vector3 position, Vector3 rotation)
     {
-        GD.Print($"Moving player {GetMultiplayerAuthority()} to {position} for {Multiplayer.GetUniqueId()}");
+        // GD.Print($"Moving player {GetMultiplayerAuthority()} to {position} for {Multiplayer.GetUniqueId()}");
         GlobalPosition = position;
         GlobalRotation = rotation;
     }
@@ -389,15 +407,23 @@ public partial class Player : CharacterBody3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void MovePlayerReliable(Vector3 position, Vector3 rotation)
     {
-        GD.Print($"Moving player {GetMultiplayerAuthority()} to {position} for {Multiplayer.GetUniqueId()}");
+        // GD.Print($"Moving player {GetMultiplayerAuthority()} to {position} for {Multiplayer.GetUniqueId()}");
         GlobalPosition = position;
         GlobalRotation = rotation;
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void Hit(int damage, string boneName, Vector3 bulletDirection)
     {
-        if (!IsMultiplayerAuthority()) return;
+        if (Multiplayer.IsServer())
+        {
+            ragdoll.startBoneName = boneName;
+            ragdoll.startDirection = bulletDirection;
+            ragdoll.startStrength = damage;
+        }
+
+        if (!isLocal) return;
+
         GD.Print($"Player {Name} was hit for {damage}");
         Health -= (short)damage;
 
@@ -417,7 +443,6 @@ public partial class Player : CharacterBody3D
             }
 
             movementState = MovementState.unconscious;
-            ragdoll.Rpc(nameof(ragdoll.Activate), boneName, bulletDirection);
         }
     }
 }

@@ -122,8 +122,12 @@ public partial class GameManager : Node
         {
             return;
         }
-        var player = GetNode<Player>($"{playerId}");
-        player.playerInteraction.RpcId(playerId, nameof(player.playerInteraction.SetPickedItem), item.GetPath());
+
+        if (PlayerManager.playerInstances.TryGetValue(playerId, out var player))
+        {
+            item.GlobalPosition = player.playerInteraction.syncHandPosition;
+            item.PickItem(playerId);
+        }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

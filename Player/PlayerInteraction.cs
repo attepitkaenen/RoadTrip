@@ -15,9 +15,12 @@ public partial class PlayerInteraction : Node3D
     [Export] private Node3D EquipHandPosition;
     private dynamic PickedItem;
     // private ItemResource itemResource;
-    private int _heldItemId;
+    public int heldItemId;
     private float _heldItemCondition;
     public HeldItem _heldItem;
+
+    public Vector3 syncHandPosition;
+    public Basis syncHandBasis;
 
     public override void _Ready()
     {
@@ -43,7 +46,12 @@ public partial class PlayerInteraction : Node3D
     {
         HandleHeldItem();
 
-        if (!IsMultiplayerAuthority()) return;
+        if (Multiplayer.IsServer() && !player.isLocal)
+        {
+            // GD.Print(syncHandPosition);
+        }
+
+        if (!player.isLocal) return;
 
         HandleItem();
 
@@ -52,9 +60,16 @@ public partial class PlayerInteraction : Node3D
         FlipCar();
     }
 
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+    public void syncHandProperties(Vector3 position, Basis basis)
+    {
+        syncHandPosition = position;
+        syncHandBasis = basis;
+    }
+
     public bool IsHolding()
     {
-        return _heldItemId != 0;
+        return heldItemId != 0;
     }
 
     public bool IsMovingItem()
@@ -85,7 +100,7 @@ public partial class PlayerInteraction : Node3D
     {
         if (IsHolding() && _heldItem is null)
         {
-            HeldItem item = gameManager.GetItemResource(_heldItemId).ItemInHand.Instantiate() as HeldItem;
+            HeldItem item = gameManager.GetItemResource(heldItemId).ItemInHand.Instantiate() as HeldItem;
             if (item.holdType == 0)
             {
                 EquipHandPosition.Position = new Vector3(0.274f, -0.175f, -0.357f);
@@ -96,7 +111,7 @@ public partial class PlayerInteraction : Node3D
                 EquipHandPosition.Position = new Vector3(0.274f, -0.211f, -0.357f);
                 EquipHandPosition.RotationDegrees = new Vector3(0, 0, 90);
             }
-            item.SetMultiplayerAuthority((int)player.id);
+            item.player = player;
             equip.AddChild(item, true);
             _heldItem = item;
         }
@@ -121,7 +136,7 @@ public partial class PlayerInteraction : Node3D
         if (Input.IsActionJustPressed("rightClick") && PickedItem is Installable part && part.canBeInstalled && _heldItem is Toolbox)
         {
             PickedItem = null;
-            part.Install();
+            part.RpcId(1, nameof(part.Install));
             GD.Print("INSTALL PART");
         }
         else if (Input.IsActionJustPressed("rightClick") && interactionCast.GetCollider() is CarPart installedPart && _heldItem is Toolbox && interactionCast.IsColliding() && PickedItem is null)
@@ -142,7 +157,7 @@ public partial class PlayerInteraction : Node3D
             {
                 GD.Print("Item picked");
                 SetHeldItem(itemResource.Id, PickedItem.condition);
-                PickedItem.RpcId(1, nameof(PickedItem.QueueItemDestruction));
+                PickedItem.RpcId(1, nameof(PickedItem.DestroyItem));
                 PickedItem = null;
             }
         }
@@ -159,9 +174,12 @@ public partial class PlayerInteraction : Node3D
         if (Input.IsActionJustPressed("leftClick"))
         {
             dynamic collider = interactionCast.GetCollider();
-            if ((collider is Item || collider is Door || collider is Bone) && PickedItem is null && collider.playerHolding == 0)
+            if ((collider is Item || collider is Door || collider is Bone) && PickedItem is null && collider.playerHolding == null)
             {
-                PickItem(collider);
+                GD.Print("Should pick item");
+                hand.GlobalPosition = collider.GlobalPosition;
+                staticBody.GlobalBasis = collider.GlobalBasis;
+                collider.Rpc(nameof(collider.PickItem), player.id);
             }
             else if (PickedItem is not null)
             {
@@ -187,14 +205,6 @@ public partial class PlayerInteraction : Node3D
             DropPickedItem();
         }
 
-
-        // Move item
-        if (PickedItem is not null)
-        {
-            staticBody.Position = hand.Position;
-            PickedItem.Rpc("Move", hand.GlobalPosition, staticBody.GlobalBasis, player.id);
-        }
-
         // Move item closer and further
         if (Input.IsActionJustPressed("scrollDown") && hand.Position.Z < -0.5f)
         {
@@ -204,6 +214,8 @@ public partial class PlayerInteraction : Node3D
         {
             hand.Position = new Vector3(hand.Position.X, hand.Position.Y, hand.Position.Z - 0.1f);
         }
+
+        RpcId(1, nameof(syncHandProperties), hand.GlobalPosition, staticBody.GlobalBasis);
     }
 
     public void DropHeldItem(bool pickDroppedItem)
@@ -219,8 +231,8 @@ public partial class PlayerInteraction : Node3D
             id = 0;
         }
 
-        GD.Print(player.id + " : " + _heldItemId + " : " + hand.GlobalPosition);
-        gameManager.RpcId(1, nameof(gameManager.SpawnItem), id, _heldItemId, _heldItemCondition, hand.GlobalPosition, hand.GlobalRotation);
+        GD.Print(player.id + " : " + heldItemId + " : " + hand.GlobalPosition);
+        gameManager.RpcId(1, nameof(gameManager.SpawnItem), id, heldItemId, _heldItemCondition, hand.GlobalPosition, hand.GlobalRotation);
         SetHeldItem(0, 0);
     }
 
@@ -237,20 +249,18 @@ public partial class PlayerInteraction : Node3D
     public void PickItem(dynamic item)
     {
         PickedItem = item;
-        hand.GlobalPosition = item.GlobalPosition;
-        staticBody.GlobalBasis = PickedItem.GlobalBasis;
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SetPickedItem(string itemPath)
     {
         GD.Print($"Should pickup {itemPath}");
-        PickedItem = GetTree().Root.GetNode<Item>(itemPath);
+        PickedItem = GetTree().Root.GetNode(itemPath);
     }
 
     public void SetHeldItem(int id, float condition)
     {
-        _heldItemId = id;
+        heldItemId = id;
         _heldItemCondition = condition;
     }
 }

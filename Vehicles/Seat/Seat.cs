@@ -7,10 +7,9 @@ public partial class Seat : CarPart
 	public Vehicle vehicle;
 	public Marker3D seatPosition;
 	private Player _seatedPlayer;
-	private long _seatedPlayerId = 0;
+	private int _seatedPlayerId = 0;
 	public bool occupied = false;
 	[Export] public bool isDriverSeat = false;
-	[Signal] public delegate void PlayerSeatedEventHandler(int playerId);
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -40,37 +39,26 @@ public partial class Seat : CarPart
 		return vehicle;
 	}
 
-	public Vector3 GetPosition()
-	{
-		return seatPosition.GlobalPosition;
-	}
-
-	public Vector3 GetRotation()
-	{
-		return seatPosition.GlobalRotation;
-	}
-
 	public long GetSeatedPlayerId()
 	{
 		return _seatedPlayerId;
 	}
 
-	public Player GetPlayer(long Id)
+	public Player GetPlayer(long id)
 	{
 		var players = GetTree().GetNodesInGroup("Player");
 		if (players.Count() < 1) return null;
-		return players.First(player => player.Name == Id.ToString()) as Player;
+		return players.First(player => ((Player)player).id == id) as Player;
 	}
 
 	public void MovePassenger(Player player)
 	{
-		player.MovePlayer(GetPosition(), GetRotation());
+		player.MovePlayer(seatPosition.GlobalPosition, seatPosition.GlobalRotation);
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void Sit(long playerId)
+	public void Sit(int playerId)
 	{
-		GD.Print("Sit");
 		if (_seatedPlayerId == 0)
 		{
 			_seatedPlayerId = playerId;
@@ -81,6 +69,7 @@ public partial class Seat : CarPart
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void Stand()
 	{
+		GD.Print("Stand up");
 		if (_seatedPlayerId != 0)
 		{
 			_seatedPlayerId = 0;

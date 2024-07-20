@@ -14,6 +14,9 @@ public partial class Ragdoll : Node3D
     Player _player;
     Array<Bone> bones = new Array<Bone>();
     bool isActive;
+    public Vector3 startDirection;
+    public string startBoneName;
+    public float startStrength;
 
     public override void _Ready()
     {
@@ -26,10 +29,6 @@ public partial class Ragdoll : Node3D
             if (child is Bone bone)
             {
                 bones.Add(bone);
-                if (IsMultiplayerAuthority())
-                {
-                    bone.SetCollisionLayerValue(6, false);
-                }
             }
         }
     }
@@ -42,7 +41,7 @@ public partial class Ragdoll : Node3D
             head.Visible = false;
         }
 
-        if (IsMultiplayerAuthority() && isActive)
+        if (Multiplayer.IsServer() && isActive)
         {
             Dictionary<Vector3, Vector3> boneInfo = new Dictionary<Vector3, Vector3>();
             foreach (var bone in bones)
@@ -50,6 +49,14 @@ public partial class Ragdoll : Node3D
                 boneInfo[bone.Position] = bone.Rotation;
             }
             Rpc(nameof(UpdateRagdoll), boneInfo);
+
+            if (startBoneName != string.Empty)
+            {
+                Hit(startBoneName, startDirection, startStrength);
+                startBoneName = string.Empty;
+                startDirection = Vector3.Zero;
+                startStrength = 0;
+            }
         }
 
         if (_player.playerInteraction.IsHolding())
@@ -61,6 +68,33 @@ public partial class Ragdoll : Node3D
             HandIK.Interpolation = 0;
         }
 
+        if (_player.movementState == Player.MovementState.unconscious && !isActive)
+        {
+            GD.Print("Ragdoll active");
+            isActive = true;
+            HeadIK.Stop();
+            HandIK.Stop();
+            Position = Vector3.Zero;
+            skeleton.PhysicalBonesStartSimulation();
+
+            if (_player.isLocal)
+            {
+                SetBoneCollision(true);
+                camera.Current = true;
+            }
+        }
+        else if (_player.movementState != Player.MovementState.unconscious && isActive)
+        {
+            if (_player.isLocal)
+            {
+                SetBoneCollision(false);
+                camera.Current = false;
+            }
+            HeadIK.Start();
+            HandIK.Start();
+            isActive = false;
+            skeleton.PhysicalBonesStopSimulation();
+        }
     }
 
 
@@ -76,43 +110,10 @@ public partial class Ragdoll : Node3D
         }
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void Activate(string boneName, Vector3 bonePushDirection)
+    public void Hit(string boneName, Vector3 bonePushDirection, float strength)
     {
-        if (isActive == true)
-        {
-            var bone = skeleton.GetChildren().First(node => node.Name == boneName) as Bone;
-            bone.Impact(bonePushDirection);
-            return;
-        }
-
-        isActive = true;
-        HeadIK.Stop();
-        HandIK.Stop();
-        Position = Vector3.Zero;
-        skeleton.PhysicalBonesStartSimulation();
-
-        if (IsMultiplayerAuthority())
-        {
-            SetBoneCollision(true);
-            // camera.Current = true;
-            var bone = skeleton.GetChildren().First(node => node.Name == boneName) as Bone;
-            bone.Impact(bonePushDirection);
-        }
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void Deactivate()
-    {
-        if (IsMultiplayerAuthority())
-        {
-            // camera.Current = true;
-            SetBoneCollision(false);
-        }
-        HeadIK.Start();
-        HandIK.Start();
-        isActive = false;
-        skeleton.PhysicalBonesStopSimulation();
+        var bone = skeleton.GetChildren().First(node => node.Name == boneName) as Bone;
+        bone.Impact(bonePushDirection * (strength / 1));
     }
 
     public void SetBoneCollision(bool status)
