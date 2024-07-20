@@ -20,11 +20,6 @@ public partial class Ragdoll : Node3D
         _player = GetParent<Player>();
         HeadIK.Start();
         HandIK.Start();
-        if (IsMultiplayerAuthority())
-        {
-            SetBoneCollision(false);
-            head.Visible = false;
-        }
 
         foreach (var child in skeleton.GetChildren())
         {
@@ -41,6 +36,12 @@ public partial class Ragdoll : Node3D
 
     public override void _PhysicsProcess(double delta)
     {
+        if (_player.isLocal && head.Visible == true)
+        {
+            SetBoneCollision(false);
+            head.Visible = false;
+        }
+
         if (IsMultiplayerAuthority() && isActive)
         {
             Dictionary<Vector3, Vector3> boneInfo = new Dictionary<Vector3, Vector3>();
@@ -94,7 +95,7 @@ public partial class Ragdoll : Node3D
         if (IsMultiplayerAuthority())
         {
             SetBoneCollision(true);
-            camera.Current = true;
+            // camera.Current = true;
             var bone = skeleton.GetChildren().First(node => node.Name == boneName) as Bone;
             bone.Impact(bonePushDirection);
         }
@@ -105,7 +106,7 @@ public partial class Ragdoll : Node3D
     {
         if (IsMultiplayerAuthority())
         {
-            camera.Current = true;
+            // camera.Current = true;
             SetBoneCollision(false);
         }
         HeadIK.Start();

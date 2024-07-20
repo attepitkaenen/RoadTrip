@@ -23,7 +23,7 @@ public partial class InGameMenu : Menu
     public void _on_mainmenu_pressed()
     {
         menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
-        multiplayerController.Disconnect();
+        multiplayerController.CloseConnection();
     }
 
     public void _on_settings_pressed()
@@ -38,7 +38,7 @@ public partial class InGameMenu : Menu
 
     public void _on_respawn_pressed()
     {
-        gameManager.Respawn();
+        Rpc(nameof(gameManager.Respawn), Multiplayer.GetUniqueId());
     }
 
     public void _on_save_pressed()

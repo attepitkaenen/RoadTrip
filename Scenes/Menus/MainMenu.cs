@@ -45,7 +45,7 @@ public partial class MainMenu : Menu
 
     public override void _PhysicsProcess(double delta)
     {
-        if (multiplayerController.GetPlayerStates().Count > 0)
+        if (PlayerManager.playerStates.Count() > 0)
         {
             lobbyContainer.Visible = true;
         }
@@ -53,7 +53,7 @@ public partial class MainMenu : Menu
         {
             lobbyContainer.Visible = false;
         }
-
+        
     }
 
     private void ConnectionFailed()
@@ -64,13 +64,14 @@ public partial class MainMenu : Menu
 
     public void UpdateLobbyNames(long peerId, PlayerState peerName)
     {
+        GD.Print("Updating lobby list");
         playerList.Clear();
-        while (playerList.ItemCount < multiplayerController.GetPlayerStates().Count)
+        while (playerList.ItemCount < PlayerManager.playerStates.Count)
         {
             playerList.AddItem("");
         }
         var index = 0;
-        foreach (var (id, playerState) in multiplayerController.GetPlayerStates())
+        foreach (var (id, playerState) in PlayerManager.playerStates)
         {
             playerList.SetItemText(index, playerState.Name);
             index++;
@@ -79,7 +80,7 @@ public partial class MainMenu : Menu
 
     private void SaveUserName(string newText)
     {
-        multiplayerController.UpdateUserName(newText);
+        PlayerManager.localPlayerState.Name = newText;
     }
 
     private void SaveChosen(long id)
@@ -158,6 +159,7 @@ public partial class MainMenu : Menu
 
     public void ResetMenu()
     {
+        GD.Print("Menu should reset");
         multiplayerContainer.Visible = false;
         singleplayerContainer.Visible = false;
         buttons.GetNode<Button>("Singleplayer").Visible = true;

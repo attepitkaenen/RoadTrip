@@ -1,211 +1,196 @@
 using Godot;
 using Godot.Collections;
+using System;
 using System.ComponentModel.Design;
 using System.Linq;
 
 
 public partial class MultiplayerController : Control
 {
-	[Signal] public delegate void PlayerConnectedEventHandler(long peerId, PlayerState peerState);
-	[Signal] public delegate void PlayerDisconnectedEventHandler(long peerId);
 
-	[Export] private int port = 25565;
-	public int maxConnections = 20;
-	private string defaultServerIp = "127.0.0.1";
+    [Signal] public delegate void PlayerConnectedEventHandler(long peerId, PlayerState state);
+    [Signal] public delegate void PlayerDisconnectedEventHandler(long peerId);
 
-	PlayerState playerState = new PlayerState { Id = 1, Name = "Jorma", IsLoading = true };
-	public bool isGameStarted = false;
-
-	Dictionary<long, PlayerState> players = new Dictionary<long, PlayerState>();
-
-	private ENetMultiplayerPeer _peer;
-	private ENetConnection _host;
+    [Export] private int port = 25565;
+    public int maxConnections = 20;
+    private string defaultServerIp = "127.0.0.1";
 
 
-	MenuHandler menuHandler;
-	GameManager gameManager;
+    private ENetMultiplayerPeer _peer;
+    private ENetConnection _host;
 
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-		ProcessMode = ProcessModeEnum.Always;
-		menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
-		gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-		Multiplayer.PeerConnected += PeerConnected;
-		Multiplayer.PeerDisconnected += PeerDisconnected;
-		Multiplayer.ConnectedToServer += ConnectedToServer;
-		Multiplayer.ConnectionFailed += ConnectionFailed;
-		Multiplayer.ServerDisconnected += ServerDisconnected;
+    MenuHandler menuHandler;
+    GameManager gameManager;
+    PlayerManager playerManager;
+    SaveManager saveManager;
 
-		// if(OS.GetCmdlineArgs().Contains("--server")){
-		// 	hostGame();
-		// }
-	}
 
-	public bool GetGameStartedStatus()
-	{
-		return isGameStarted;
-	}
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
+    {
+        ProcessMode = ProcessModeEnum.Always;
+        menuHandler = GetNode<MenuHandler>("/root/MenuHandler");
+        gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
+        playerManager = GetTree().Root.GetNode<PlayerManager>("PlayerManager");
+        saveManager = GetTree().Root.GetNode<SaveManager>("SaveManager");
 
-	public Dictionary<long, PlayerState> GetPlayerStates()
-	{
-		return players;
-	}
+        // Signals
+        Multiplayer.PeerConnected += PeerConnected;
+        Multiplayer.ConnectionFailed += ConnectionFailed;
+        Multiplayer.ServerDisconnected += ServerDisconnected;
+        Multiplayer.ConnectedToServer += ConnectedToServer;
+        Multiplayer.PeerDisconnected += PeerDisconnected;
 
-	public PlayerState GetPlayerState()
-	{
-		return playerState;
-	}
+        // if(OS.GetCmdlineArgs().Contains("--server")){
+        // 	hostGame();
+        // }
+    }
 
-	public void UpdateUserName(string newUsername)
-	{
-		playerState.Name = newUsername;
-	}
+    private void PeerDisconnected(long id)
+    {
+        GD.Print($"Peer disconnected {id}");
+    }
 
-	private void ServerDisconnected()
-	{
-		GD.Print("Server disconnected");
-		Multiplayer.MultiplayerPeer = null;
-		gameManager.ResetWorld();
-		players.Clear();
-		isGameStarted = false;
-		menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
-		playerState = new PlayerState { Id = 1, Name = "Jorma", IsLoading = true };
-	}
+    private void ConnectedToServer()
+    {
+        GD.Print($"Connected to server run on {Multiplayer.GetUniqueId()}, {PlayerManager.localPlayerState.Name}, {PlayerManager.localPlayerState.IsLoading}");
+        Rpc(nameof(RegisterPlayer), Multiplayer.GetUniqueId(), PlayerManager.localPlayerState.Name, PlayerManager.localPlayerState.IsLoading);
+    }
 
-	private void ConnectionFailed()
-	{
-		Multiplayer.MultiplayerPeer = null;
-	}
+    private void ServerDisconnected()
+    {
+        GD.Print("Server disconnected");
+        Multiplayer.MultiplayerPeer = null;
+        gameManager.ResetWorld();
+        PlayerManager.Reset();
+        menuHandler.OpenMenu(MenuHandler.MenuType.mainmenu);
+    }
 
-	private void ConnectedToServer()
-	{
-		var peerId = Multiplayer.GetUniqueId();
-		playerState.Id = peerId;
-		players[peerId] = playerState;
-		EmitSignal(SignalName.PlayerConnected, peerId, playerState);
-	}
+    private void ConnectionFailed()
+    {
+        GD.Print("Connection failed");
+        Multiplayer.MultiplayerPeer = null;
+    }
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	private void PeerDisconnected(long id)
-	{
-		GD.Print("Player: " + id + " disconnected");
-		players.Remove(id);
-		gameManager.RemovePlayer(id);
-		EmitSignal(SignalName.PlayerDisconnected, id);
-	}
+    private void PeerConnected(long id)
+    {
+        // This runs on everyone else except the player of the received id
+        GD.Print($"Player {id} has connected");
+    }
 
-	private void PeerConnected(long id)
-	{
-		GD.Print($"Player {id} has connected");
-		RpcId(id, nameof(RegisterPlayer), playerState.Id, playerState.Name, playerState.IsLoading);
-	}
 
-	public void Disconnect()
-	{
-		if (!Multiplayer.IsServer())
-		{
-			Rpc(nameof(PeerDisconnected), Multiplayer.GetUniqueId());
-			Multiplayer.MultiplayerPeer.Close();
-		}
-		gameManager.ResetWorld();
-		players.Clear();
-	}
+    public void CloseConnection()
+    {
+        if (Multiplayer.IsServer())
+        {
+            ShutDownServer();
+        }
+        else
+        {
+            Disconnect();
+        }
+    }
 
-	public void CloseConnection()
-	{
-		isGameStarted = false;
-		if (Multiplayer.IsServer())
-		{
-			_host.Destroy();
-			Multiplayer.MultiplayerPeer = null;
-		}
-		else
-		{
-			Multiplayer.MultiplayerPeer.Close();
-		}
-		playerState = new PlayerState { Id = 1, Name = "Jorma", IsLoading = true };
-	}
+    public void Disconnect()
+    {
+        gameManager.ResetWorld();
+        PlayerManager.Reset();
+        Multiplayer.MultiplayerPeer.Close();
+        Multiplayer.MultiplayerPeer = null;
+    }
 
-	public void JoinGame(string address)
-	{
-		if (address is null)
-		{
-			address = defaultServerIp;
-		}
-		_peer = new ENetMultiplayerPeer();
-		var error = _peer.CreateClient(address, port);
-		if (error != Error.Ok)
-		{
-			GD.Print("error cannot join! :" + error.ToString());
-			return;
-		}
-		_peer.Host.Compress(ENetConnection.CompressionMode.Zlib);
-		Multiplayer.MultiplayerPeer = _peer;
-		GD.Print("Joining Game!");
-	}
+    public void ShutDownServer()
+    {
+        gameManager.ResetWorld();
+        PlayerManager.Reset();
+        Multiplayer.MultiplayerPeer.Close();
 
-	public void CreateGame()
-	{
-		GD.Print("Creating server");
-		_peer = new ENetMultiplayerPeer();
-		var error = _peer.CreateServer(port, maxConnections);
-		if (error != Error.Ok)
-		{
-			GD.Print("error cannot host! :" + error.ToString());
-			return;
-		}
-		_peer.Host.Compress(ENetConnection.CompressionMode.Zlib);
-		Multiplayer.MultiplayerPeer = _peer;
-		_host = _peer.Host;
+        // This line is required for windows to not leave server running
+        _host.Destroy();
 
-		players[1] = playerState;
-		EmitSignal(SignalName.PlayerConnected, 1, playerState);
-	}
+        Multiplayer.MultiplayerPeer = null;
+    }
 
-	public void RemoveMultiplayerPeer()
-	{
-		Multiplayer.MultiplayerPeer = null;
-	}
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void Kick(string reason)
+    {
+        GD.Print($"kicked: {reason}");
+        Disconnect();
+    }
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void RegisterPlayer(long id, string name, bool isLoading)
-	{
-		GD.Print($"Registering player {Multiplayer.GetRemoteSenderId()}");
-		var newPlayerState = new PlayerState { Name = name, Id = id, IsLoading = isLoading };
-		var newPlayerId = Multiplayer.GetRemoteSenderId();
+    public void JoinGame(string address)
+    {
+        if (address is null)
+        {
+            address = defaultServerIp;
+        }
+        _peer = new ENetMultiplayerPeer();
+        var error = _peer.CreateClient(address, port);
+        if (error != Error.Ok)
+        {
+            GD.Print("error cannot join! :" + error.ToString());
+            return;
+        }
+        _peer.Host.Compress(ENetConnection.CompressionMode.Zlib);
+        Multiplayer.MultiplayerPeer = _peer;
+        GD.Print("Joining Game!");
+    }
 
-		if (Multiplayer.IsServer())
-		{
-			foreach (var player in players)
-			{
-				Rpc(nameof(RegisterPlayer), player.Key, player.Value.Name, player.Value.IsLoading);
-			}
-		}
+    public void CreateGame()
+    {
+        GD.Print("Creating server");
+        _peer = new ENetMultiplayerPeer();
+        var error = _peer.CreateServer(port, maxConnections);
+        if (error != Error.Ok)
+        {
+            GD.Print("error cannot host! :" + error.ToString());
+            return;
+        }
+        _peer.Host.Compress(ENetConnection.CompressionMode.Zlib);
+        Multiplayer.MultiplayerPeer = _peer;
+        _host = _peer.Host;
+        PlayerManager.localPlayerState.Id = 1;
+        PlayerManager.AddPlayerState(PlayerManager.localPlayerState);
+    }
 
-		players[newPlayerId] = newPlayerState;
-		EmitSignal(SignalName.PlayerConnected, newPlayerId, newPlayerState);
-		gameManager.StartGame();
-	}
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void RegisterPlayer(int id, string name, bool isLoading)
+    {
+        GD.Print($"Received a RegisterPlayer request for id: {id}, name: {name}");
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SetLoadingStatus(bool status)
-	{
-		// GD.Print($"On player {Multiplayer.GetUniqueId()} the status for loading player {Multiplayer.GetRemoteSenderId()} is set to {status}");
-		players[Multiplayer.GetRemoteSenderId()].IsLoading = status;
+        var newPlayerState = new PlayerState { Name = name, Id = id, IsLoading = isLoading };
 
-		foreach (var player in players)
-		{
-			if (player.Value.IsLoading) return;
-		}
+        PlayerManager.AddPlayerState(newPlayerState);
 
-		isGameStarted = true;
+        EmitSignal(SignalName.PlayerConnected, id, newPlayerState);
 
-		if (Multiplayer.IsServer())
-		{
-			GD.Print("Starting game");
-			gameManager.StartGame();
-		}
-	}
+        if (Multiplayer.IsServer())
+        {
+            foreach (var state in PlayerManager.playerStates)
+            {
+                Rpc(nameof(RegisterPlayer), state.Value.Id, state.Value.Name, state.Value.IsLoading);
+            }
+        }
+
+        if (Multiplayer.IsServer() && GameManager.isGameStarted)
+        {
+            saveManager.RpcId(id, nameof(saveManager.InstantiateLoad), saveManager.activeMapScenePath);
+            playerManager.SpawnPlayer(newPlayerState);
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SetLoadingStatus(bool status)
+    {
+        GD.Print($"On player {Multiplayer.GetUniqueId()} the status for loading player {Multiplayer.GetRemoteSenderId()} is set to {status}");
+
+        PlayerManager.SetLoadingStatus(Multiplayer.GetRemoteSenderId(), status);
+
+        if (!PlayerManager.localPlayerState.IsLoading && Multiplayer.IsServer() && !GameManager.isGameStarted)
+        {
+            GD.Print("Starting game");
+
+        }
+    }
 }

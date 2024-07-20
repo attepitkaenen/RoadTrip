@@ -4,6 +4,7 @@ using System;
 public partial class PlayerState : GodotObject
 {
 	public string Name;
-	public long Id;
+	public int Id;
 	public bool IsLoading;
+	public Vector3 SpawnPoint;
 }

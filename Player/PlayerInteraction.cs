@@ -96,7 +96,7 @@ public partial class PlayerInteraction : Node3D
                 EquipHandPosition.Position = new Vector3(0.274f, -0.211f, -0.357f);
                 EquipHandPosition.RotationDegrees = new Vector3(0, 0, 90);
             }
-            item.SetMultiplayerAuthority((int)player.Id);
+            item.SetMultiplayerAuthority((int)player.id);
             equip.AddChild(item, true);
             _heldItem = item;
         }
@@ -192,7 +192,7 @@ public partial class PlayerInteraction : Node3D
         if (PickedItem is not null)
         {
             staticBody.Position = hand.Position;
-            PickedItem.Rpc("Move", hand.GlobalPosition, staticBody.GlobalBasis, player.Id);
+            PickedItem.Rpc("Move", hand.GlobalPosition, staticBody.GlobalBasis, player.id);
         }
 
         // Move item closer and further
@@ -212,14 +212,14 @@ public partial class PlayerInteraction : Node3D
 
         if (pickDroppedItem)
         {
-            id = player.Id;
+            id = player.id;
         }
         else
         {
             id = 0;
         }
 
-        GD.Print(player.Id + " : " + _heldItemId + " : " + hand.GlobalPosition);
+        GD.Print(player.id + " : " + _heldItemId + " : " + hand.GlobalPosition);
         gameManager.RpcId(1, nameof(gameManager.SpawnItem), id, _heldItemId, _heldItemCondition, hand.GlobalPosition, hand.GlobalRotation);
         SetHeldItem(0, 0);
     }

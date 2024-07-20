@@ -20,7 +20,7 @@ public partial class LoadingScreen : Menu
     {
         var progress = saveManager.progress;
         icon.RotationDegrees += 0.5f;
-        if (multiplayerController.GetPlayerState().IsLoading && progress.Count > 0)
+        if (PlayerManager.localPlayerState.IsLoading && progress.Count > 0)
         {
             statusLabel.Text = Mathf.Round((float)progress[0] * 100).ToString() + "%";
         }

@@ -15,6 +15,7 @@ public partial class SaveManager : Node
     [Export] Array<PackedScene> maps;
     [Export] Array<PackedScene> emptyMaps;
 
+    public string activeMapScenePath = string.Empty;
     string sceneToLoad = string.Empty;
     public Array progress = new Array();
 
@@ -40,13 +41,13 @@ public partial class SaveManager : Node
         menuHandler = GetTree().Root.GetNode<MenuHandler>("MenuHandler");
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
-        if (sceneToLoad == string.Empty) return;
+        if (sceneToLoad == string.Empty || !PlayerManager.localPlayerState.IsLoading) return;
 
         sceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(sceneToLoad, progress);
 
-        if (sceneLoadStatus == ResourceLoader.ThreadLoadStatus.Loaded && multiplayerController.GetPlayerStates()[Multiplayer.GetUniqueId()].IsLoading && !Multiplayer.IsServer())
+        if (sceneLoadStatus == ResourceLoader.ThreadLoadStatus.Loaded && !Multiplayer.IsServer())
         {
             GD.Print("Loading done client");
             multiplayerController.Rpc(nameof(multiplayerController.SetLoadingStatus), false);
@@ -59,7 +60,6 @@ public partial class SaveManager : Node
             var newScene = ResourceLoader.LoadThreadedGet(sceneToLoad) as PackedScene;
             gameManager.InstantiateMap(sceneToLoad);
             multiplayerController.Rpc(nameof(multiplayerController.SetLoadingStatus), false);
-            GetTree().Paused = false;
             sceneToLoad = string.Empty;
         }
     }
@@ -202,6 +202,7 @@ public partial class SaveManager : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void InstantiateLoad(string scenePath)
     {
+        activeMapScenePath = scenePath;
         sceneToLoad = scenePath;
         menuHandler.OpenMenu(MenuHandler.MenuType.loading);
         ResourceLoader.LoadThreadedRequest(scenePath);

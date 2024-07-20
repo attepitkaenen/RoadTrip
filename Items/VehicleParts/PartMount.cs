@@ -5,7 +5,7 @@ using Godot;
 public partial class PartMount : Node3D
 {
     GameManager gameManager;
-    MultiplayerSynchronizer multiplayerSynchronizer;
+    [Export] MultiplayerSynchronizer multiplayerSynchronizer;
 
     [Signal] public delegate void PartInstalledEventHandler(int id, float condition, string partType);
     [Signal] public delegate void PartUninstalledEventHandler();
@@ -22,12 +22,6 @@ public partial class PartMount : Node3D
     public override void _Ready()
     {
         gameManager = GetTree().Root.GetNode<GameManager>("GameManager");
-        if (multiplayerSynchronizer is null)
-        {
-            multiplayerSynchronizer = GetParent().GetParent().GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
-        }
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partId");
-        multiplayerSynchronizer.ReplicationConfig.AddProperty(GetPath() + ":partCondition");
 
         _partArea = GetNode<Area3D>("Area3D");
         _partArea.BodyEntered += PartEntered;
@@ -37,7 +31,18 @@ public partial class PartMount : Node3D
 
     public override void _PhysicsProcess(double delta)
     {
+        if(IsMultiplayerAuthority())
+        {
+            Rpc(nameof(SyncPartInfo), partId, partCondition);
+        }
         HandlePart();
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+    private void SyncPartInfo(int newPartId, int newPartCondition)
+    {
+        partId = newPartId;
+        partCondition = newPartCondition;
     }
 
     public int GetPartId()

@@ -5,7 +5,6 @@ using System.Linq;
 
 public partial class MenuHandler : Control
 {
-    MultiplayerController multiplayerController;
     public MenuType currentMenu = MenuType.mainmenu;
 
     public enum MenuType
@@ -20,12 +19,11 @@ public partial class MenuHandler : Control
     public override void _Ready()
     {
         ProcessMode = ProcessModeEnum.Always;
-        multiplayerController = GetNode<MultiplayerController>("/root/MultiplayerController");
     }
 
     public override void _Input(InputEvent @event)
     {
-        if (multiplayerController.GetGameStartedStatus())
+        if (GameManager.isGameStarted)
         {
             if (currentMenu == MenuType.none && Input.IsActionJustPressed("menu"))
             {
