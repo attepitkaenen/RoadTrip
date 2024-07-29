@@ -22,6 +22,8 @@ public partial class FloatMachine : Node
 		floatOffset = Mathf.Lerp(floatOffset, lerpFloatOffset, 0.05f);
 
 		// Handle Floating
+		if (player.movementState == Player.MovementState.seated) return;
+		if (player.movementState == Player.MovementState.unconscious) return;
 		player.Velocity += FloatPlayer();
 	}
 

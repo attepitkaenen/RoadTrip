@@ -12,12 +12,11 @@ public partial class Vehicle : VehicleBody3D
 	[Export] private Area3D _itemArea;
 	[Export] private Seat _driverSeat;
 	[Export] private Node3D doorsAndPanels;
-	float enginePower = 0;
+	public float enginePower = 0;
 	float maxSteer = 0.8f;
 	private Vector2 _inputDir;
 	bool braking;
 	public Dictionary<Item, Marker3D> items = new Dictionary<Item, Marker3D>();
-	// public Array<PartMount> partMounts = new Array<PartMount>();
 
 	// Sync properties
 	Vector3 syncPosition;
@@ -116,8 +115,9 @@ public partial class Vehicle : VehicleBody3D
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void Drive(float inputDir, float gas, bool space, double delta)
+	public virtual void Drive(float inputDir, float gas, bool space, double delta)
 	{
+		GD.Print("Driving with enginepower: " + enginePower);
 		var steeringReducer = 1 / LinearVelocity.Length() * 10;
 		steeringReducer = Mathf.Clamp(steeringReducer, 0.1f, 1);
 

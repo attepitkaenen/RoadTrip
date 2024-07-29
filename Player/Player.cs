@@ -170,7 +170,7 @@ public partial class Player : CharacterBody3D
         {
             movementState = (MovementState)syncMovementStateId;
             rotationPoint.Rotation = new Vector3(Mathf.LerpAngle(rotationPoint.Rotation.X, syncHeadRotationX, 0.2f), 0, 0);
-            playerInteraction.Rotation = new Vector3(0,  Mathf.LerpAngle(playerInteraction.Rotation.Y, syncHeadRotationY, 0.2f), 0);
+            playerInteraction.Rotation = new Vector3(0, Mathf.LerpAngle(playerInteraction.Rotation.Y, syncHeadRotationY, 0.2f), 0);
             playerInteraction.heldItemId = syncHeldItemId;
 
             if (movementState == MovementState.seated)
@@ -218,6 +218,7 @@ public partial class Player : CharacterBody3D
         // Stop movement if seated and handle driving
         if (movementState == MovementState.seated)
         {
+            collisionShape3D.Disabled = true;
             Velocity = Vector3.Zero;
             if (_seat.isDriverSeat)
             {
@@ -225,6 +226,11 @@ public partial class Player : CharacterBody3D
                 vehicle.RpcId(1, nameof(vehicle.Drive), Input.GetActionStrength("left") - Input.GetActionStrength("right"), Input.GetActionStrength("up") - Input.GetActionStrength("down"), Input.IsActionPressed("jump"), delta);
             }
             return;
+        }
+        else
+        {
+            collisionShape3D.Disabled = false;
+            GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
         }
 
 

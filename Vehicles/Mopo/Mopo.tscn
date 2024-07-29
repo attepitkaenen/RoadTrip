@@ -1,0 +1,95 @@
+[gd_scene load_steps=9 format=3 uid="uid://03y4xqy0sslk"]
+
+[ext_resource type="Script" path="res://Items/VehicleParts/SeatMount.cs" id="1_eyutr"]
+[ext_resource type="Script" path="res://Vehicles/Moped.cs" id="1_jhtol"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_i51uy"]
+size = Vector3(0.4, 0.5, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x4tol"]
+size = Vector3(0.2, 1, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5c4e6"]
+size = Vector3(0.4, 0.5, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4dd84"]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 0.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h6lqu"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7dhod"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[node name="Mopo" type="VehicleBody3D"]
+collision_layer = 4
+collision_mask = 70
+center_of_mass_mode = 1
+script = ExtResource("1_jhtol")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_i51uy")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.184359, 0.387536)
+mesh = SubResource("BoxMesh_x4tol")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_5c4e6")
+
+[node name="FrontWheel" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.369015, 0.420496)
+use_as_steering = true
+wheel_radius = 0.3
+suspension_travel = 0.1
+suspension_stiffness = 200.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FrontWheel"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_4dd84")
+
+[node name="BackWheel" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.356331, -0.44058)
+use_as_traction = true
+wheel_radius = 0.3
+suspension_travel = 0.1
+suspension_stiffness = 200.0
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="BackWheel"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_4dd84")
+skeleton = NodePath("../../FrontWheel")
+
+[node name="PartMounts" type="Node3D" parent="."]
+
+[node name="SeatMount" type="Node3D" parent="PartMounts"]
+script = ExtResource("1_eyutr")
+isDriverSeat = true
+partId = 117
+partCondition = 100.0
+partType = 14
+
+[node name="Area3D" type="Area3D" parent="PartMounts/SeatMount"]
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PartMounts/SeatMount/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39312, -0.194056)
+shape = SubResource("BoxShape3D_h6lqu")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.52147, 0)
+gravity_scale = -1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("BoxShape3D_7dhod")
+
+[node name="CenterOfMass" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.26353, 0)
+
+[node name="HingeJoint3D" type="HingeJoint3D" parent="."]
+angular_limit/enable = true
+angular_limit/upper = 0.0
+angular_limit/lower = 0.0

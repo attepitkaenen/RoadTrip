@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://ckm7pwgnmngal"]
+[gd_scene load_steps=25 format=3 uid="uid://ckm7pwgnmngal"]
 
 [ext_resource type="Script" path="res://Maps/Map.cs" id="1_n22ko"]
 [ext_resource type="PackedScene" uid="uid://crbxy7tai54ii" path="res://Maps/Ilari/IlariEmpty.tscn" id="2_uvm14"]
@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" uid="uid://c33tfbwblv3kb" path="res://Items/VehicleParts/Aito/FRDoor/AitoFRDoorDropped.tscn" id="22_74l6g"]
 [ext_resource type="PackedScene" uid="uid://qiiml1cl4jf8" path="res://Items/VehicleParts/Aito/BLDoor/AitoBLDoorDropped.tscn" id="23_77v5f"]
 [ext_resource type="PackedScene" uid="uid://c6fxoxlitv3wi" path="res://Items/VehicleParts/Aito/FrontSeat/AitoFrontSeatDropped.tscn" id="23_wa7sw"]
+[ext_resource type="PackedScene" uid="uid://03y4xqy0sslk" path="res://Vehicles/Mopo/Mopo.tscn" id="24_h6g60"]
 
 [node name="World" type="Node3D" groups=["World"]]
 script = ExtResource("1_n22ko")
@@ -30,7 +31,7 @@ script = ExtResource("1_n22ko")
 [node name="Ilari" parent="." instance=ExtResource("2_uvm14")]
 
 [node name="Items" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 818.018, 13.0611, 200.626)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 787.064, 12.8403, 167.084)
 
 [node name="Item" parent="Items" instance=ExtResource("3_pfqch")]
 transform = Transform3D(-0.309, 0, 0.951062, 0, 1, 0, -0.951062, 0, -0.309, 14.3061, 3.03859, 14.8399)
@@ -174,88 +175,124 @@ transform = Transform3D(-0.309, 0, 0.951062, 0, 1, 0, -0.951062, 0, -0.309, 8.65
 transform = Transform3D(-0.309, 0, 0.951062, 0, 1, 0, -0.951062, 0, -0.309, 8.65918, 3.74704, 14.3096)
 
 [node name="RevolverDropped" parent="." instance=ExtResource("4_cok5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 820.918, 20.2586, 195.776)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 789.964, 20.0378, 162.234)
 
 [node name="RevolverDropped2" parent="." instance=ExtResource("4_cok5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 832.008, 15.0994, 200.346)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 801.054, 14.8786, 166.804)
 
 [node name="RevolverDropped3" parent="." instance=ExtResource("4_cok5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 821.058, 14.2957, 205.856)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 790.104, 14.0749, 172.314)
 
 [node name="RevolverDropped4" parent="." instance=ExtResource("4_cok5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 819.498, 14.2957, 205.856)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 788.544, 14.0749, 172.314)
 
 [node name="ToolBoxDropped" parent="." instance=ExtResource("5_as8c8")]
-transform = Transform3D(0.296742, 0, 0.954957, 0, 1, 0, -0.954957, 0, 0.296742, 830.802, 16.2531, 224.505)
+transform = Transform3D(0.296742, 0, 0.954957, 0, 1, 0, -0.954957, 0, 0.296742, 799.848, 16.0323, 190.963)
 
 [node name="ToolBoxDropped2" parent="." instance=ExtResource("5_as8c8")]
-transform = Transform3D(0.786569, 0, 0.617503, 0, 1, 0, -0.617503, 0, 0.786569, 830.383, 16.2531, 224.272)
+transform = Transform3D(0.786569, 0, 0.617503, 0, 1, 0, -0.617503, 0, 0.786569, 799.429, 16.0323, 190.73)
 
 [node name="ToolBoxDropped3" parent="." instance=ExtResource("5_as8c8")]
-transform = Transform3D(0.49335, 0, 0.869831, 0, 1, 0, -0.869831, 0, 0.49335, 830.797, 16.5827, 223.999)
+transform = Transform3D(0.49335, 0, 0.869831, 0, 1, 0, -0.869831, 0, 0.49335, 799.843, 16.3619, 190.457)
 
 [node name="ToolBoxDropped4" parent="." instance=ExtResource("5_as8c8")]
-transform = Transform3D(0.878241, 0, -0.478216, 0, 1, 0, 0.478216, 0, 0.878241, 831.262, 16.2645, 224.645)
+transform = Transform3D(0.878241, 0, -0.478216, 0, 1, 0, 0.478216, 0, 0.878241, 800.308, 16.0437, 191.103)
 
 [node name="Engine" parent="." instance=ExtResource("6_clkcr")]
-transform = Transform3D(-0.125125, 0.865845, 0.484413, 0.989719, 0.143026, -4.44089e-16, -0.0692836, 0.479432, -0.87484, 830.936, 15.5098, 225.151)
+transform = Transform3D(-0.125125, 0.865845, 0.484413, 0.989719, 0.143026, -4.44089e-16, -0.0692836, 0.479432, -0.87484, 799.982, 15.289, 191.609)
+
+[node name="Engine2" parent="." instance=ExtResource("6_clkcr")]
+transform = Transform3D(-0.125125, 0.865845, 0.484413, 0.989719, 0.143026, -4.44089e-16, -0.0692836, 0.479432, -0.87484, 790.159, 15.289, 184.293)
 
 [node name="Aito2" parent="." instance=ExtResource("7_mvj3d")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 828.137, 14.4458, 220.937)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 797.183, 14.225, 187.395)
 
 [node name="StockRadiatorDropped" parent="." instance=ExtResource("8_sv6fk")]
-transform = Transform3D(0.0900899, -0.61016, 0.78714, 0.989275, 0.146066, -2.35854e-09, -0.114975, 0.778697, 0.616775, 831.384, 15.1873, 224.735)
+transform = Transform3D(0.0900899, -0.61016, 0.78714, 0.989275, 0.146066, -2.35854e-09, -0.114975, 0.778697, 0.616775, 800.43, 14.9665, 191.193)
 
 [node name="StockBatteryDropped" parent="." instance=ExtResource("9_swxi4")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 829.104, 15.2978, 223.485)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 798.15, 15.077, 189.943)
+
+[node name="StockBatteryDropped2" parent="." instance=ExtResource("9_swxi4")]
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 791.063, 15.077, 183.152)
 
 [node name="StockFuelInjectorDropped" parent="." instance=ExtResource("10_o45u5")]
-transform = Transform3D(0.046055, 0.98426, 0.170623, 0.998907, -0.0467403, 8.79786e-10, 0.00797497, 0.170436, -0.985336, 830.211, 15.2586, 224.211)
+transform = Transform3D(0.046055, 0.98426, 0.170623, 0.998907, -0.0467403, 8.79786e-10, 0.00797497, 0.170436, -0.985336, 799.257, 15.0378, 190.669)
 
 [node name="StockAlternatorDropped" parent="." instance=ExtResource("11_v4fc5")]
-transform = Transform3D(-0.87484, 0.484406, -0.00258711, 0, -0.00534071, -0.999986, -0.484413, -0.874827, 0.00467226, 830.185, 15.2486, 225.021)
+transform = Transform3D(-0.87484, 0.484406, -0.00258711, 0, -0.00534071, -0.999986, -0.484413, -0.874827, 0.00467226, 799.231, 15.0278, 191.479)
 
 [node name="StockWaterTankDropped" parent="." instance=ExtResource("12_d36q2")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 831.207, 14.377, 224.889)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 800.253, 14.1562, 191.347)
 
 [node name="StockFuelInjectorDropped2" parent="." instance=ExtResource("13_o3jgq")]
-transform = Transform3D(-0.172497, 0, 0.98501, 0, 1, 0, -0.98501, 0, -0.172497, 829.479, 15.2574, 224.149)
+transform = Transform3D(-0.172497, 0, 0.98501, 0, 1, 0, -0.98501, 0, -0.172497, 798.525, 15.0366, 190.607)
 
 [node name="StockStarterDropped" parent="." instance=ExtResource("14_kojty")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 829.781, 15.3012, 224.305)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 798.827, 15.0804, 190.763)
+
+[node name="StockStarterDropped2" parent="." instance=ExtResource("14_kojty")]
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 791.505, 15.108, 182.343)
 
 [node name="StockTireDropped" parent="." instance=ExtResource("15_ous8s")]
-transform = Transform3D(3.82405e-08, -0.87484, 0.484413, -1, -4.37114e-08, 0, 2.11744e-08, -0.484413, -0.87484, 829.544, 14.4908, 223.991)
+transform = Transform3D(3.82405e-08, -0.87484, 0.484413, -1, -4.37114e-08, 0, 2.11744e-08, -0.484413, -0.87484, 798.59, 14.27, 190.449)
 
 [node name="StockTireDropped2" parent="." instance=ExtResource("15_ous8s")]
-transform = Transform3D(3.82405e-08, 0.87484, 0.484413, 1, -4.37114e-08, 0, 2.11744e-08, 0.484413, -0.87484, 829.529, 14.2087, 224.04)
+transform = Transform3D(3.82405e-08, 0.87484, 0.484413, 1, -4.37114e-08, 0, 2.11744e-08, 0.484413, -0.87484, 798.575, 13.9879, 190.498)
 
 [node name="StockTireDropped3" parent="." instance=ExtResource("15_ous8s")]
-transform = Transform3D(3.82405e-08, 0.87484, 0.484413, 1, -4.37114e-08, 0, 2.11744e-08, 0.484413, -0.87484, 828.798, 14.2098, 223.955)
+transform = Transform3D(3.82405e-08, 0.87484, 0.484413, 1, -4.37114e-08, 0, 2.11744e-08, 0.484413, -0.87484, 797.844, 13.989, 190.413)
 
 [node name="StockTireDropped4" parent="." instance=ExtResource("15_ous8s")]
-transform = Transform3D(3.82405e-08, 0.87484, 0.484413, 1, -4.37114e-08, 0, 2.11744e-08, 0.484413, -0.87484, 828.806, 14.4452, 223.879)
+transform = Transform3D(3.82405e-08, 0.87484, 0.484413, 1, -4.37114e-08, 0, 2.11744e-08, 0.484413, -0.87484, 797.852, 14.2244, 190.337)
+
+[node name="StockTireDropped5" parent="." instance=ExtResource("15_ous8s")]
+transform = Transform3D(3.82405e-08, -0.87484, 0.484413, -1, -4.37114e-08, 0, 2.11744e-08, -0.484413, -0.87484, 793.579, 14.27, 187.47)
+
+[node name="StockTireDropped6" parent="." instance=ExtResource("15_ous8s")]
+transform = Transform3D(3.82405e-08, 0.87484, 0.484413, 1, -4.37114e-08, 0, 2.11744e-08, 0.484413, -0.87484, 793.564, 13.9879, 187.519)
+
+[node name="StockTireDropped7" parent="." instance=ExtResource("15_ous8s")]
+transform = Transform3D(3.82405e-08, 0.87484, 0.484413, 1, -4.37114e-08, 0, 2.11744e-08, 0.484413, -0.87484, 792.833, 13.989, 187.434)
+
+[node name="StockTireDropped8" parent="." instance=ExtResource("15_ous8s")]
+transform = Transform3D(3.82405e-08, 0.87484, 0.484413, 1, -4.37114e-08, 0, 2.11744e-08, 0.484413, -0.87484, 792.841, 14.2244, 187.358)
 
 [node name="AitoBonnet" parent="." instance=ExtResource("16_vuwvk")]
-transform = Transform3D(-0.521248, 0, -0.853405, 0, 1, 0, 0.853405, 0, -0.521248, 831.931, 14.6147, 222.364)
+transform = Transform3D(-0.521248, 0, -0.853405, 0, 1, 0, 0.853405, 0, -0.521248, 800.977, 14.3939, 188.822)
 
 [node name="AitoBootDropped" parent="." instance=ExtResource("17_tbri6")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 825.536, 15.0938, 219.566)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 795.339, 14.873, 186.703)
 
 [node name="AitoWindshieldDropped" parent="." instance=ExtResource("18_2ehkq")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 827.197, 14.7477, 218.485)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 796.243, 14.5269, 184.943)
 
 [node name="AitoBRDoorDropped" parent="." instance=ExtResource("20_f1gbt")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 833.778, 13.7477, 221.009)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 802.824, 13.5269, 187.467)
 
 [node name="AitoFLDoorDropped" parent="." instance=ExtResource("21_4ugw1")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 833.169, 13.7477, 221.655)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 802.215, 13.5269, 188.113)
 
 [node name="AitoFRDoorDropped" parent="." instance=ExtResource("22_74l6g")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 832.57, 13.7477, 222.386)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 801.616, 13.5269, 188.844)
 
 [node name="AitoBLDoorDropped" parent="." instance=ExtResource("23_77v5f")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 833.355, 13.7477, 220.763)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 802.401, 13.5269, 187.221)
 
 [node name="AitoFrontSeat" parent="." instance=ExtResource("23_wa7sw")]
-transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 830.626, 14.4528, 220.644)
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 799.672, 14.232, 187.102)
+
+[node name="AitoFrontSeat2" parent="." instance=ExtResource("23_wa7sw")]
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 800.38, 14.232, 187.441)
+
+[node name="AitoFrontSeat3" parent="." instance=ExtResource("23_wa7sw")]
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 794.338, 14.232, 184.27)
+
+[node name="AitoFrontSeat4" parent="." instance=ExtResource("23_wa7sw")]
+transform = Transform3D(-0.87484, 0, 0.484413, 0, 1, 0, -0.484413, 0, -0.87484, 793.777, 14.232, 185.292)
+
+[node name="Mopo" parent="." instance=ExtResource("24_h6g60")]
+transform = Transform3D(0.301505, 0, 0.953465, 0, 1, 0, -0.953465, 0, 0.301505, 811.315, 15.8161, 201.666)
+
+[node name="Aito" parent="." instance=ExtResource("7_mvj3d")]
+transform = Transform3D(-0.897751, 0, 0.440503, 0, 1, 0, -0.440503, 0, -0.897751, 791.992, 13.8977, 184.171)

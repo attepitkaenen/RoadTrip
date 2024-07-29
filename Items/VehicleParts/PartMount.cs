@@ -5,7 +5,6 @@ using Godot;
 public partial class PartMount : Node3D
 {
     GameManager gameManager;
-    [Export] MultiplayerSynchronizer multiplayerSynchronizer;
 
     [Signal] public delegate void PartInstalledEventHandler(int id, float condition, string partType);
     [Signal] public delegate void PartUninstalledEventHandler();
