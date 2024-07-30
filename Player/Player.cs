@@ -66,14 +66,14 @@ public partial class Player : CharacterBody3D
     }
 
     // Sync properties
-    private short Health = 10;
+    public short Health = 10;
     public Vector3 syncVelocity;
     public Vector3 syncPosition;
     public float syncRotation;
     public float syncHeadRotationX;
     public float syncHeadRotationY;
-    private ushort syncMovementStateId;
-    private ushort syncHeldItemId;
+    public ushort syncMovementStateId;
+    public ushort syncHeldItemId;
 
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -140,6 +140,7 @@ public partial class Player : CharacterBody3D
             camera.Current = true;
             sensitivity = gameManager.Sensitivity;
             playerManager.RpcId(1, nameof(playerManager.LocalPlayerReady), id);
+            PlayerManager.localPlayerInstance = this;
         }
 
         // Sync properties to other players
@@ -148,7 +149,7 @@ public partial class Player : CharacterBody3D
             var rotation = (short)(GlobalRotation.Y * 100);
             var headRotationX = (short)(rotationPoint.Rotation.X * 100);
             var headRotationY = (short)(playerInteraction.Rotation.Y * 100);
-            Rpc(nameof(SyncProperties), Velocity, GlobalPosition, rotation, headRotationX, headRotationY, (ushort)movementState, playerInteraction.heldItemId);
+            // Rpc(nameof(SyncProperties), Velocity, GlobalPosition, rotation, headRotationX, headRotationY, (ushort)movementState, playerInteraction.heldItemId);
         }
     }
 
@@ -166,7 +167,7 @@ public partial class Player : CharacterBody3D
         }
 
         // Handle property syncing and Lerping for non local players
-        if (!isLocal)
+        if (!isLocal && !Multiplayer.IsServer())
         {
             movementState = (MovementState)syncMovementStateId;
             rotationPoint.Rotation = new Vector3(Mathf.LerpAngle(rotationPoint.Rotation.X, syncHeadRotationX, 0.2f), 0, 0);
@@ -182,12 +183,26 @@ public partial class Player : CharacterBody3D
             GlobalPosition = GlobalPosition.Lerp(syncPosition, 0.2f);
             GlobalRotation = new Vector3(0, Mathf.LerpAngle(GlobalRotation.Y, syncRotation, 0.2f), 0);
             return;
-        };
+        }
+        else if (!isLocal && Multiplayer.IsServer())
+        {
+            GlobalRotation = new Vector3(0, Mathf.LerpAngle(GlobalRotation.Y, syncRotation, 0.2f), 0);
+        }
 
+        if (isLocal)
+        {
+            HandleDebugUpdate(delta);
+        }
+
+        MoveAndSlide();
+    }
+
+    public void HandleMovement(float minTimeBetweenTicks, float rotation,  float[] inputs)
+    {
         if (movementState == MovementState.unconscious)
         {
             camera.Current = false;
-            if (Input.IsActionJustPressed("jump"))
+            if (inputs[(int)Inputs.jump] > 0)
             {
                 Health = 10;
                 movementState = MovementState.idle;
@@ -196,24 +211,25 @@ public partial class Player : CharacterBody3D
             return;
         }
 
-        camera.Current = true;
+        if (isLocal)
+        {
+            camera.Current = true;
+        }
 
         // Movement logic
         Vector3 velocity = Velocity;
 
         // Gravity
-        velocity.Y -= gravity * (float)delta;
+        velocity.Y -= gravity * minTimeBetweenTicks;
 
         // sync properties to lerp movement for other players
         syncPosition = GlobalPosition;
-        syncRotation = GlobalRotation.Y;
+        syncRotation = rotation;
 
         float correctedSpeed = speed * floatMachine.GetCrouchHeight();
         float currentSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
 
         HandleSeat();
-
-        HandleDebugUpdate(delta);
 
         // Stop movement if seated and handle driving
         if (movementState == MovementState.seated)
@@ -223,26 +239,29 @@ public partial class Player : CharacterBody3D
             if (_seat.isDriverSeat)
             {
                 Vehicle vehicle = _seat.GetVehicle();
-                vehicle.RpcId(1, nameof(vehicle.Drive), Input.GetActionStrength("left") - Input.GetActionStrength("right"), Input.GetActionStrength("up") - Input.GetActionStrength("down"), Input.IsActionPressed("jump"), delta);
+                vehicle.RpcId(1, nameof(vehicle.Drive), inputs[(int)Inputs.left] - inputs[(int)Inputs.right], inputs[(int)Inputs.up] - inputs[(int)Inputs.down], inputs[(int)Inputs.jump], minTimeBetweenTicks);
             }
             return;
         }
         else
         {
             collisionShape3D.Disabled = false;
-            GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
+            // GlobalRotation = new Vector3(0, GlobalRotation.Y, 0);
         }
 
+        // if (Multiplayer.IsServer())
+        // {
+        //     GlobalPosition = new Vector3(0, rotation, 0);
+        // }
 
         // Makes head and body same rotation when not seated
-        playerInteraction.GlobalRotation = GlobalRotation;
 
         // Handle movementState changes
         if (Health <= 0)
         {
             movementState = MovementState.unconscious;
         }
-        if (Input.IsActionJustPressed("jump") && isGrounded)
+        if (inputs[(int)Inputs.jump] > 0 && isGrounded && movementState != MovementState.jumping)
         {
             velocity.Y = jumpVelocity;
             movementState = MovementState.jumping;
@@ -251,11 +270,11 @@ public partial class Player : CharacterBody3D
         {
             movementState = MovementState.falling;
         }
-        else if (Input.IsActionPressed("crouch") && isGrounded)
+        else if (inputs[(int)Inputs.crouch] > 0 && isGrounded)
         {
             movementState = MovementState.crouching;
         }
-        else if (Input.IsActionPressed("sprint") && floatMachine.GetCrouchHeight() > 0.8f && currentSpeed > 0.1f && isGrounded)
+        else if (inputs[(int)Inputs.sprint] > 0 && floatMachine.GetCrouchHeight() > 0.8f && currentSpeed > 0.1f && isGrounded)
         {
             movementState = MovementState.running;
         }
@@ -269,7 +288,7 @@ public partial class Player : CharacterBody3D
         }
 
         // Handle crouch height seperately so that you can crouch while airborne
-        if (Input.IsActionPressed("crouch"))
+        if (inputs[(int)Inputs.crouch] > 0)
         {
             floatMachine.SetFloatOffset(0.2f);
         }
@@ -297,30 +316,33 @@ public partial class Player : CharacterBody3D
                 floatMachine.SetFloatOffset(0.2f);
                 break;
         }
-
+        
+        // Create a new basis that uses the given rotation instead of the current rotation.
+        var bas = new Basis(){X = new Vector3(1,0,0), Y = new Vector3(0,1,0), Z = new Vector3(0,0,1)};
+        bas = bas.Rotated(Vector3.Up, rotation);
 
         // Get the input direction and handle the movement/deceleration.
-        Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
-        Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+        Vector2 inputDir = new Vector2(inputs[(int)Inputs.right] - inputs[(int)Inputs.left], inputs[(int)Inputs.down] - inputs[(int)Inputs.up]);
+        Vector3 direction = (bas * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
         if (direction != Vector3.Zero && isGrounded)
         {
-            velocity.X = Mathf.Lerp(velocity.X, direction.X * correctedSpeed, (float)delta * acceleration);
-            velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * correctedSpeed, (float)delta * acceleration);
+            velocity.X = Mathf.Lerp(velocity.X, direction.X * correctedSpeed, minTimeBetweenTicks * acceleration);
+            velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * correctedSpeed, minTimeBetweenTicks * acceleration);
         }
         else if (direction != Vector3.Zero && !isGrounded)
         {
-            velocity.X = Mathf.Lerp(velocity.X, direction.X * correctedSpeed, (float)delta * acceleration);
-            velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * correctedSpeed, (float)delta * acceleration);
+            velocity.X = Mathf.Lerp(velocity.X, direction.X * correctedSpeed, minTimeBetweenTicks * acceleration);
+            velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * correctedSpeed, minTimeBetweenTicks * acceleration);
         }
         else if (isGrounded)
         {
-            velocity.X = Mathf.Lerp(velocity.X, 0, (float)delta * deceleration);
-            velocity.Z = Mathf.Lerp(velocity.Z, 0, (float)delta * deceleration);
+            velocity.X = Mathf.Lerp(velocity.X, 0, minTimeBetweenTicks * deceleration);
+            velocity.Z = Mathf.Lerp(velocity.Z, 0, minTimeBetweenTicks * deceleration);
         }
 
         Velocity = velocity;
         syncVelocity = Velocity;
-        MoveAndSlide();
+        // MoveAndSlide();
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]

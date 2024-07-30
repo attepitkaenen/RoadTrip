@@ -22,6 +22,8 @@ GameManager="*res://Multiplayer/GameManager.tscn"
 MultiplayerController="*res://Multiplayer/MultiplayerController.cs"
 SaveManager="*res://Multiplayer/Saving/SaveManager.cs"
 PlayerManager="*res://Multiplayer/PlayerManager.tscn"
+Server="*res://Multiplayer/Server.cs"
+Client="*res://Multiplayer/Client.cs"
 
 [display]
 

@@ -123,7 +123,7 @@ public partial class Moped : Vehicle
 
         // steer lean
         var speed = new Vector2(LinearVelocity.X, LinearVelocity.Z).Length();
-        GD.Print(speed);
+
         if (speed >= 10)
         {
             steerLean = true;

@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Linq;
 
 public partial class PlayerManager : Node
 {
@@ -16,6 +17,7 @@ public partial class PlayerManager : Node
 
     public static Dictionary<int, Player> playerInstances { get; private set; } = new Dictionary<int, Player>();
     public static PlayerState localPlayerState { get; private set; } = new PlayerState() { Id = -1, Name = "Jorma", IsLoading = true };
+    public static Player localPlayerInstance { get; set; }
     public static int playerCount = 0;
 
     // References	
@@ -43,6 +45,24 @@ public partial class PlayerManager : Node
             GD.Print($"PlayerState count changed from {playerCount} to {playerStates.Count} on {localPlayerState.Id}");
             playerCount = playerStates.Count;
             EmitSignal(SignalName.PlayerStatesChanged);
+        }
+
+        if (!Multiplayer.IsServer() && playerInstances.Count != playerStates.Count)
+        {
+            var players = GetTree().GetNodesInGroup("Player").Select(node => node as Player) as Array<Player>;
+
+            if (players is not null)
+            {
+                foreach (var player in players)
+                {
+                    if (player.id < 1) return;
+                    if (playerInstances.TryGetValue(player.id, out _))
+                    {
+                        playerInstances[player.id] = player;
+                    }
+                }
+            }
+
         }
     }
 
@@ -133,10 +153,30 @@ public partial class PlayerManager : Node
             }
         }
 
-        GD.Print($"Spawning player {playerState.Name} with id: {playerState.Id}");
         var currentPlayer = multiplayerSpawner.Spawn(playerScene.ResourcePath) as Player;
         playerInstances.Add(playerState.Id, currentPlayer);
         currentPlayer.Rpc(nameof(currentPlayer.SetPlayerState), playerState.Id, playerState.Name);
+
+        var random = new Random();
+        int spawnPointId = random.Next(4);
+        var spawnPoints = GetTree().GetNodesInGroup("SpawnPoints");
+        foreach (Node3D spawnPoint in spawnPoints)
+        {
+            if (int.Parse(spawnPoint.Name) == spawnPointId)
+            {
+                if (playerInstances.TryGetValue(playerState.Id, out var player))
+                {
+                    GD.Print($"Spawning player {playerState.Name} with id: {playerState.Id} in location: {spawnPoint.GlobalPosition}");
+                    player.GlobalPosition = spawnPoint.GlobalPosition;
+                    // player.Rpc(nameof(player.MovePlayerReliable), spawnPoint.GlobalPosition, Vector3.Zero);
+                    Server.AddPlayerBufferAndQueue(playerState.Id);
+                }
+                else
+                {
+                    GD.Print($"No player of id: {playerState.Id}, was found");
+                }
+            }
+        }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -152,7 +192,9 @@ public partial class PlayerManager : Node
             {
                 if (playerInstances.TryGetValue(id, out var player))
                 {
-                    player.Rpc(nameof(player.MovePlayerReliable), spawnPoint.GlobalPosition, Vector3.Zero);
+                    player.GlobalPosition = spawnPoint.GlobalPosition;
+                    // player.Rpc(nameof(player.MovePlayerReliable), spawnPoint.GlobalPosition, Vector3.Zero);
+                    Server.AddPlayerBufferAndQueue(id);
                 }
                 else
                 {
@@ -187,7 +229,7 @@ public partial class PlayerManager : Node
         {
             player.QueueFree();
         }
-        
+
         playerStates = new Dictionary<int, PlayerState>();
         playerInstances = new Dictionary<int, Player>();
         localPlayerState = new PlayerState { Id = -1, Name = "Jorma", IsLoading = true };

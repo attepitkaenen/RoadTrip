@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 
@@ -41,11 +42,8 @@ public partial class MultiplayerController : Control
         Multiplayer.ServerDisconnected += ServerDisconnected;
         Multiplayer.ConnectedToServer += ConnectedToServer;
         Multiplayer.PeerDisconnected += PeerDisconnected;
-
-        // if(OS.GetCmdlineArgs().Contains("--server")){
-        // 	hostGame();
-        // }
     }
+
 
     private void PeerDisconnected(long id)
     {

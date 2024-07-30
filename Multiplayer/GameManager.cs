@@ -67,11 +67,6 @@ public partial class GameManager : Node
         }
     }
 
-    public Array<Player> GetPlayers()
-    {
-        return GetTree().GetNodesInGroup("Player").Select(node => node as Player) as Array<Player>;
-    }
-
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void Respawn(int id)
     {
